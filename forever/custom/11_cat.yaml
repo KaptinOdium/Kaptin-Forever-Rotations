@@ -6,7 +6,7 @@
 # Simulation reference adapted for leveling and reactive utility; not live-verified.
 spec: 11
 name: Forever Druid - Cat 1-60
-version: 2.3.15
+version: 2.3.16
 author: Custom
 date: '2026-11-17'
 patch: Classic Forever
@@ -149,8 +149,18 @@ config:
     section: Feral
     type: note
     label: Cat leveling and level 60
-    text: Uses Bear before Cat is learned, and caster spells before Bear. Pools energy for Shred from behind only when threat confirms the enemy is not tanked by you; Claw covers frontal, tanking or unreadable checks. Clearcasting uses free attacks,
+    text: Uses Bear before Cat is learned, and caster spells before Bear. Pools energy for Shred when the loader reports rear positioning, regardless of threat; Claw covers frontal or missing position checks. Clearcasting uses free attacks,
       with a final Bite when the enemy is about to die. Does not leave Cat in combat to heal.
+  conservative_shred:
+    section: Feral
+    type: checkbox
+    label: Use Claw while tanking or threat is unknown (workaround)
+    default: false
+  conservative_shred_info:
+    section: Feral
+    type: note
+    label: Optional workaround for repeated behind-target errors
+    text: Off by default. If enabled, Shred also requires known non-tanking threat. This can skip valid rear Shreds in PvP and against casting or stunned enemies. It does not repair loader positioning or detect a server rejection.
   elunes_light:
     section: Racials
     type: checkbox
@@ -220,7 +230,7 @@ variables:
   # Form auras may have no caster GUID; always query every source.
   caster_form_active: buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any&buff.783.down.any&buff.1066.down.any
   cat_rear: target.in_melee&target.has_world_pos&player.has_world_pos&!target.facing.player
-  cat_shred_allowed: var.cat_rear&target.threat>=0&target.threat<2
+  cat_shred_allowed: var.cat_rear&(!config.conservative_shred|(target.threat>=0&target.threat<2))
   cat_builder: combo_points<5|buff.clearcasting.up|((!action.ferocious_bite.known|action.ferocious_bite.blocked)&(!action.rip.known|action.rip.blocked|target.time_to_die<config.rip_ttd))|(energy.deficit<25&(!action.rip.known|action.rip.blocked|dot.rip.remains>2|target.time_to_die<config.rip_ttd))
   demo_shout_present: debuff.1160.up.any|debuff.6190.up.any|debuff.11554.up.any|debuff.11555.up.any|debuff.11556.up.any
 lists:

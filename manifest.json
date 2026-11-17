@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.17.6",
+  "collection": "2026.11.17.7",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -28,13 +28,13 @@
     {
       "class_name": "Druid",
       "name": "Forever Druid - Cat 1-60",
-      "version": "2.3.15",
+      "version": "2.3.16",
       "path": "forever/custom/11_cat.yaml"
     },
     {
       "class_name": "Druid",
       "name": "Forever Druid - Feral Manual Forms 1-60",
-      "version": "2.3.12",
+      "version": "2.3.13",
       "path": "forever/custom/11_feral.yaml"
     },
     {
@@ -238,7 +238,7 @@
     {
       "path": "README.md",
       "bytes": 1762,
-      "sha256": "70c99d417ecd09ce142bbc1ad56782ff7b6172280444e11e0c6de1860cc5eab5"
+      "sha256": "e4cfca00ad0e3b8ec0cecb76d2e78206866c24bb53c38b83bbabaf14edeeae46"
     },
     {
       "path": "docs/classes.md",
@@ -247,8 +247,8 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 4570,
-      "sha256": "faa187c7b12ad51f3097fe78bacd1c58f7248fa8c2a6ed5bb016153bf145c2fb"
+      "bytes": 4711,
+      "sha256": "a1b386d01abe679dddf9d2b32903676a3ae80290e20a689baa108fbfa2ed6c58"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -277,13 +277,13 @@
     },
     {
       "path": "forever/custom/11_cat.yaml",
-      "bytes": 16198,
-      "sha256": "3cd58af3d6d55d01e3a2df05b5a2a4ceae2563e03f6dee2f863864f10edc70ef"
+      "bytes": 16734,
+      "sha256": "a494319ba014af551316c80ba574434db57752ff858b8c9e3ddee3a5feeba106"
     },
     {
       "path": "forever/custom/11_feral.yaml",
-      "bytes": 22613,
-      "sha256": "681f2cdb83ac6ce988ebdc9cd053c630619890381c97ee78b4b595053fb7fcf1"
+      "bytes": 23159,
+      "sha256": "f30d3c220df52b5b10faa68cfa930441f6bb25a85f86dba5641275df083a8d63"
     },
     {
       "path": "forever/custom/11_restoration.yaml",
