@@ -8,8 +8,8 @@ Download with **Code > Download ZIP**, then extract it. Install only the classes
 
 | Class | Included profiles | Version |
 |---|---|---|
-| Paladin | Protection, Retribution, Holy | 2.7.3 / 2.5.6 / 2.3.18 |
-| Druid | Bear, Cat, Balance, Restoration; manual Feral | 2.3.14; manual Feral 2.3.11 |
+| Paladin | Protection, Retribution, Holy | 2.7.4 / 2.5.7 / 2.3.18 |
+| Druid | Bear, Cat, Balance, Restoration; manual Feral | Cat 2.3.15; manual Feral 2.3.12; others 2.3.14 |
 | Hunter | Beast Mastery, Marksmanship, Survival | 1.0.8 |
 | Shaman | Elemental, Enhancement, Restoration | 1.0.3 |
 | Warlock | Affliction, Demonology, Destruction | 1.3.3 |

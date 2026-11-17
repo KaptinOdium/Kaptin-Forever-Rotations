@@ -1,16 +1,16 @@
 {
-  "collection": "2026.11.17.3",
+  "collection": "2026.11.17.5",
   "profiles": [
     {
       "class_name": "Paladin",
       "name": "Forever Paladin - Protection 1-60",
-      "version": "2.7.3",
+      "version": "2.7.4",
       "path": "forever/custom/2_protection_leveling.yaml"
     },
     {
       "class_name": "Paladin",
       "name": "Forever Paladin - Retribution 1-60",
-      "version": "2.5.6",
+      "version": "2.5.7",
       "path": "forever/custom/2_retribution_leveling.yaml"
     },
     {
@@ -28,13 +28,13 @@
     {
       "class_name": "Druid",
       "name": "Forever Druid - Cat 1-60",
-      "version": "2.3.14",
+      "version": "2.3.15",
       "path": "forever/custom/11_cat.yaml"
     },
     {
       "class_name": "Druid",
       "name": "Forever Druid - Feral Manual Forms 1-60",
-      "version": "2.3.11",
+      "version": "2.3.12",
       "path": "forever/custom/11_feral.yaml"
     },
     {
@@ -237,8 +237,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 1743,
-      "sha256": "7a1627da757609ff9ce0700dddb542350a40ff94d67749834620aca03900ccc1"
+      "bytes": 1762,
+      "sha256": "8527870ea6013610321bd2b37022d4e70d156a22671f5f36eed8d88a479906fb"
     },
     {
       "path": "docs/classes.md",
@@ -247,8 +247,8 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 3754,
-      "sha256": "6bc6f609efb52c69394da5f21c317604c98599b0e49eb64eddd461f7c2015a95"
+      "bytes": 4316,
+      "sha256": "39e74068e3de11795cce99bcc96fb2f0e062179b5c30aa73510cfbf76ae6e0c6"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -277,13 +277,13 @@
     },
     {
       "path": "forever/custom/11_cat.yaml",
-      "bytes": 16051,
-      "sha256": "7e21f8c29776981726db00729c7df9bf4d1948da2f2bb9d52f34c61b32810ea7"
+      "bytes": 16198,
+      "sha256": "3cd58af3d6d55d01e3a2df05b5a2a4ceae2563e03f6dee2f863864f10edc70ef"
     },
     {
       "path": "forever/custom/11_feral.yaml",
-      "bytes": 22466,
-      "sha256": "e0db8d11fe42d8c68357e817be62f545d8262a034c96b7120155a0b86c49ae88"
+      "bytes": 22613,
+      "sha256": "681f2cdb83ac6ce988ebdc9cd053c630619890381c97ee78b4b595053fb7fcf1"
     },
     {
       "path": "forever/custom/11_restoration.yaml",
@@ -312,13 +312,13 @@
     },
     {
       "path": "forever/custom/2_protection_leveling.yaml",
-      "bytes": 54364,
-      "sha256": "7c7eef2cd147a43e93ca0f4f8bc02afd12c3bbb51d6a1c3fee81f48685fbca0c"
+      "bytes": 55454,
+      "sha256": "5b12cdd8c90c911e4a3a2b7dd980a2584ab2e86d8a6103d0c025ae03b8d3a7e6"
     },
     {
       "path": "forever/custom/2_retribution_leveling.yaml",
-      "bytes": 47364,
-      "sha256": "04a547d7338778c531e0916aee03f63ba0c9eb066918c8bd03d113dc3c3eaa8a"
+      "bytes": 48454,
+      "sha256": "a492b0fb71e337956b4f4842970c3bfcb58ceb2b49ff3b81ebfaa0f96b5d4db4"
     },
     {
       "path": "forever/custom/3_beast_mastery_wasd.yaml",

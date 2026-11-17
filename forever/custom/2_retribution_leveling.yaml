@@ -1,4 +1,4 @@
-# Forever Paladin profiles, updated 2026-11-16. Simia class-id schema (Paladin=2).
+# Forever Paladin profiles, updated 2026-11-17. Simia class-id schema (Paladin=2).
 # Source mechanics: https://github.com/sage3648/mythicsim-forever-engine
 # Syntax: https://auth.simia.pro/rotation/
 # Requires learned spell bindings; .player/.mouseover are explicit macro variants.
@@ -7,9 +7,9 @@
 # See ../README.md for targeting limits and what has actually been verified.
 spec: 2
 name: Forever Paladin - Retribution 1-60
-version: 2.5.6
+version: 2.5.7
 author: Custom
-date: '2026-11-16'
+date: '2026-11-17'
 patch: Classic Forever
 entry: main
 movement_allowed: false
@@ -407,8 +407,8 @@ config:
     section: 02 - Buffs
     type: note
     label: Aura preference
-    text: Devotion is the default. An unlearned preference falls back to Devotion. A learned aura keeps its preference when disabled or unbound. Existing ranks from any Paladin are respected.
-      Manual leaves aura changes to you; automatic blessings still follow their own settings.
+    text: Devotion is the default. An unlearned preference falls back to Devotion only when no rank of that preferred aura is active. A learned aura keeps its preference when disabled
+      or unbound. Existing ranks from any Paladin are respected. Manual leaves aura changes to you; automatic blessings still follow their own settings.
   self_blessing_mode:
     section: 02 - Buffs
     type: dropdown
@@ -659,12 +659,12 @@ lists:
   - holy_shock,if=config.shock_damage&player.health.effective.pct>=80&target.range<=20&(!player.moving|action.holy_shock.cast_time=0)&(mana-action.holy_shock.cost)*100>=mana.max*config.mana_floor
   - attack_target,if=target.in_melee&!player.auto_attacking
   aura_selection:
-  - devotion_aura,range_check=none,if=config.maintain_buffs&(config.aura_mode=0|(config.aura_mode=1&!action.retribution_aura.known)|(config.aura_mode=2&!action.fire_resistance_aura.known)|(config.aura_mode=3&!action.frost_resistance_aura.known)|(config.aura_mode=4&!action.shadow_resistance_aura.known)|(config.aura_mode=5&!action.concentration_aura.known))&!buff.devotion_aura.up.any&!buff.465.up.any&!buff.10290.up.any&!buff.643.up.any&!buff.10291.up.any&!buff.1032.up.any&!buff.10292.up.any&!buff.10293.up.any
-  - retribution_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=1&action.retribution_aura.known&!buff.retribution_aura.up.any&!buff.7294.up.any&!buff.10298.up.any&!buff.10299.up.any&!buff.10300.up.any&!buff.10301.up.any
-  - fire_resistance_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=2&action.fire_resistance_aura.known&!buff.fire_resistance_aura.up.any&!buff.19891.up.any&!buff.19899.up.any&!buff.19900.up.any
-  - frost_resistance_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=3&action.frost_resistance_aura.known&!buff.frost_resistance_aura.up.any&!buff.19888.up.any&!buff.19897.up.any&!buff.19898.up.any
-  - shadow_resistance_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=4&action.shadow_resistance_aura.known&!buff.shadow_resistance_aura.up.any&!buff.19876.up.any&!buff.19895.up.any&!buff.19896.up.any
-  - concentration_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=5&action.concentration_aura.known&!buff.concentration_aura.up.any&!buff.19746.up.any
+  - devotion_aura,range_check=none,if=config.maintain_buffs&(config.aura_mode=0|(config.aura_mode=1&!(action.retribution_aura.known|action.7294.known|action.10298.known|action.10299.known|action.10300.known|action.10301.known)&!buff.retribution_aura.up.any&!buff.7294.up.any&!buff.10298.up.any&!buff.10299.up.any&!buff.10300.up.any&!buff.10301.up.any)|(config.aura_mode=2&!(action.fire_resistance_aura.known|action.19891.known|action.19899.known|action.19900.known)&!buff.fire_resistance_aura.up.any&!buff.19891.up.any&!buff.19899.up.any&!buff.19900.up.any)|(config.aura_mode=3&!(action.frost_resistance_aura.known|action.19888.known|action.19897.known|action.19898.known)&!buff.frost_resistance_aura.up.any&!buff.19888.up.any&!buff.19897.up.any&!buff.19898.up.any)|(config.aura_mode=4&!(action.shadow_resistance_aura.known|action.19876.known|action.19895.known|action.19896.known)&!buff.shadow_resistance_aura.up.any&!buff.19876.up.any&!buff.19895.up.any&!buff.19896.up.any)|(config.aura_mode=5&!(action.concentration_aura.known|action.19746.known)&!buff.concentration_aura.up.any&!buff.19746.up.any))&!buff.devotion_aura.up.any&!buff.465.up.any&!buff.10290.up.any&!buff.643.up.any&!buff.10291.up.any&!buff.1032.up.any&!buff.10292.up.any&!buff.10293.up.any
+  - retribution_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=1&(action.retribution_aura.known|action.7294.known|action.10298.known|action.10299.known|action.10300.known|action.10301.known)&!buff.retribution_aura.up.any&!buff.7294.up.any&!buff.10298.up.any&!buff.10299.up.any&!buff.10300.up.any&!buff.10301.up.any
+  - fire_resistance_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=2&(action.fire_resistance_aura.known|action.19891.known|action.19899.known|action.19900.known)&!buff.fire_resistance_aura.up.any&!buff.19891.up.any&!buff.19899.up.any&!buff.19900.up.any
+  - frost_resistance_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=3&(action.frost_resistance_aura.known|action.19888.known|action.19897.known|action.19898.known)&!buff.frost_resistance_aura.up.any&!buff.19888.up.any&!buff.19897.up.any&!buff.19898.up.any
+  - shadow_resistance_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=4&(action.shadow_resistance_aura.known|action.19876.known|action.19895.known|action.19896.known)&!buff.shadow_resistance_aura.up.any&!buff.19876.up.any&!buff.19895.up.any&!buff.19896.up.any
+  - concentration_aura,range_check=none,if=config.maintain_buffs&config.aura_mode=5&(action.concentration_aura.known|action.19746.known)&!buff.concentration_aura.up.any&!buff.19746.up.any
   self_kings:
   - blessing_of_kings.player,range_check=none
   judgement_setup:

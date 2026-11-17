@@ -7,9 +7,9 @@
 # Offline scenario-verified; live client delivery still requires in-game checks.
 spec: 11
 name: Forever Druid - Feral Manual Forms 1-60
-version: 2.3.11
+version: 2.3.12
 author: Custom
-date: '2026-11-12'
+date: '2026-11-17'
 patch: Classic Forever
 entry: main
 description: Manual Cat/Bear form routing with caster healing, buffs and optional Moonfire pulls; no automatic shifting or Wrath.
@@ -171,7 +171,7 @@ config:
     section: Cat damage
     type: note
     label: Cat priorities while you choose Cat Form
-    text: Pools energy for Shred from behind; Claw covers frontal or unreadable positioning. Clearcasting uses free attacks, with a final Bite when the enemy is about to die. Shifting
+    text: Pools energy for Shred from behind only when threat confirms the enemy is not tanked by you; Claw covers frontal, tanking or unreadable checks. Clearcasting uses free attacks, with a final Bite when the enemy is about to die. Shifting
       Power converts mana into energy without leaving Cat. Before you learn Cat, choose Bear yourself; caster form remains support only.
   use_shifting_power:
     section: Cat damage
@@ -301,6 +301,7 @@ variables:
   cat_form_active: buff.768.up.any
   caster_form_active: '!var.bear_form_active&!var.cat_form_active&buff.24858.down.any&buff.783.down.any&buff.1066.down.any'
   cat_rear: target.in_melee&target.has_world_pos&player.has_world_pos&!target.facing.player
+  cat_shred_allowed: var.cat_rear&target.threat>=0&target.threat<2
   cat_builder: combo_points<5|buff.clearcasting.up|((!action.ferocious_bite.known|action.ferocious_bite.blocked)&(!action.rip.known|action.rip.blocked|target.time_to_die<config.rip_ttd))|(energy.deficit<25&(!action.rip.known|action.rip.blocked|dot.rip.remains>2|target.time_to_die<config.rip_ttd))
   demo_shout_present: debuff.1160.up.any|debuff.6190.up.any|debuff.11554.up.any|debuff.11555.up.any|debuff.11556.up.any
 lists:
@@ -404,6 +405,6 @@ lists:
   - rip,if=combo_points>=config.rip_cp&dot.rip.remains<=0&target.time_to_die>=config.rip_ttd
   - ferocious_bite,if=combo_points>=5&!buff.clearcasting.up&(!action.rip.known|action.rip.blocked|dot.rip.remains>5|target.time_to_die<config.rip_ttd)
   - ferocious_bite,if=combo_points>=3&target.time_to_die>0&target.time_to_die<5&!buff.clearcasting.up
-  - shred,if=var.cat_rear&var.cat_builder
-  - claw,if=target.in_melee&var.cat_builder&(!var.cat_rear|!action.shred.known|action.shred.blocked)
+  - shred,if=var.cat_shred_allowed&var.cat_builder
+  - claw,if=target.in_melee&var.cat_builder&(!var.cat_shred_allowed|!action.shred.known|action.shred.blocked)
   - attack_target,if=target.in_melee&!player.auto_attacking&buff.prowl.down

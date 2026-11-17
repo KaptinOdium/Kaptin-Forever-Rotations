@@ -6,9 +6,9 @@
 # Simulation reference adapted for leveling and reactive utility; not live-verified.
 spec: 11
 name: Forever Druid - Cat 1-60
-version: 2.3.14
+version: 2.3.15
 author: Custom
-date: '2026-11-12'
+date: '2026-11-17'
 patch: Classic Forever
 entry: main
 description: Feral leveling fallbacks and level-60 Shifting Power, Rip and positional builder priorities.
@@ -149,7 +149,7 @@ config:
     section: Feral
     type: note
     label: Cat leveling and level 60
-    text: Uses Bear before Cat is learned, and caster spells before Bear. Pools energy for Shred from behind; Claw covers frontal or unreadable positioning. Clearcasting uses free attacks,
+    text: Uses Bear before Cat is learned, and caster spells before Bear. Pools energy for Shred from behind only when threat confirms the enemy is not tanked by you; Claw covers frontal, tanking or unreadable checks. Clearcasting uses free attacks,
       with a final Bite when the enemy is about to die. Does not leave Cat in combat to heal.
   elunes_light:
     section: Racials
@@ -220,6 +220,7 @@ variables:
   # Form auras may have no caster GUID; always query every source.
   caster_form_active: buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any&buff.783.down.any&buff.1066.down.any
   cat_rear: target.in_melee&target.has_world_pos&player.has_world_pos&!target.facing.player
+  cat_shred_allowed: var.cat_rear&target.threat>=0&target.threat<2
   cat_builder: combo_points<5|buff.clearcasting.up|((!action.ferocious_bite.known|action.ferocious_bite.blocked)&(!action.rip.known|action.rip.blocked|target.time_to_die<config.rip_ttd))|(energy.deficit<25&(!action.rip.known|action.rip.blocked|dot.rip.remains>2|target.time_to_die<config.rip_ttd))
   demo_shout_present: debuff.1160.up.any|debuff.6190.up.any|debuff.11554.up.any|debuff.11555.up.any|debuff.11556.up.any
 lists:
@@ -291,8 +292,8 @@ lists:
   - rip,if=combo_points>=config.rip_cp&dot.rip.remains<=0&target.time_to_die>=config.rip_ttd
   - ferocious_bite,if=combo_points>=5&!buff.clearcasting.up&(!action.rip.known|action.rip.blocked|dot.rip.remains>5|target.time_to_die<config.rip_ttd)
   - ferocious_bite,if=combo_points>=3&target.time_to_die>0&target.time_to_die<5&!buff.clearcasting.up
-  - shred,if=var.cat_rear&var.cat_builder
-  - claw,if=target.in_melee&var.cat_builder&(!var.cat_rear|!action.shred.known|action.shred.blocked)
+  - shred,if=var.cat_shred_allowed&var.cat_builder
+  - claw,if=target.in_melee&var.cat_builder&(!var.cat_shred_allowed|!action.shred.known|action.shred.blocked)
   - attack_target,if=target.in_melee&!player.auto_attacking&buff.prowl.down
   early_bear:
   - demoralizing_roar,range_check=none,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y>=2&debuff.demoralizing_roar.remains.any<=2&(!config.respect_demo_shout|!var.demo_shout_present)

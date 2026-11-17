@@ -1,11 +1,11 @@
-# Collection 2026.11.17.3
+# Collection 2026.11.17.5
 
-This collection updates Warrior to 1.0.2 with bounded preferred-stance recovery and clearer enemy range requirements for Whirlwind, Death Wish and Blood Fury. It retains the racial support and Shaman 1.0.3's Enhancement Windfury-first priority. Other profiles and all companions are unchanged from collection 2026.11.17.2. Core payload: **20 YAML profiles, 5 companion addons**. Source dates and individual versions differ; a collection version does not replace class versions.
+This collection adds a conservative Cat/Manual Feral Shred fallback and includes the preceding Paladin aura fix. Shred requires rear positioning and confirmed non-tanking threat; tanking or unknown threat uses Claw instead. Claw needs its ordinary enabled binding. This prevents a false rear reading from blocking Claw while solo tanking, but deliberately gives up some Shred opportunities behind a casting or stunned enemy that is still tanked by you. No live retest is claimed. Shaman 1.0.3 retains Windfury-first priority; both Earth and Air totems remain selected by default. Core payload: **20 YAML profiles, 5 companion addons**. Source dates and individual versions differ; a collection version does not replace class versions.
 
 ## Included updates
 
-- Paladin 2.7.3 / 2.5.6 / 2.3.18: rank-aware self-blessing selection fixes the reproduced Wisdom/Might switching loop.
-- Druid 2.3.14, manual Feral 2.3.11: stricter caster-only mouseover control. Older 2.3.13 archives predate this change.
+- Paladin 2.7.4 / 2.5.7 / 2.3.18: Ret/Prot recognize every trained preferred-aura rank and preserve an active preferred aura even if the named spell lookup fails. The earlier rank-aware self-blessing fix is retained. This does not diagnose native key delivery or change dispels.
+- Cat 2.3.15 / manual Feral 2.3.12: conservative Shred eligibility with immediate Claw fallback while tanking or when threat is unknown. Ravage's opener positioning stays unchanged. Bear/Balance/Restoration remain 2.3.14; caster-only mouseover control is retained.
 - Hunter 1.0.8, companion 1.0.3: ordinary retargeting no longer shares the protective Passive macro; new `@retarget_stop` binding required for optional retargeting.
 - Shaman 1.0.3, companion 1.0.0: Enhancement Windfury-first routine-totem priority; configurable main-hand imbues with existing-enchant protection, shield and Fire Nova logic retained. Reload the Enhancement YAML; no new binding or addon update is required.
 - Warlock 1.3.3: engaged-mouseover DoTs and optional own-pet engagement support, retaining health/mana recovery.
