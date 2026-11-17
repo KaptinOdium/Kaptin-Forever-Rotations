@@ -6,9 +6,9 @@
 # Simulation reference adapted for leveling and reactive utility; not live-verified.
 spec: 11
 name: Forever Druid - Cat 1-60
-version: 2.3.17
+version: 2.3.18
 author: Custom
-date: '2026-11-17'
+date: '2026-11-18'
 patch: Classic Forever
 entry: main
 description: Feral leveling fallbacks and level-60 Shifting Power, Rip and positional builder priorities.
@@ -117,6 +117,37 @@ config:
     type: checkbox
     label: Use Swiftmend below 60% health with your active heal over time
     default: true
+  combat_self_heal:
+    section: Combat self-healing
+    type: checkbox
+    label: Heal in combat after I manually leave animal form
+    default: false
+  combat_regrowth_hp:
+    section: Combat self-healing
+    type: slider
+    label: Swiftmend or missing Regrowth below effective health (%)
+    min: 10
+    max: 90
+    default: 50
+  combat_healing_touch_hp:
+    section: Combat self-healing
+    type: slider
+    label: Healing Touch below effective health (%)
+    min: 10
+    max: 90
+    default: 65
+  combat_rejuvenation_hp:
+    section: Combat self-healing
+    type: slider
+    label: Missing Rejuvenation below effective health (%)
+    min: 10
+    max: 95
+    default: 80
+  combat_heal_info:
+    section: Combat self-healing
+    type: note
+    label: Manual combat forms and caster self-heals
+    text: You change forms manually during combat. Cat and Bear keep attacking. Caster form heals, recovers mana and dispels, then waits without offensive casts or starting auto-attacks. Hard casts require standing still. Active HoTs are not reapplied. Thresholds include incoming heals and healing absorbs. Bind @player heals. Between-pull healing and form entry stay separate.
   health_pot_hp:
     section: Recovery
     type: slider
@@ -261,6 +292,7 @@ config:
     label: "Save mana once weapon swings start"
     text: "Before Bear/Cat/Moonkin Form is learned, finish a weakened engaged enemy already in melee. Requires at least 50% health and no detected extra attackers. Paid damage resumes if the enemy leaves melee; free spells and healing retain their priorities. No automatic movement or target changes."
 variables:
+  auto_form_allowed: config.auto_form&(!config.combat_self_heal|!player.combat)
   prowl_approach: config.auto_prowl&buff.768.up.any&!player.combat&!player.auto_attacking&buff.prowl.down.any&target.exists&target.enemy&target.alive&target.attackable&player.has_world_pos&target.has_world_pos&target.distance<=config.prowl_range
   cat_opening_allowed: target.exists&target.alive&target.enemy&target.attackable&((player.combat&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking))|(config.start_selected&!player.combat))
   selected_stun_cast: target.exists&target.enemy&target.alive&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)&!target.boss&(target.casting|target.channeling)&(target.casting.interruptible|target.incoming_cast.stunnable.up)
@@ -288,6 +320,11 @@ lists:
   - healing_touch.player,range_check=none,if=config.rest_healing_touch&!player.moving&player.health.effective.pct<config.rest_healing_touch_hp
   - regrowth.player,range_check=none,if=config.rest_regrowth&!player.moving&player.health.effective.pct<config.rest_regrowth_hp&buff.regrowth.down.any
   - rejuvenation.player,range_check=none,if=config.rest_rejuvenation&player.health.effective.pct<config.rest_hp&buff.rejuvenation.down.any
+  combat_heals:
+  - swiftmend.player,range_check=none,if=player.health.effective.pct<config.combat_regrowth_hp&(buff.rejuvenation.up|buff.regrowth.up)
+  - regrowth.player,range_check=none,if=!player.moving&player.health.effective.pct<config.combat_regrowth_hp&buff.regrowth.down.any
+  - healing_touch.player,range_check=none,if=!player.moving&player.health.effective.pct<config.combat_healing_touch_hp
+  - rejuvenation.player,range_check=none,if=player.health.effective.pct<config.combat_rejuvenation_hp&buff.rejuvenation.down.any
   buffs:
   - call_action_list,name=self_mark,if=config.maintain_buffs&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.gift_of_the_wild.down.any&(buff.mark_of_the_wild.down.any|(buff.mark_of_the_wild.up&buff.mark_of_the_wild.remains>0&buff.mark_of_the_wild.remains<60))
   - call_action_list,name=self_thorns,if=config.maintain_buffs&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&(buff.thorns.down.any|(buff.thorns.up&buff.thorns.remains>0&buff.thorns.remains<30))
@@ -312,8 +349,9 @@ lists:
   - wrath,if=(!var.early_melee_saving|action.wrath.cost=0)&var.caster_form_active&!player.moving&(action.wrath.cost=0|(mana-action.wrath.cost)*100>=mana.max*config.mana_reserve)
   - attack_target,if=var.caster_form_active&target.in_melee&!player.auto_attacking
   loot:
-  - interact_target,if=target.lootable&target.range<=5
-  - interact_mouseover,if=mouseover.lootable&mouseover.range<=5
+  - interact_target,delay=350,if=target.lootable&target.range<=5
+  - interact_mouseover,delay=350,if=mouseover.lootable&mouseover.range<=5
+  - interact_target,range_check=none,delay=350,if=!target.exists&loot_nearby
   main:
   - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
   - return,if=buff.20580.up.any
@@ -326,16 +364,18 @@ lists:
   - call_action_list,name=survival
   - call_action_list,name=control
   - call_action_list,name=recovery
+  - call_action_list,name=combat_heals,if=config.combat_self_heal&player.combat&var.caster_form_active
   - call_action_list,name=dispels
+  - return,if=config.combat_self_heal&player.combat&var.caster_form_active
   - call_action_list,name=buffs
-  - call_action_list,name=loot,if=config.lootnearby&!player.combat&(!target.exists|target.dead)
+  - call_action_list,name=loot,if=config.lootnearby&!player.combat&!player.auto_attacking&buff.prowl.down.any&buff.20580.down.any&(!target.exists|target.dead)
   - 2383,range_check=none,ignore_usable=true,if=config.find_herbs&action.2383.known&!player.combat&!player.auto_attacking&buff.prowl.down.any&buff.20580.down.any&buff.2383.down.any&buff.8387.down.any&(!config.start_selected|!target.exists|!target.enemy|target.dead)
   - return,if=!(target.exists&target.alive&target.enemy&((player.combat&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking))|(config.start_selected&!player.combat)))
-  - cat_form,range_check=none,if=config.auto_form&buff.768.down.any
+  - cat_form,range_check=none,if=var.auto_form_allowed&buff.768.down.any
   - call_action_list,name=cat_combat,if=buff.768.up.any
-  - dire_bear_form,range_check=none,if=config.auto_form&!action.768.known&buff.5487.down.any&buff.9634.down.any
-  - bear_form,range_check=none,if=config.auto_form&!action.768.known&buff.5487.down.any&buff.9634.down.any
-  - call_action_list,name=early_bear,if=(!config.auto_form|!action.768.known|action.cat_form.blocked|mana<action.cat_form.cost)&(buff.5487.up.any|buff.9634.up.any)
+  - dire_bear_form,range_check=none,if=var.auto_form_allowed&!action.768.known&buff.5487.down.any&buff.9634.down.any
+  - bear_form,range_check=none,if=var.auto_form_allowed&!action.768.known&buff.5487.down.any&buff.9634.down.any
+  - call_action_list,name=early_bear,if=(!var.auto_form_allowed|!action.768.known|action.cat_form.blocked|mana<action.cat_form.cost)&(buff.5487.up.any|buff.9634.up.any)
   - call_action_list,name=caster_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any&(!config.auto_form|action.cat_form.blocked|(!action.768.known&(!action.5487.known|action.bear_form.blocked)&(!action.9634.known|action.dire_bear_form.blocked))|mana<action.cat_form.cost|mana<action.bear_form.cost|mana<action.dire_bear_form.cost)
   cat_combat:
   - run_action_list,name=cat_opening,if=buff.prowl.up.any
