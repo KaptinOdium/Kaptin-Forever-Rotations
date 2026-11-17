@@ -1,4 +1,6 @@
-# Collection 2026.11.18.1
+# Collection 2026.11.18.2
+
+Standalone Cat 2.3.19 adds an optional out-of-combat Faerie Fire pull, off by default. Auto Prowl takes priority while you approach in Cat Form, including outside the configured Prowl distance and while waiting for the stealth aura.
 
 Enhancement 1.0.5 can drop Searing with AoE off for a lone engaged enemy and replace an individual totem that has fallen out of range. Setup is under Shaman in [class features](classes.md). Totemic Recall stays under player control.
 

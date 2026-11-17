@@ -6,7 +6,7 @@
 # Simulation reference adapted for leveling and reactive utility; not live-verified.
 spec: 11
 name: Forever Druid - Cat 1-60
-version: 2.3.18
+version: 2.3.19
 author: Custom
 date: '2026-11-18'
 patch: Classic Forever
@@ -23,6 +23,12 @@ config:
     section: Targeting
     type: checkbox
     label: Allow attacks on an idle selected enemy
+    default: false
+  pull_faerie_fire:
+    section: Stealth and opener
+    type: checkbox
+    label: Pull with Faerie Fire out of combat
+    description: Requires idle-target attacks under Targeting. Auto Prowl takes priority while you approach in Cat Form. Faerie Fire still refreshes in combat.
     default: false
   auto_prowl:
     section: Stealth and opener
@@ -50,7 +56,7 @@ config:
     section: Stealth and opener
     type: note
     label: Preserve stealth until the chosen opener is available
-    text: Auto Prowl only works in Cat Form outside combat, with a selected enemy and known distance. It does not enable idle-target attacks. Both Forever openers require rear positioning. While prowling, wait for the chosen learned, enabled and bound opener; no automatic fallback attack or racial. Explicitly queued actions remain under your control.
+    text: Approach a selected enemy in Cat Form. Auto Prowl waits for a known distance inside your slider range and holds automatic Cat attacks until Prowl takes effect. Enable idle-target attacks under Targeting if you want the profile to open with your chosen Pounce or Ravage. Both require a rear position and a working bind. You can still start an attack manually.
   war_stomp_interrupt:
     section: Interrupts
     type: checkbox
@@ -379,10 +385,11 @@ lists:
   - call_action_list,name=caster_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any&(!config.auto_form|action.cat_form.blocked|(!action.768.known&(!action.5487.known|action.bear_form.blocked)&(!action.9634.known|action.dire_bear_form.blocked))|mana<action.cat_form.cost|mana<action.bear_form.cost|mana<action.dire_bear_form.cost)
   cat_combat:
   - run_action_list,name=cat_opening,if=buff.prowl.up.any
+  - return,if=config.auto_prowl&!player.combat&!player.auto_attacking
   - elunes_light,range_check=none,if=config.elunes_light&state.cds&action.elunes_light.ready&buff.1259799.down.any&target.in_melee&(player.combat|buff.prowl.up)&(target.boss|target.time_to_die>=12)
   - ferocious_bite,if=target.in_melee&combo_points>=3&target.time_to_die>0&target.time_to_die<3
   - shifting_power,range_check=none,if=config.use_shifting_power&target.in_melee&energy.deficit>=40+5*equipped.8345&(mana-action.shifting_power.cost)*100>=mana.max*config.mana_reserve
-  - faerie_fire,if=buff.prowl.down.any&debuff.faerie_fire.remains.any<=1&target.time_to_die>=10
+  - faerie_fire,if=(player.combat|(config.pull_faerie_fire&target.attackable))&buff.prowl.down.any&debuff.faerie_fire.remains.any<=1&target.time_to_die>=10
   - rake,if=config.leveling_rake&combo_points<5&dot.rake.remains<=0&(target.time_to_die>=8|(target.time_to_die>=6&action.ferocious_bite.known&!buff.clearcasting.up&energy>=action.rake.cost+action.ferocious_bite.cost))
   - rip,if=combo_points>=config.rip_cp&dot.rip.remains<=0&target.time_to_die>=config.rip_ttd
   - ferocious_bite,if=combo_points>=5&!buff.clearcasting.up&(!action.rip.known|action.rip.blocked|dot.rip.remains>5|target.time_to_die<config.rip_ttd)

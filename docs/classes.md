@@ -12,7 +12,9 @@ Use `KhanForeverBindings`. Bind the ordinary seals/Judgement and enabled self, g
 
 Bear, Cat, Balance and Restoration have separate profiles. **Manual Feral** follows the form you choose and does not automatically switch forms. Early leveling melee finishing, resource management, healing and optional mouseover utility have their own settings. Current mouseover Bash requires a caster; selected-target stun behavior is separate.
 
-In the standalone **Cat** profile, turn on **Combat self-healing → Heal in combat after I manually leave animal form** if you want to control shifts during a fight. Leave Cat or Bear to heal yourself, then switch back when ready. Bind the `@player` variants of the heals you know. The health sliders use effective health, including incoming heals. Healing Touch and Regrowth require standing still.
+In standalone **Cat**, **Stealth and opener → Pull with Faerie Fire out of combat** defaults off. With **Auto Prowl** on, approach in Cat Form and the profile waits for Prowl and your chosen opener. For a ranged Faerie Fire pull, turn Auto Prowl off and enable both the Faerie Fire pull and **Targeting → Allow attacks on an idle selected enemy**. In combat the usual debuff refresh applies.
+
+Turn on **Combat self-healing → Heal in combat after I manually leave animal form** if you want to control shifts during a fight. Leave Cat or Bear to heal yourself, then switch back when ready. Bind the `@player` variants of the heals you know. The health sliders use effective health, including incoming heals. Healing Touch and Regrowth require standing still.
 
 For corpse looting, enable the loader’s **Loot Nearby** option and bind **Interact Target**. Cat can use that key after combat when the dead enemy drops out of your target frame and WoW reports a lootable corpse nearby. A lootable mouseover still uses **Interact Mouseover**.
 
