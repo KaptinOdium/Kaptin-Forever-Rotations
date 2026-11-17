@@ -1,7 +1,7 @@
 # Forever only. Offline scenario validated; live key delivery must be checked.
 spec: 1
 name: Forever Warrior - Protection WASD 1-60
-version: 1.0.1
+version: 1.0.2
 author: Kaptin
 date: '2026-11-17'
 patch: Classic Forever
@@ -48,7 +48,7 @@ config:
   auto_stance:
     section: Stances
     type: checkbox
-    label: Maintain preferred stance when detected and rage-safe
+    label: Maintain preferred stance within the rage-loss limit
     default: true
   preferred_stance:
     section: Stances
@@ -69,13 +69,21 @@ config:
     min: 0
     max: 25
     default: 0
+  stance_max_loss:
+    section: Stances
+    type: slider
+    label: Maximum rage to discard for preferred stance (0 = none)
+    min: 0
+    max: 25
+    default: 0
   stance_note:
     section: Stances
     type: note
     label: Set your stance before combat
     text: Automatic maintenance requires a visible stance aura and a learned preferred stance. If stance telemetry is unavailable, select the stance manually.
-      Retained rage defaults to 0; set 10 only after training Tactical Mastery, then add 5 per Improved Tactical Mastery rank. Routine swaps never discard
-      excess rage. The profile does not repeatedly dance for off-stance abilities or equip a shield for you.
+      Retained rage defaults to 0; set 10 only after training Tactical Mastery, then add 5 per Improved Tactical Mastery rank. Fury allows up to 15 extra
+      rage to be discarded by default; Arms/Protection allow none. Above that limit, legal attacks spend rage down and Bloodrage waits. Set the loss limit
+      to 0 for strict retention. Bind your ordinary stance keys. The profile does not repeatedly dance for off-stance abilities or equip a shield for you.
   slam:
     section: Movement
     type: checkbox
@@ -426,11 +434,17 @@ variables:
   focus_cast: (focus.casting|focus.channeling)&focus.casting.interruptible
   melee_pressure: var.engaged&target.in_melee&target.threat>=2&!target.casting&!target.channeling
   stance_visible: buff.2457.up.any|buff.71.up.any|buff.2458.up.any
-  stance_safe: config.auto_stance&var.stance_visible&rage<=config.retained_rage
+  want_battle: config.preferred_stance=0|(config.preferred_stance=1&!action.berserker_stance.known)|(config.preferred_stance=2&!action.defensive_stance.known)
+  stance_pending: config.auto_stance&var.stance_visible&((var.want_battle&buff.2457.down.any&action.battle_stance.known&!action.battle_stance.blocked&usable.battle_stance)|(config.preferred_stance=1&buff.2458.down.any&action.berserker_stance.known&!action.berserker_stance.blocked&usable.berserker_stance)|(config.preferred_stance=2&buff.71.down.any&action.defensive_stance.known&!action.defensive_stance.blocked&usable.defensive_stance))
+  stance_safe: var.stance_pending&rage<=config.retained_rage+config.stance_max_loss
+  stance_recover: var.stance_pending&rage>config.retained_rage+config.stance_max_loss
   hover_protected: (config.protect_cc&var.hover_cc)|(config.avoid_retaliation&mouseover.buff.retaliation.up.any)|(config.avoid_immunity&(mouseover.buff.divine_shield.up.any|mouseover.buff.ice_block.up.any|mouseover.buff.blessing_of_protection.up.any))
   focus_protected: (config.protect_cc&var.focus_cc)|(config.avoid_retaliation&focus.buff.retaliation.up.any)|(config.avoid_immunity&(focus.buff.divine_shield.up.any|focus.buff.ice_block.up.any|focus.buff.blessing_of_protection.up.any))
   area_clear: state.aoe&config.aoe&enemies.combat.10y>0&enemies.10y=enemies.combat.10y&!var.protected_target&!var.hover_protected&!var.focus_protected
   pack: var.area_clear&enemies.combat.8y>=2
+  position_ready: player.has_world_pos&target.has_world_pos
+  melee_window: var.engaged&var.position_ready&target.in_melee
+  whirlwind_window: var.engaged&var.position_ready&target.distance<=8&var.area_clear&enemies.combat.8y>0
   rend_lifetime: target.time_to_die>=config.rend_ttd|(target.time_to_die<=0&target.health.pct>=70)
   sunder_lifetime: target.boss|target.time_to_die>=config.sunder_ttd
   cooldown_window: target.boss|target.time_to_die>=config.cooldown_ttd
@@ -445,6 +459,7 @@ variables:
   dump_threshold: config.dump_rage*var.major_core_learned+config.early_dump_rage*!var.major_core_learned
   core_budget: action.shield_slam.cost*(usable.shield_slam&!action.shield_slam.blocked&cooldown.shield_slam.remains<=config.reserve_window)+action.revenge.cost*(usable.revenge&!action.revenge.blocked&cooldown.revenge.remains<=config.reserve_window)
   reserve: var.core_budget+var.interrupt_budget+var.block_budget
+  dump_reserve: var.core_budget*!var.stance_recover+var.interrupt_budget+var.block_budget
 lists:
   main:
   - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
@@ -464,6 +479,7 @@ lists:
   - call_action_list,name=maintenance
   - call_action_list,name=control
   - call_action_list,name=cooldowns
+  - call_action_list,name=ranged_aoe,if=!target.in_melee
   - return,if=!target.in_melee
   - call_action_list,name=damage
   - call_action_list,name=dumps
@@ -494,7 +510,7 @@ lists:
   - charge,if=config.charge&!player.combat&!target.in_melee&target.range>=8&target.range<=25
   - intercept,if=config.intercept&player.combat&var.engaged&!target.in_melee&target.range>=8&target.range<=25&rage>=action.intercept.cost+var.interrupt_budget
   maintenance:
-  - bloodrage,range_check=none,if=config.bloodrage&player.combat&var.engaged&target.in_melee&rage<=config.bloodrage_rage&player.health.pct>=config.bloodrage_hp&buff.bloodrage.down.any
+  - bloodrage,range_check=none,if=config.bloodrage&!var.stance_pending&player.combat&var.engaged&target.in_melee&rage<=config.bloodrage_rage&player.health.pct>=config.bloodrage_hp&buff.bloodrage.down.any
   - battle_shout,range_check=none,if=config.battle_shout&player.combat&buff.battle_shout.remains.any<=5&rage>=action.battle_shout.cost+var.interrupt_budget
   - shield_block,range_check=none,if=var.tank_profile&config.shield_block&var.melee_pressure&buff.shield_block.down.any&rage>=action.shield_block.cost+var.interrupt_budget
   - demoralizing_shout,range_check=none,if=config.demoralizing&var.melee_pressure&var.area_clear&(enemies.combat.8y>=2|player.health.pct<=60|var.tank_profile)&debuff.demoralizing_shout.down.any&debuff.demoralizing_roar.down.any&debuff.curse_of_weakness.down.any&rage>=action.demoralizing_shout.cost+var.interrupt_budget+var.block_budget
@@ -504,9 +520,9 @@ lists:
   - hamstring,if=config.hamstring&var.engaged&target.in_melee&!target.boss&target.moving&(player.inpvp|(target.health.pct<=25&target.closing_speed<-1))&debuff.hamstring.down.any&debuff.crippling_poison.down.any&rage>=action.hamstring.cost+var.interrupt_budget
   - disarm,if=config.disarm&var.melee_pressure&!target.boss&player.health.pct<=config.disarm_hp&debuff.disarm.down.any&rage>=action.disarm.cost+var.interrupt_budget
   cooldowns:
-  - blood_fury,range_check=none,if=config.cooldowns&config.blood_fury&state.cds&player.combat&var.engaged&target.in_melee&player.health.pct>=config.blood_fury_hp&var.cooldown_window&buff.blood_fury.down.any
+  - blood_fury,range_check=none,if=config.cooldowns&config.blood_fury&state.cds&player.combat&var.melee_window&player.health.pct>=config.blood_fury_hp&var.cooldown_window&buff.blood_fury.down.any
   - sweeping_strikes,range_check=none,if=config.cooldowns&config.sweeping&state.cds&player.combat&target.in_melee&var.pack&target.time_to_die>=8&rage>=action.sweeping_strikes.cost+var.interrupt_budget
-  - death_wish,range_check=none,if=config.cooldowns&config.death_wish&state.cds&player.combat&target.in_melee&!var.tank_profile&!player.inpvp&target.npcid>0&target.threat>=0&target.threat<2&player.health.pct>=80&var.cooldown_window&buff.death_wish.down.any&rage>=action.death_wish.cost+var.interrupt_budget
+  - death_wish,range_check=none,if=config.cooldowns&config.death_wish&state.cds&player.combat&var.melee_window&!var.tank_profile&!player.inpvp&target.npcid>0&target.threat>=0&target.threat<2&player.health.pct>=80&var.cooldown_window&buff.death_wish.down.any&rage>=action.death_wish.cost+var.interrupt_budget
   damage:
   - revenge,if=action.revenge.ready&rage>=action.revenge.cost+var.interrupt_budget
   - shield_slam,if=rage>=action.shield_slam.cost+var.interrupt_budget
@@ -514,6 +530,7 @@ lists:
   - sunder_armor,if=config.sunder&debuff.expose_armor.down.any&(debuff.sunder_armor.stack.any<config.sunder_stacks|debuff.sunder_armor.remains.any<=5)&(var.tank_profile|var.sunder_lifetime)&rage>=action.sunder_armor.cost+var.interrupt_budget+var.block_budget
   - victory_rush,if=config.victory_rush
   - rend,if=config.rend&var.rend_lifetime&dot.rend.remains<=0&rage>=action.rend.cost+var.interrupt_budget
+  ranged_aoe: []
   dumps:
-  - cleave,if=config.cleave&var.pack&rage>=var.dump_threshold&rage>=action.cleave.cost+var.reserve
-  - heroic_strike,if=config.heroic_strike&(!config.cleave|!var.pack|!usable.cleave|action.cleave.blocked)&rage>=var.dump_threshold&rage>=action.heroic_strike.cost+var.reserve
+  - cleave,if=config.cleave&var.pack&(var.stance_recover|rage>=var.dump_threshold)&rage>=action.cleave.cost+var.dump_reserve
+  - heroic_strike,if=config.heroic_strike&(!config.cleave|!var.pack|!usable.cleave|action.cleave.blocked)&(var.stance_recover|rage>=var.dump_threshold)&rage>=action.heroic_strike.cost+var.dump_reserve

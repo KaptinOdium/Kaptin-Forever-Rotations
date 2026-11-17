@@ -42,6 +42,10 @@ The optional own-pet engagement patch is in `Optional/Warlock-Pet-Bridge`; it su
 
 Arms, Fury and Protection include rage management, movement-aware priorities, optional interrupts/taunts and equipment/stance conditions. Set retained rage only to the amount your actual training/talents allow. Choose the initial stance and equipment yourself; no automatic stance-dance sequence is assumed.
 
+Fury allows up to **15 extra rage loss** when maintaining its preferred Berserker stance; Arms/Protection default to 0. Adjust **Stances > Maximum rage to discard**; 0 restores strict retention. Above the limit, legal attacks spend down and Bloodrage waits, while emergency/interrupt/Shield Block priorities remain. Bind the ordinary preferred stance key. Pack size does not select a different stance; sustained rage gains may still delay a bounded switch.
+
+Whirlwind uses its full **8-yard center radius**, including outside ordinary melee, with confirmed in-range combat enemies and existing AoE/CC checks. Blood Fury and Death Wish require an engaged enemy in actual melee reach. All three require readable player/target positions. Other melee attacks gain no extra range.
+
 Blood Fury (20572) follows the Offensive cooldowns and Burst toggles, requires an engaged enemy in melee, a boss or the configured fight duration, and at least 80% player health by default (adjustable). Shatter Curse (1299026) is independently enabled and only responds to a detected curse on you; it also works out of combat without an enemy selected. Bind each ordinary racial spell if your character has it. Neither action bypasses native availability or binding checks.
 
 Use `KaptinForeverWarriorBindings`. Bind **Attack Target**, **Health Potion**, learned abilities and **Battle Stance @stop_attack** (this variant only stops attacking). Optional mouseover/focus control needs its exact variants. Slam and charge behavior are opt-in. Retaliation and Shield Wall default off; optional Retaliation uses emergency solo conditions rather than pack size alone. Raid tank swaps remain manual.

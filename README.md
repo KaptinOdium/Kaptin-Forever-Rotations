@@ -13,7 +13,7 @@ Download with **Code > Download ZIP**, then extract it. Install only the classes
 | Hunter | Beast Mastery, Marksmanship, Survival | 1.0.8 |
 | Shaman | Elemental, Enhancement, Restoration | 1.0.3 |
 | Warlock | Affliction, Demonology, Destruction | 1.3.3 |
-| Warrior | Arms, Fury, Protection | 1.0.1 |
+| Warrior | Arms, Fury, Protection | 1.0.2 |
 
 ## Where the files go
 

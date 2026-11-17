@@ -1,6 +1,6 @@
-# Collection 2026.11.17.2
+# Collection 2026.11.17.3
 
-This collection updates all three Warrior profiles to 1.0.1 with configurable Blood Fury and curse-only Shatter Curse support. It retains Shaman 1.0.3's Enhancement Windfury-first priority. Other profiles and all companions are unchanged from collection 2026.11.17.1. Core payload: **20 YAML profiles, 5 companion addons**. Source dates and individual versions differ; a collection version does not replace class versions.
+This collection updates Warrior to 1.0.2 with bounded preferred-stance recovery and clearer enemy range requirements for Whirlwind, Death Wish and Blood Fury. It retains the racial support and Shaman 1.0.3's Enhancement Windfury-first priority. Other profiles and all companions are unchanged from collection 2026.11.17.2. Core payload: **20 YAML profiles, 5 companion addons**. Source dates and individual versions differ; a collection version does not replace class versions.
 
 ## Included updates
 
@@ -9,7 +9,7 @@ This collection updates all three Warrior profiles to 1.0.1 with configurable Bl
 - Hunter 1.0.8, companion 1.0.3: ordinary retargeting no longer shares the protective Passive macro; new `@retarget_stop` binding required for optional retargeting.
 - Shaman 1.0.3, companion 1.0.0: Enhancement Windfury-first routine-totem priority; configurable main-hand imbues with existing-enchant protection, shield and Fire Nova logic retained. Reload the Enhancement YAML; no new binding or addon update is required.
 - Warlock 1.3.3: engaged-mouseover DoTs and optional own-pet engagement support, retaining health/mana recovery.
-- Warrior 1.0.1: Blood Fury and curse-only Shatter Curse support in Arms, Fury and Protection. Bind the ordinary racial spell rows if learned; the companion remains 1.0.0.
+- Warrior 1.0.2: Fury stance recovery allows a configurable 15-rage loss by default; normal attacks spend higher rage down while Bloodrage waits. Whirlwind covers its full 8-yard radius, and both offensive self-buffs require an engaged melee enemy. Position/AoE safeguards remain. Blood Fury and curse-only Shatter Curse support is retained. Ordinary stance/racial keys are required; companion 1.0.0 is unchanged. 63 offline Warrior scenarios passed; the reported live stance cause and actual casting still need confirmation.
 - Paladin/Druid shared companion is 1.1.6; Warlock companion is 1.3.3.
 
 ## Compatibility and known issues
