@@ -1,9 +1,9 @@
 # Forever only. See README.txt and RESEARCH.md. Offline validated; live testing required.
 spec: 7
 name: Forever Shaman - Enhancement 1-60
-version: 1.0.2
+version: 1.0.3
 author: Kaptin
-date: '2026-11-16'
+date: '2026-11-17'
 patch: Classic Forever
 entry: main
 description: 'Enhancement: movement-aware leveling and normal dungeons; reactive healing, shock control and stable totem slots.'
@@ -638,9 +638,9 @@ lists:
   - searing_totem,range_check=none,if=(var.nova_setup&(config.fire_totem=1|!action.magma_totem.known|action.magma_totem.blocked)&action.searing_totem.ready&mana>=action.searing_totem.cost+action.fire_nova.cost+var.heal_reserve&mana-action.searing_totem.cost>=mana.max*config.nova_mana/100)&(action.searing_totem.cost=0|mana>=action.searing_totem.cost+var.heal_reserve)
   totems:
   - grounding_totem,range_check=none,if=(config.grounding&player.combat&var.engaged&var.target_cast&target.targeting_party&totem.grounding_totem.down&(!config.totems_stationary|!player.moving))&(action.grounding_totem.cost=0|mana>=action.grounding_totem.cost+var.heal_reserve)
+  - windfury_totem,range_check=none,if=(var.totem_window&config.air_totem=1&var.air_free)&(action.windfury_totem.cost=0|mana>=action.windfury_totem.cost+var.heal_reserve)
   - strength_of_earth_totem,range_check=none,if=(var.totem_window&config.earth_totem=1&var.earth_free)&(action.strength_of_earth_totem.cost=0|mana>=action.strength_of_earth_totem.cost+var.heal_reserve)
   - stoneskin_totem,range_check=none,if=(var.totem_window&config.earth_totem=2&var.earth_free)&(action.stoneskin_totem.cost=0|mana>=action.stoneskin_totem.cost+var.heal_reserve)
-  - windfury_totem,range_check=none,if=(var.totem_window&config.air_totem=1&var.air_free)&(action.windfury_totem.cost=0|mana>=action.windfury_totem.cost+var.heal_reserve)
   - grace_of_air_totem,range_check=none,if=(var.totem_window&config.air_totem=2&var.air_free)&(action.grace_of_air_totem.cost=0|mana>=action.grace_of_air_totem.cost+var.heal_reserve)
   - windwall_totem,range_check=none,if=(var.totem_window&config.air_totem=3&var.air_free)&(action.windwall_totem.cost=0|mana>=action.windwall_totem.cost+var.heal_reserve)
   - mana_spring_totem,range_check=none,if=(var.totem_window&config.water_totem=1&var.water_free)&(action.mana_spring_totem.cost=0|mana>=action.mana_spring_totem.cost+var.heal_reserve)

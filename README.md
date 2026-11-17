@@ -11,7 +11,7 @@ Download with **Code > Download ZIP**, then extract it. Install only the classes
 | Paladin | Protection, Retribution, Holy | 2.7.3 / 2.5.6 / 2.3.18 |
 | Druid | Bear, Cat, Balance, Restoration; manual Feral | 2.3.14; manual Feral 2.3.11 |
 | Hunter | Beast Mastery, Marksmanship, Survival | 1.0.8 |
-| Shaman | Elemental, Enhancement, Restoration | 1.0.2 |
+| Shaman | Elemental, Enhancement, Restoration | 1.0.3 |
 | Warlock | Affliction, Demonology, Destruction | 1.3.3 |
 | Warrior | Arms, Fury, Protection | 1.0.0 |
 

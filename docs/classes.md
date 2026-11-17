@@ -26,7 +26,7 @@ Optional retargeting preserves living targets but native Target Enemy can select
 
 ## Shaman
 
-Elemental, Enhancement and Restoration include movement-aware damage/healing, shield maintenance and configurable totems. Optional Fire Nova requires the configured pack/totem conditions; it is not an unconditional single-target filler. Enhancement can apply the strongest learned main-hand imbue between fights when no temporary enchant is present. Existing enchants are preserved and off-hand application stays manual.
+Elemental, Enhancement and Restoration include movement-aware damage/healing, shield maintenance and configurable totems. Enhancement now prioritizes eligible Windfury Totem before Strength of Earth, while reactive Grounding stays first. Select **Totems > Air slot > Windfury** and bind its ordinary key. Both Earth/Air slots can stay active; existing mana, fight-length, movement and healing-reserve checks still apply. Optional Fire Nova requires the configured pack/totem conditions; it is not an unconditional single-target filler. Enhancement can apply the strongest learned main-hand imbue between fights when no temporary enchant is present. Existing enchants are preserved and off-hand application stays manual.
 
 Use `KaptinForeverShamanBindings`. Bind learned spells, chosen totems/imbues, potions and enabled heal/cure variants. Configure native focus routing for group healing. [Detailed bindings](shaman-bindings.md) explain focus assignment, `@player` self-heals and optional mouseover Earth Shock. Choose utility totems and position them yourself.
 

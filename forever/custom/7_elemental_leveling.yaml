@@ -1,9 +1,9 @@
 # Forever only. See README.txt and RESEARCH.md. Offline validated; live testing required.
 spec: 7
 name: Forever Shaman - Elemental 1-60
-version: 1.0.2
+version: 1.0.3
 author: Kaptin
-date: '2026-11-16'
+date: '2026-11-17'
 patch: Classic Forever
 entry: main
 description: 'Elemental: movement-aware leveling and normal dungeons; reactive healing, shock control and stable totem slots.'
