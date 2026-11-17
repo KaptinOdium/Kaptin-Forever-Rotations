@@ -1,4 +1,6 @@
-# Collection 2026.11.18
+# Collection 2026.11.18.1
+
+Enhancement 1.0.5 can drop Searing with AoE off for a lone engaged enemy and replace an individual totem that has fallen out of range. Setup is under Shaman in [class features](classes.md). Totemic Recall stays under player control.
 
 Standalone Cat can now heal you in combat after you manually leave animal form. Enable this option to keep control of combat form changes. With Loot Nearby enabled, Cat can also use Interact when WoW clears your target and reports a nearby lootable corpse. See the Druid setup in [class features](classes.md).
 

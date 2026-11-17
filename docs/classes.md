@@ -36,6 +36,10 @@ Optional retargeting preserves living targets but native Target Enemy can select
 
 Elemental, Enhancement and Restoration include movement-aware damage/healing, shield maintenance and configurable totems. Enhancement now prioritizes eligible Windfury Totem before Strength of Earth, while reactive Grounding stays first. Select **Totems > Air slot > Windfury** and bind its ordinary key. Both Earth/Air slots can stay active; existing mana, fight-length, movement and healing-reserve checks still apply. Optional Fire Nova requires the configured pack/totem conditions; it is not an unconditional single-target filler. Enhancement can apply the strongest learned main-hand imbue between fights when no temporary enchant is present. Existing enchants are preserved and off-hand application stays manual.
 
+For Enhancement, select **Totems > Fire slot > Searing** or **Magma on packs; Searing otherwise** and bind the ordinary **Searing Totem** spell. With AoE off, Searing can drop for one detected, engaged enemy within 20 yards. Routine totems still use your minimum mana and fight-length settings.
+
+**Totems > Recast selected totems that have fallen out of range** is enabled by default for Enhancement. During an eligible fight, stand still and the profile can replace an individual tracked support totem beyond its 30-yard buff radius. Searing and Magma also check whether their old position still reaches the target or other enemies. If the loader cannot locate an active totem, you can move or replace it manually.
+
 Use `KaptinForeverShamanBindings`. Bind learned spells, chosen totems/imbues, potions and enabled heal/cure variants. Configure native focus routing for group healing. [Detailed bindings](shaman-bindings.md) explain focus assignment, `@player` self-heals and optional mouseover Earth Shock. Choose utility totems and position them yourself.
 
 ## Warlock

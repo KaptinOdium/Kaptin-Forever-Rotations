@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.18",
+  "collection": "2026.11.18.1",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -76,7 +76,7 @@
     {
       "class_name": "Shaman",
       "name": "Forever Shaman - Enhancement 1-60",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "path": "forever/custom/7_enhancement_leveling.yaml"
     },
     {
@@ -237,18 +237,18 @@
     },
     {
       "path": "README.md",
-      "bytes": 1758,
-      "sha256": "4465a1650b4345b313c23c550f1ca75231e6088e5cfd0c3f1f438fd1e7c282c7"
+      "bytes": 1774,
+      "sha256": "c4b4b7f2cda6e39f907623777cde72372f9894aa1043f77abc0bf71b02d5d03f"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 9413,
-      "sha256": "8f3a5eb309aac8ede7497af7d4516b8256ac8917c3e07b159de240d869536487"
+      "bytes": 10130,
+      "sha256": "2a88d32cf86bf06e67defb16af95f101e8544eee1f035f9f0a59b87d7f1e637e"
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 4072,
-      "sha256": "713b096d151b74f5109a38bf4165463382be2e5a63f333fb73bcca3e928b6922"
+      "bytes": 4308,
+      "sha256": "f2ee7cc0ec6b22acf7c3a8a1d859e8583185cb4d90398c3af863bb1e7d77e16c"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -342,8 +342,8 @@
     },
     {
       "path": "forever/custom/7_enhancement_leveling.yaml",
-      "bytes": 35526,
-      "sha256": "271d54a87238813304060f146d3b8c01adb09c655d350478eab62d2de90625a1"
+      "bytes": 43063,
+      "sha256": "463fe0dbd4c8077ca1b9d4467e6faaad24af0fc0035dbb4f44b12d08681553a9"
     },
     {
       "path": "forever/custom/7_restoration_leveling.yaml",

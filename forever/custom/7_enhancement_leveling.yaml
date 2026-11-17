@@ -1,9 +1,9 @@
 # Forever only. See README.txt and RESEARCH.md. Offline validated; live testing required.
 spec: 7
 name: Forever Shaman - Enhancement 1-60
-version: 1.0.4
+version: 1.0.5
 author: Kaptin
-date: '2026-11-17'
+date: '2026-11-18'
 patch: Classic Forever
 entry: main
 description: 'Enhancement: movement-aware leveling and normal dungeons; reactive healing, shock control and stable totem slots.'
@@ -416,11 +416,10 @@ config:
     section: Totems
     type: note
     label: Slots, movement and positioning
-    text: Routine totems preserve existing detected occupants, including manual utility and Mana Tide. Enabled emergency Mana Tide/Grounding can replace
-      the current water/air totem. Test totem detection first; disable this option if an active totem is repeatedly proposed. No automatic twisting or recall.
-      Optional Fire Nova setup can replace a tracked Searing/Magma left over 20 yards away; other totems still need manual relocation. Searing/Magma require
-      AoE enabled, an engaged selected target and no idle enemies counted nearby. Nearby crowd control and exact Chain Lightning bounces still require your
-      judgement. Earthbind, Tremor and resistance/cleansing totems remain manual encounter tools.
+    text: While stationary in a worthwhile fight, recast a selected buff totem more than 30 yards from you. A tracked Searing or Magma can be replaced when
+      the target is out of its reach and no enemies are near it. Missing positions leave active slots alone. Other active totems stay in place. Enabled
+      emergency Mana Tide and Grounding and the optional Fire Nova setup have their own rules. Searing can run with AoE off against one detected, engaged
+      enemy. Magma and Fire Nova require AoE. Routine fire drops skip nearby idle enemies. Totemic Recall remains manual.
   fire_nova:
     section: Fire Nova
     type: checkbox
@@ -514,6 +513,11 @@ config:
     min: 5
     max: 40
     default: 15
+  reposition_totems:
+    section: Totems
+    type: checkbox
+    label: Recast selected totems that have fallen out of range
+    default: true
   stormstrike:
     section: Enhancement
     type: checkbox
@@ -551,20 +555,42 @@ variables:
   dot_lifetime: target.time_to_die>=config.flame_ttd|(target.time_to_die<=0&target.health.pct>=70)
   cooldown_window: target.boss|target.time_to_die>=config.cooldown_ttd
   shock_damage: '!config.shock_reserve_all&(!config.preserve_shock|(!var.target_cast&!(config.mouseover_interrupt&var.hover_engaged&var.hover_cast)))'
-  earth_free: totem.strength_of_earth_totem.down&totem.stoneskin_totem.down&totem.earthbind_totem.down&totem.tremor_totem.down&totem.stoneclaw_totem.down
-  air_free: '!(totem.windfury_totem.up|totem.grace_of_air_totem.up|totem.windwall_totem.up|totem.grounding_totem.up|totem.nature_resistance_totem.up|totem.tranquil_air_totem.up)'
-  water_free: totem.mana_spring_totem.down&totem.healing_stream_totem.down&totem.mana_tide_totem.down&totem.poison_cleansing_totem.down&totem.disease_cleansing_totem.down&totem.fire_resistance_totem.down
-  fire_free: totem.searing_totem.down&totem.magma_totem.down&totem.frost_resistance_totem.down&totem.flametongue_totem.down
+  earth_free: '!(var.earth_utility|var.strength_of_earth_totem_present|var.stoneskin_totem_present)'
+  air_free: '!(var.air_utility|var.windfury_totem_present|var.grace_of_air_totem_present|var.windwall_totem_present)'
+  water_free: '!(var.water_utility|var.mana_spring_totem_present|var.healing_stream_totem_present)'
+  fire_free: '!(var.fire_utility|var.searing_totem_present|var.magma_totem_present)'
   totem_window: config.use_totems&player.combat&var.engaged&!var.target_cc&(!config.totems_stationary|!player.moving)&mana.pct>=config.totem_mana&var.long_fight
-  safe_fire: state.aoe&target.range<=20&enemies.20y=enemies.combat.20y&enemies.combat.20y>0
+  safe_fire: target.range<=20&enemies.combat.20y>0&enemies.20y=enemies.combat.20y&(state.aoe|(player.has_world_pos&player.distance.target<=20&enemies.around.angle.180.20=1))
   safe_chain: enemies.around_target>=config.chain_targets&enemies.30y=enemies.combat.30y&enemies.combat.30y>=config.chain_targets
   nova_window: config.fire_nova&state.aoe&player.combat&var.can_damage&action.fire_nova.known&!action.fire_nova.blocked&mana.pct>=config.nova_mana&(target.time_to_die>=config.nova_ttd|(target.time_to_die<=0&target.health.pct>=70))&!(config.maelstrom&buff.408505.stack>=5&action.lightning_bolt.cast_time=0&action.lightning_bolt.ready)
   nova_safe_area: enemies.30y=enemies.combat.30y&enemies.combat.30y>=config.nova_targets
   fire_nova_area: ((totem.searing_totem.up&minion.2523.up&minion.2523.distance<=20&minion.2523.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance<=20&minion.3902.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance<=20&minion.3903.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance<=20&minion.3904.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance<=20&minion.7400.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance<=20&minion.7402.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance<=20&minion.5929.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance<=20&minion.7464.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance<=20&minion.7465.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance<=20&minion.7466.enemies.10>=config.nova_targets))&var.nova_safe_area
   fire_near: (totem.searing_totem.up&minion.2523.up&minion.2523.distance<=20)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance<=20)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance<=20)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance<=20)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance<=20)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance<=20)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance<=20)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance<=20)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance<=20)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance<=20)
   fire_far: ((totem.searing_totem.up&minion.2523.up&minion.2523.distance>20&minion.2523.distance<100000000)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance>20&minion.3902.distance<100000000)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance>20&minion.3903.distance<100000000)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance>20&minion.3904.distance<100000000)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance>20&minion.7400.distance<100000000)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance>20&minion.7402.distance<100000000)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance>20&minion.5929.distance<100000000)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance>20&minion.7464.distance<100000000)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance>20&minion.7465.distance<100000000)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance>20&minion.7466.distance<100000000))&!var.fire_near
-  nova_replace: var.fire_free|(config.nova_reposition&var.fire_far&totem.frost_resistance_totem.down&totem.flametongue_totem.down)
+  nova_replace: lastcast.searing_totem>=3&lastcast.magma_totem>=3&(var.fire_free|(config.nova_reposition&var.fire_far&!var.fire_utility))
   nova_setup: var.nova_window&config.nova_prepare&config.use_totems&config.fire_totem>0&!player.moving&target.range<=8&enemies.combat.8y>=config.nova_targets&var.nova_safe_area&!var.fire_nova_area&var.nova_replace&cooldown.fire_nova.remains<=0
+  earth_utility: totem.earthbind_totem.up|totem.tremor_totem.up|totem.stoneclaw_totem.up|totem.decoy_totem.up
+  strength_of_earth_totem_present: totem.strength_of_earth_totem.up|minion.5874.up|minion.5921.up|minion.5922.up|minion.7403.up|minion.15464.up
+  stoneskin_totem_present: totem.stoneskin_totem.up|minion.5873.up|minion.5919.up|minion.5920.up|minion.7366.up|minion.7367.up|minion.7368.up
+  strength_of_earth_totem_stranded: totem.strength_of_earth_totem.up&!(var.earth_utility|var.stoneskin_totem_present)&(minion.5874.up|minion.5921.up|minion.5922.up|minion.7403.up|minion.15464.up)&(!minion.5874.up|(minion.5874.distance>30&minion.5874.distance<1000000000))&(!minion.5921.up|(minion.5921.distance>30&minion.5921.distance<1000000000))&(!minion.5922.up|(minion.5922.distance>30&minion.5922.distance<1000000000))&(!minion.7403.up|(minion.7403.distance>30&minion.7403.distance<1000000000))&(!minion.15464.up|(minion.15464.distance>30&minion.15464.distance<1000000000))
+  stoneskin_totem_stranded: totem.stoneskin_totem.up&!(var.earth_utility|var.strength_of_earth_totem_present)&(minion.5873.up|minion.5919.up|minion.5920.up|minion.7366.up|minion.7367.up|minion.7368.up)&(!minion.5873.up|(minion.5873.distance>30&minion.5873.distance<1000000000))&(!minion.5919.up|(minion.5919.distance>30&minion.5919.distance<1000000000))&(!minion.5920.up|(minion.5920.distance>30&minion.5920.distance<1000000000))&(!minion.7366.up|(minion.7366.distance>30&minion.7366.distance<1000000000))&(!minion.7367.up|(minion.7367.distance>30&minion.7367.distance<1000000000))&(!minion.7368.up|(minion.7368.distance>30&minion.7368.distance<1000000000))
+  air_utility: totem.grounding_totem.up|totem.nature_resistance_totem.up|totem.tranquil_air_totem.up|totem.sentry_totem.up
+  windfury_totem_present: totem.windfury_totem.up|minion.6112.up|minion.7483.up|minion.7484.up
+  grace_of_air_totem_present: totem.grace_of_air_totem.up|minion.7486.up|minion.7487.up|minion.15463.up
+  windwall_totem_present: totem.windwall_totem.up|minion.9687.up|minion.9688.up|minion.9689.up
+  windfury_totem_stranded: totem.windfury_totem.up&!(var.air_utility|var.grace_of_air_totem_present|var.windwall_totem_present)&(minion.6112.up|minion.7483.up|minion.7484.up)&(!minion.6112.up|(minion.6112.distance>30&minion.6112.distance<1000000000))&(!minion.7483.up|(minion.7483.distance>30&minion.7483.distance<1000000000))&(!minion.7484.up|(minion.7484.distance>30&minion.7484.distance<1000000000))
+  grace_of_air_totem_stranded: totem.grace_of_air_totem.up&!(var.air_utility|var.windfury_totem_present|var.windwall_totem_present)&(minion.7486.up|minion.7487.up|minion.15463.up)&(!minion.7486.up|(minion.7486.distance>30&minion.7486.distance<1000000000))&(!minion.7487.up|(minion.7487.distance>30&minion.7487.distance<1000000000))&(!minion.15463.up|(minion.15463.distance>30&minion.15463.distance<1000000000))
+  windwall_totem_stranded: totem.windwall_totem.up&!(var.air_utility|var.windfury_totem_present|var.grace_of_air_totem_present)&(minion.9687.up|minion.9688.up|minion.9689.up)&(!minion.9687.up|(minion.9687.distance>30&minion.9687.distance<1000000000))&(!minion.9688.up|(minion.9688.distance>30&minion.9688.distance<1000000000))&(!minion.9689.up|(minion.9689.distance>30&minion.9689.distance<1000000000))
+  water_utility: totem.mana_tide_totem.up|totem.poison_cleansing_totem.up|totem.disease_cleansing_totem.up|totem.fire_resistance_totem.up
+  mana_spring_totem_present: totem.mana_spring_totem.up|minion.3573.up|minion.7414.up|minion.7415.up|minion.7416.up
+  healing_stream_totem_present: totem.healing_stream_totem.up|minion.3527.up|minion.3906.up|minion.3907.up|minion.3908.up|minion.3909.up
+  mana_spring_totem_stranded: totem.mana_spring_totem.up&!(var.water_utility|var.healing_stream_totem_present)&(minion.3573.up|minion.7414.up|minion.7415.up|minion.7416.up)&(!minion.3573.up|(minion.3573.distance>30&minion.3573.distance<1000000000))&(!minion.7414.up|(minion.7414.distance>30&minion.7414.distance<1000000000))&(!minion.7415.up|(minion.7415.distance>30&minion.7415.distance<1000000000))&(!minion.7416.up|(minion.7416.distance>30&minion.7416.distance<1000000000))
+  healing_stream_totem_stranded: totem.healing_stream_totem.up&!(var.water_utility|var.mana_spring_totem_present)&(minion.3527.up|minion.3906.up|minion.3907.up|minion.3908.up|minion.3909.up)&(!minion.3527.up|(minion.3527.distance>30&minion.3527.distance<1000000000))&(!minion.3906.up|(minion.3906.distance>30&minion.3906.distance<1000000000))&(!minion.3907.up|(minion.3907.distance>30&minion.3907.distance<1000000000))&(!minion.3908.up|(minion.3908.distance>30&minion.3908.distance<1000000000))&(!minion.3909.up|(minion.3909.distance>30&minion.3909.distance<1000000000))
+  fire_utility: totem.frost_resistance_totem.up|totem.flametongue_totem.up|totem.fire_nova_totem.up
+  searing_totem_present: totem.searing_totem.up|minion.2523.up|minion.3902.up|minion.3903.up|minion.3904.up|minion.7400.up|minion.7402.up
+  magma_totem_present: totem.magma_totem.up|minion.5929.up|minion.7464.up|minion.7465.up|minion.7466.up
+  searing_totem_stranded: totem.searing_totem.up&!(var.fire_utility|var.magma_totem_present)&(minion.2523.up|minion.3902.up|minion.3903.up|minion.3904.up|minion.7400.up|minion.7402.up)&(!minion.2523.up|(minion.2523.target_distance>20&minion.2523.target_distance<1000000000&minion.2523.enemies.20=0))&(!minion.3902.up|(minion.3902.target_distance>20&minion.3902.target_distance<1000000000&minion.3902.enemies.20=0))&(!minion.3903.up|(minion.3903.target_distance>20&minion.3903.target_distance<1000000000&minion.3903.enemies.20=0))&(!minion.3904.up|(minion.3904.target_distance>20&minion.3904.target_distance<1000000000&minion.3904.enemies.20=0))&(!minion.7400.up|(minion.7400.target_distance>20&minion.7400.target_distance<1000000000&minion.7400.enemies.20=0))&(!minion.7402.up|(minion.7402.target_distance>20&minion.7402.target_distance<1000000000&minion.7402.enemies.20=0))
+  magma_totem_stranded: totem.magma_totem.up&!(var.fire_utility|var.searing_totem_present)&(minion.5929.up|minion.7464.up|minion.7465.up|minion.7466.up)&(!minion.5929.up|(minion.5929.target_distance>8&minion.5929.target_distance<1000000000&minion.5929.enemies.8=0))&(!minion.7464.up|(minion.7464.target_distance>8&minion.7464.target_distance<1000000000&minion.7464.enemies.8=0))&(!minion.7465.up|(minion.7465.target_distance>8&minion.7465.target_distance<1000000000&minion.7465.enemies.8=0))&(!minion.7466.up|(minion.7466.target_distance>8&minion.7466.target_distance<1000000000&minion.7466.enemies.8=0))
 lists:
   main:
   - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
@@ -638,15 +664,15 @@ lists:
   - searing_totem,range_check=none,if=(var.nova_setup&(config.fire_totem=1|!action.magma_totem.known|action.magma_totem.blocked)&action.searing_totem.ready&mana>=action.searing_totem.cost+action.fire_nova.cost+var.heal_reserve&mana-action.searing_totem.cost>=mana.max*config.nova_mana/100)&(action.searing_totem.cost=0|mana>=action.searing_totem.cost+var.heal_reserve)
   totems:
   - grounding_totem,range_check=none,if=(config.grounding&player.combat&var.engaged&var.target_cast&target.targeting_party&totem.grounding_totem.down&(!config.totems_stationary|!player.moving))&(action.grounding_totem.cost=0|mana>=action.grounding_totem.cost+var.heal_reserve)
-  - windfury_totem,range_check=none,if=(var.totem_window&config.air_totem=1&var.air_free)&(action.windfury_totem.cost=0|mana>=action.windfury_totem.cost+var.heal_reserve)
-  - strength_of_earth_totem,range_check=none,if=(var.totem_window&config.earth_totem=1&var.earth_free)&(action.strength_of_earth_totem.cost=0|mana>=action.strength_of_earth_totem.cost+var.heal_reserve)
-  - stoneskin_totem,range_check=none,if=(var.totem_window&config.earth_totem=2&var.earth_free)&(action.stoneskin_totem.cost=0|mana>=action.stoneskin_totem.cost+var.heal_reserve)
-  - grace_of_air_totem,range_check=none,if=(var.totem_window&config.air_totem=2&var.air_free)&(action.grace_of_air_totem.cost=0|mana>=action.grace_of_air_totem.cost+var.heal_reserve)
-  - windwall_totem,range_check=none,if=(var.totem_window&config.air_totem=3&var.air_free)&(action.windwall_totem.cost=0|mana>=action.windwall_totem.cost+var.heal_reserve)
-  - mana_spring_totem,range_check=none,if=(var.totem_window&config.water_totem=1&var.water_free)&(action.mana_spring_totem.cost=0|mana>=action.mana_spring_totem.cost+var.heal_reserve)
-  - healing_stream_totem,range_check=none,if=(var.totem_window&config.water_totem=2&var.water_free)&(action.healing_stream_totem.cost=0|mana>=action.healing_stream_totem.cost+var.heal_reserve)
-  - magma_totem,range_check=none,if=(var.can_damage&var.totem_window&config.fire_totem=2&var.fire_free&state.aoe&target.range<=8&enemies.combat.8y>=config.magma_count&var.safe_fire)&(action.magma_totem.cost=0|mana>=action.magma_totem.cost+var.heal_reserve)
-  - searing_totem,range_check=none,if=(var.can_damage&var.totem_window&config.fire_totem>0&var.fire_free&var.safe_fire)&(action.searing_totem.cost=0|mana>=action.searing_totem.cost+var.heal_reserve)
+  - windfury_totem,range_check=none,if=(var.totem_window&config.air_totem=1&(lastcast.windfury_totem>=3&(var.air_free|(config.reposition_totems&!player.moving&var.windfury_totem_stranded))))&(action.windfury_totem.cost=0|mana>=action.windfury_totem.cost+var.heal_reserve)
+  - strength_of_earth_totem,range_check=none,if=(var.totem_window&config.earth_totem=1&(lastcast.strength_of_earth_totem>=3&(var.earth_free|(config.reposition_totems&!player.moving&var.strength_of_earth_totem_stranded))))&(action.strength_of_earth_totem.cost=0|mana>=action.strength_of_earth_totem.cost+var.heal_reserve)
+  - stoneskin_totem,range_check=none,if=(var.totem_window&config.earth_totem=2&(lastcast.stoneskin_totem>=3&(var.earth_free|(config.reposition_totems&!player.moving&var.stoneskin_totem_stranded))))&(action.stoneskin_totem.cost=0|mana>=action.stoneskin_totem.cost+var.heal_reserve)
+  - grace_of_air_totem,range_check=none,if=(var.totem_window&config.air_totem=2&(lastcast.grace_of_air_totem>=3&(var.air_free|(config.reposition_totems&!player.moving&var.grace_of_air_totem_stranded))))&(action.grace_of_air_totem.cost=0|mana>=action.grace_of_air_totem.cost+var.heal_reserve)
+  - windwall_totem,range_check=none,if=(var.totem_window&config.air_totem=3&(lastcast.windwall_totem>=3&(var.air_free|(config.reposition_totems&!player.moving&var.windwall_totem_stranded))))&(action.windwall_totem.cost=0|mana>=action.windwall_totem.cost+var.heal_reserve)
+  - mana_spring_totem,range_check=none,if=(var.totem_window&config.water_totem=1&(lastcast.mana_spring_totem>=3&(var.water_free|(config.reposition_totems&!player.moving&var.mana_spring_totem_stranded))))&(action.mana_spring_totem.cost=0|mana>=action.mana_spring_totem.cost+var.heal_reserve)
+  - healing_stream_totem,range_check=none,if=(var.totem_window&config.water_totem=2&(lastcast.healing_stream_totem>=3&(var.water_free|(config.reposition_totems&!player.moving&var.healing_stream_totem_stranded))))&(action.healing_stream_totem.cost=0|mana>=action.healing_stream_totem.cost+var.heal_reserve)
+  - magma_totem,range_check=none,if=(var.can_damage&var.totem_window&config.fire_totem=2&(lastcast.searing_totem>=3&lastcast.magma_totem>=3&(var.fire_free|(config.reposition_totems&!player.moving&(var.searing_totem_stranded|var.magma_totem_stranded)&player.has_world_pos&player.distance.target<=8)))&state.aoe&target.range<=8&enemies.combat.8y>=config.magma_count&var.safe_fire)&(action.magma_totem.cost=0|mana>=action.magma_totem.cost+var.heal_reserve)
+  - searing_totem,range_check=none,if=(var.can_damage&var.totem_window&config.fire_totem>0&(lastcast.searing_totem>=3&lastcast.magma_totem>=3&(var.fire_free|(config.reposition_totems&!player.moving&(var.searing_totem_stranded|var.magma_totem_stranded)&player.has_world_pos&player.distance.target<=20)))&var.safe_fire)&(action.searing_totem.cost=0|mana>=action.searing_totem.cost+var.heal_reserve)
   cooldowns:
   - rage_of_the_farseer,range_check=none,if=(config.cooldowns&state.cds&var.engaged&target.range<=5&var.cooldown_window)&(action.rage_of_the_farseer.cost=0|mana>=action.rage_of_the_farseer.cost+var.heal_reserve)
   - lightning_mastery,range_check=none,if=(config.cooldowns&state.cds&var.engaged&var.cooldown_window&!player.moving&action.lightning_bolt.ready&mana>=action.lightning_bolt.cost)&(action.lightning_mastery.cost=0|mana>=action.lightning_mastery.cost+var.heal_reserve)
