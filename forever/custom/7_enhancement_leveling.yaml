@@ -1,7 +1,7 @@
 # Forever only. See README.txt and RESEARCH.md. Offline validated; live testing required.
 spec: 7
 name: Forever Shaman - Enhancement 1-60
-version: 1.0.3
+version: 1.0.4
 author: Kaptin
 date: '2026-11-17'
 patch: Classic Forever
@@ -552,7 +552,7 @@ variables:
   cooldown_window: target.boss|target.time_to_die>=config.cooldown_ttd
   shock_damage: '!config.shock_reserve_all&(!config.preserve_shock|(!var.target_cast&!(config.mouseover_interrupt&var.hover_engaged&var.hover_cast)))'
   earth_free: totem.strength_of_earth_totem.down&totem.stoneskin_totem.down&totem.earthbind_totem.down&totem.tremor_totem.down&totem.stoneclaw_totem.down
-  air_free: totem.windfury_totem.down&totem.grace_of_air_totem.down&totem.windwall_totem.down&totem.grounding_totem.down&totem.nature_resistance_totem.down&totem.tranquil_air_totem.down
+  air_free: '!(totem.windfury_totem.up|totem.grace_of_air_totem.up|totem.windwall_totem.up|totem.grounding_totem.up|totem.nature_resistance_totem.up|totem.tranquil_air_totem.up)'
   water_free: totem.mana_spring_totem.down&totem.healing_stream_totem.down&totem.mana_tide_totem.down&totem.poison_cleansing_totem.down&totem.disease_cleansing_totem.down&totem.fire_resistance_totem.down
   fire_free: totem.searing_totem.down&totem.magma_totem.down&totem.frost_resistance_totem.down&totem.flametongue_totem.down
   totem_window: config.use_totems&player.combat&var.engaged&!var.target_cc&(!config.totems_stationary|!player.moving)&mana.pct>=config.totem_mana&var.long_fight

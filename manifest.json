@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.17.5",
+  "collection": "2026.11.17.6",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -70,19 +70,19 @@
     {
       "class_name": "Shaman",
       "name": "Forever Shaman - Elemental 1-60",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "path": "forever/custom/7_elemental_leveling.yaml"
     },
     {
       "class_name": "Shaman",
       "name": "Forever Shaman - Enhancement 1-60",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "path": "forever/custom/7_enhancement_leveling.yaml"
     },
     {
       "class_name": "Shaman",
       "name": "Forever Shaman - Restoration 1-60",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "path": "forever/custom/7_restoration_leveling.yaml"
     },
     {
@@ -238,7 +238,7 @@
     {
       "path": "README.md",
       "bytes": 1762,
-      "sha256": "8527870ea6013610321bd2b37022d4e70d156a22671f5f36eed8d88a479906fb"
+      "sha256": "70c99d417ecd09ce142bbc1ad56782ff7b6172280444e11e0c6de1860cc5eab5"
     },
     {
       "path": "docs/classes.md",
@@ -247,8 +247,8 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 4316,
-      "sha256": "39e74068e3de11795cce99bcc96fb2f0e062179b5c30aa73510cfbf76ae6e0c6"
+      "bytes": 4570,
+      "sha256": "faa187c7b12ad51f3097fe78bacd1c58f7248fa8c2a6ed5bb016153bf145c2fb"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -337,18 +337,18 @@
     },
     {
       "path": "forever/custom/7_elemental_leveling.yaml",
-      "bytes": 34895,
-      "sha256": "01ca90e5f5ad330537f5bb4aae3d90e451aa3009c9b98913cc25321f5e9f3eca"
+      "bytes": 34888,
+      "sha256": "b4f6a3dcaacb208a472c27f2947b2b5bb58ae594d8ba1ccdeac79fb4a79d1abd"
     },
     {
       "path": "forever/custom/7_enhancement_leveling.yaml",
-      "bytes": 35533,
-      "sha256": "43571e0ff78bd9bdcd1112a2eb75631507a3b9860f63e2d2550ffbd5a5d93af3"
+      "bytes": 35526,
+      "sha256": "271d54a87238813304060f146d3b8c01adb09c655d350478eab62d2de90625a1"
     },
     {
       "path": "forever/custom/7_restoration_leveling.yaml",
-      "bytes": 35611,
-      "sha256": "530a62a940ce691c25d76c573d6afe593ad678dbc88a0cc9589940a31fb4e105"
+      "bytes": 35604,
+      "sha256": "e93473bc123cfd28a418bd4318c63bf4db64743436b880248c1f94bd9ce9eb0f"
     },
     {
       "path": "forever/custom/9_affliction_leveling.yaml",
