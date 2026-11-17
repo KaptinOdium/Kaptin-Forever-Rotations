@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.17.1",
+  "collection": "2026.11.17.2",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -106,19 +106,19 @@
     {
       "class_name": "Warrior",
       "name": "Forever Warrior - Arms WASD 1-60",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "path": "forever/custom/1_arms_wasd.yaml"
     },
     {
       "class_name": "Warrior",
       "name": "Forever Warrior - Fury WASD 1-60",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "path": "forever/custom/1_fury_wasd.yaml"
     },
     {
       "class_name": "Warrior",
       "name": "Forever Warrior - Protection WASD 1-60",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "path": "forever/custom/1_protection_wasd.yaml"
     }
   ],
@@ -238,17 +238,17 @@
     {
       "path": "README.md",
       "bytes": 1743,
-      "sha256": "5d134e1d13e5d4705031df46cdd69fc2ca50e85c802884f7408ed7d9232db685"
+      "sha256": "4b2eab39307bad0cc122bd72b81a6d8885c3e404a7d29ba3720b96e0e8b3c4c3"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 6133,
-      "sha256": "0feaa77412f0ac742ea05a1a83717a3833cc9152234505eaed47428538b57a68"
+      "bytes": 6608,
+      "sha256": "49ee95242e559b391310fa8c329f8d63d5be694341ed55356326b4f965744f11"
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 3305,
-      "sha256": "e7d2be4fde935697454b90166046357fa2878b24b48dc5e2c5f0964c218785f9"
+      "bytes": 3345,
+      "sha256": "ae5c23129f380ef84a6e02e51f1120083ee08b2684ffd00c45c7cf1a390dde42"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -292,18 +292,18 @@
     },
     {
       "path": "forever/custom/1_arms_wasd.yaml",
-      "bytes": 23902,
-      "sha256": "5d649d68ce8179f325edf3e14810914a2d0637ffbc40425fe9303c164b495dd2"
+      "bytes": 24623,
+      "sha256": "bcdc35e364e611853bd52aaed1ca96a73b97f6c65cb9fb1765e2be5e37eacd55"
     },
     {
       "path": "forever/custom/1_fury_wasd.yaml",
-      "bytes": 24207,
-      "sha256": "e5adf8dff89f5f16693167e1a946ac100e4d0f30e82842b67c4cf814eb977b9b"
+      "bytes": 24928,
+      "sha256": "364ced0c710cd73dc0142487b79007c38983e6a0106cd9473d0bb297980c935e"
     },
     {
       "path": "forever/custom/1_protection_wasd.yaml",
-      "bytes": 23974,
-      "sha256": "f145df4c11121688681f3a3ec9d80ae93aebe9a8f331b9dfdf870d53a316c3aa"
+      "bytes": 24695,
+      "sha256": "5483a713a666a7b060785200b5d48ab00d0207e066b5a5e31751055921c2f1f5"
     },
     {
       "path": "forever/custom/2_holy_leveling.yaml",

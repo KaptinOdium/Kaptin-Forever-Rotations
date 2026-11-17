@@ -1,9 +1,9 @@
 # Forever only. Offline scenario validated; live key delivery must be checked.
 spec: 1
 name: Forever Warrior - Protection WASD 1-60
-version: 1.0.0
+version: 1.0.1
 author: Kaptin
-date: '2026-11-16'
+date: '2026-11-17'
 patch: Classic Forever
 entry: main
 description: 'Protection: manual movement, guarded rage spending, melee control and role-specific survival.'
@@ -240,6 +240,11 @@ config:
     type: checkbox
     label: Use available racial fear / poison / disease defenses
     default: true
+  shatter_curse:
+    section: Defense
+    type: checkbox
+    label: Shatter Curse only to remove a detected curse
+    default: true
   last_stand:
     section: Defense
     type: checkbox
@@ -340,8 +345,20 @@ config:
   cooldowns:
     section: Offensive cooldowns
     type: checkbox
-    label: Use short offensive cooldowns with Burst enabled
+    label: Use offensive cooldowns with Burst enabled
     default: true
+  blood_fury:
+    section: Offensive cooldowns
+    type: checkbox
+    label: Use Blood Fury on a durable engaged melee target
+    default: true
+  blood_fury_hp:
+    section: Offensive cooldowns
+    type: slider
+    label: Blood Fury minimum health (%)
+    min: 30
+    max: 100
+    default: 80
   death_wish:
     section: Offensive cooldowns
     type: checkbox
@@ -458,6 +475,7 @@ lists:
   - last_stand,range_check=none,if=config.last_stand&player.combat&player.health.pct<=config.last_stand_hp&buff.last_stand.down.any&buff.shield_wall.down.any
   - shield_wall,range_check=none,if=config.shield_wall&player.combat&player.health.pct<=config.wall_hp&buff.shield_wall.down.any
   - retaliation,range_check=none,if=config.retaliation&var.solo&!player.inpvp&player.combat&var.melee_pressure&target.npcid>0&!var.protected_target&player.health.pct<=config.retaliation_hp&buff.retaliation.down.any&buff.shield_wall.down.any
+  - shatter_curse,range_check=none,if=config.shatter_curse&player.has_curse
   interrupts:
   - pummel.mouseover,if=config.mouseover_interrupt&player.combat&var.hover_engaged&!var.hover_protected&mouseover.in_melee&var.hover_cast
   - shield_bash.mouseover,if=config.mouseover_interrupt&player.combat&var.hover_engaged&!var.hover_protected&mouseover.in_melee&var.hover_cast
@@ -486,6 +504,7 @@ lists:
   - hamstring,if=config.hamstring&var.engaged&target.in_melee&!target.boss&target.moving&(player.inpvp|(target.health.pct<=25&target.closing_speed<-1))&debuff.hamstring.down.any&debuff.crippling_poison.down.any&rage>=action.hamstring.cost+var.interrupt_budget
   - disarm,if=config.disarm&var.melee_pressure&!target.boss&player.health.pct<=config.disarm_hp&debuff.disarm.down.any&rage>=action.disarm.cost+var.interrupt_budget
   cooldowns:
+  - blood_fury,range_check=none,if=config.cooldowns&config.blood_fury&state.cds&player.combat&var.engaged&target.in_melee&player.health.pct>=config.blood_fury_hp&var.cooldown_window&buff.blood_fury.down.any
   - sweeping_strikes,range_check=none,if=config.cooldowns&config.sweeping&state.cds&player.combat&target.in_melee&var.pack&target.time_to_die>=8&rage>=action.sweeping_strikes.cost+var.interrupt_budget
   - death_wish,range_check=none,if=config.cooldowns&config.death_wish&state.cds&player.combat&target.in_melee&!var.tank_profile&!player.inpvp&target.npcid>0&target.threat>=0&target.threat<2&player.health.pct>=80&var.cooldown_window&buff.death_wish.down.any&rage>=action.death_wish.cost+var.interrupt_budget
   damage:

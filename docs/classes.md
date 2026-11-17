@@ -42,4 +42,6 @@ The optional own-pet engagement patch is in `Optional/Warlock-Pet-Bridge`; it su
 
 Arms, Fury and Protection include rage management, movement-aware priorities, optional interrupts/taunts and equipment/stance conditions. Set retained rage only to the amount your actual training/talents allow. Choose the initial stance and equipment yourself; no automatic stance-dance sequence is assumed.
 
+Blood Fury (20572) follows the Offensive cooldowns and Burst toggles, requires an engaged enemy in melee, a boss or the configured fight duration, and at least 80% player health by default (adjustable). Shatter Curse (1299026) is independently enabled and only responds to a detected curse on you; it also works out of combat without an enemy selected. Bind each ordinary racial spell if your character has it. Neither action bypasses native availability or binding checks.
+
 Use `KaptinForeverWarriorBindings`. Bind **Attack Target**, **Health Potion**, learned abilities and **Battle Stance @stop_attack** (this variant only stops attacking). Optional mouseover/focus control needs its exact variants. Slam and charge behavior are opt-in. Retaliation and Shield Wall default off; optional Retaliation uses emergency solo conditions rather than pack size alone. Raid tank swaps remain manual.

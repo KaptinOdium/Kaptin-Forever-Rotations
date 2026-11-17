@@ -1,6 +1,6 @@
-# Collection 2026.11.17.1
+# Collection 2026.11.17.2
 
-This collection updates Shaman to 1.0.3: Enhancement prioritizes eligible Windfury Totem before Strength of Earth, after reactive Grounding. Existing conditions, saved choices and bindings are preserved. Elemental and Restoration have release metadata updates only; other classes and all companions are unchanged. Core payload: **20 YAML profiles, 5 companion addons**. Source dates and individual versions differ; a collection version does not replace class versions.
+This collection updates all three Warrior profiles to 1.0.1 with configurable Blood Fury and curse-only Shatter Curse support. It retains Shaman 1.0.3's Enhancement Windfury-first priority. Other profiles and all companions are unchanged from collection 2026.11.17.1. Core payload: **20 YAML profiles, 5 companion addons**. Source dates and individual versions differ; a collection version does not replace class versions.
 
 ## Included updates
 
@@ -9,7 +9,7 @@ This collection updates Shaman to 1.0.3: Enhancement prioritizes eligible Windfu
 - Hunter 1.0.8, companion 1.0.3: ordinary retargeting no longer shares the protective Passive macro; new `@retarget_stop` binding required for optional retargeting.
 - Shaman 1.0.3, companion 1.0.0: Enhancement Windfury-first routine-totem priority; configurable main-hand imbues with existing-enchant protection, shield and Fire Nova logic retained. Reload the Enhancement YAML; no new binding or addon update is required.
 - Warlock 1.3.3: engaged-mouseover DoTs and optional own-pet engagement support, retaining health/mana recovery.
-- Warrior 1.0.0: separate Arms, Fury and Protection profiles with matching companion.
+- Warrior 1.0.1: Blood Fury and curse-only Shatter Curse support in Arms, Fury and Protection. Bind the ordinary racial spell rows if learned; the companion remains 1.0.0.
 - Paladin/Druid shared companion is 1.1.6; Warlock companion is 1.3.3.
 
 ## Compatibility and known issues
