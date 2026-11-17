@@ -6,7 +6,7 @@
 # Simulation reference adapted for leveling and reactive utility; not live-verified.
 spec: 11
 name: Forever Druid - Cat 1-60
-version: 2.3.16
+version: 2.3.17
 author: Custom
 date: '2026-11-17'
 patch: Classic Forever
@@ -24,6 +24,43 @@ config:
     type: checkbox
     label: Allow attacks on an idle selected enemy
     default: false
+  auto_prowl:
+    section: Stealth and opener
+    type: checkbox
+    label: Auto Prowl near the selected enemy while in Cat Form
+    default: false
+  prowl_range:
+    section: Stealth and opener
+    type: slider
+    label: Auto Prowl distance (yards, center to center)
+    min: 5
+    max: 40
+    default: 25
+  cat_opener:
+    section: Stealth and opener
+    type: dropdown
+    label: Exclusive stealth opener
+    default: 0
+    options:
+    - label: Ravage
+      value: 0
+    - label: Pounce
+      value: 1
+  opener_info:
+    section: Stealth and opener
+    type: note
+    label: Preserve stealth until the chosen opener is available
+    text: Auto Prowl only works in Cat Form outside combat, with a selected enemy and known distance. It does not enable idle-target attacks. Both Forever openers require rear positioning. While prowling, wait for the chosen learned, enabled and bound opener; no automatic fallback attack or racial. Explicitly queued actions remain under your control.
+  war_stomp_interrupt:
+    section: Interrupts
+    type: checkbox
+    label: 'Tauren: War Stomp a casting target or mouseover in Cat/Bear Form'
+    default: true
+  war_stomp_avoid_pulls:
+    section: Interrupts
+    type: checkbox
+    label: 'War Stomp: avoid extra pulls (AoE off: only a lone detected enemy)'
+    default: true
   find_herbs:
     section: Buffs
     type: checkbox
@@ -224,6 +261,11 @@ config:
     label: "Save mana once weapon swings start"
     text: "Before Bear/Cat/Moonkin Form is learned, finish a weakened engaged enemy already in melee. Requires at least 50% health and no detected extra attackers. Paid damage resumes if the enemy leaves melee; free spells and healing retain their priorities. No automatic movement or target changes."
 variables:
+  prowl_approach: config.auto_prowl&buff.768.up.any&!player.combat&!player.auto_attacking&buff.prowl.down.any&target.exists&target.enemy&target.alive&target.attackable&player.has_world_pos&target.has_world_pos&target.distance<=config.prowl_range
+  cat_opening_allowed: target.exists&target.alive&target.enemy&target.attackable&((player.combat&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking))|(config.start_selected&!player.combat))
+  selected_stun_cast: target.exists&target.enemy&target.alive&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)&!target.boss&(target.casting|target.channeling)&(target.casting.interruptible|target.incoming_cast.stunnable.up)
+  hover_stun_cast: mouseover.exists&mouseover.enemy&mouseover.alive&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)&!mouseover.boss&(mouseover.casting|mouseover.channeling)&(mouseover.casting.interruptible|mouseover.incoming_cast.stunnable.up)
+  stomp_area_clear: '!config.war_stomp_avoid_pulls|(state.aoe&enemies.combat.8y>0&enemies.8y=enemies.combat.8y)|(!state.aoe&player.has_world_pos&enemies.around.angle.180.8=1)'
   early_caster_stage: "config.early_melee_finish&!action.5487.known&!action.9634.known&!action.768.known&!action.24858.known&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any&buff.783.down.any&buff.1066.down.any&player.combat&player.health.pct>=50&enemies.combat.8y<=1&nameplates.threat.count<=1"
   early_melee_finish_active: "var.early_caster_stage&target.exists&target.alive&target.enemy&target.attackable&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)&target.in_melee&!target.boss&target.health.pct>0&target.health.pct<=config.early_melee_hp"
   early_melee_saving: "var.early_melee_finish_active&player.auto_attacking"
@@ -258,6 +300,7 @@ lists:
   control:
   - bash.mouseover,range_check=mouseover,if=config.mouseover_bash&(buff.5487.up.any|buff.9634.up.any)&mouseover.exists&mouseover.enemy&mouseover.alive&mouseover.combat&!mouseover.boss&(mouseover.targeting_party|mouseover.threat>=0)&(mouseover.casting|mouseover.channeling)
   - bash,if=config.auto_bash&(buff.5487.up.any|buff.9634.up.any)&target.exists&target.enemy&target.alive&target.combat&!target.boss&(target.targeting_party|target.threat>=0)&(target.casting|target.channeling)&(target.casting.interruptible|target.incoming_cast.stunnable.up)
+  - war_stomp,range_check=none,if=config.war_stomp_interrupt&player.combat&(buff.768.up.any|buff.5487.up.any|buff.9634.up.any)&buff.prowl.down.any&action.war_stomp.ready&!player.moving&var.stomp_area_clear&((var.selected_stun_cast&target.distance<=8&target.casting.remains>0.6)|(var.hover_stun_cast&mouseover.distance<=8&mouseover.casting.remains>0.6))
   - rebirth.mouseover,range_check=mouseover,if=config.rebirth_mouseover&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&mouseover.exists&mouseover.friendly&mouseover.dead
   dispels:
   - remove_curse,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.curse
@@ -277,7 +320,9 @@ lists:
   - call_action_list,name=spell_queue
   - return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
   - return,if=player.casting|player.channeling
-  - return,if=buff.prowl.up&!player.combat&!config.start_selected
+  - prowl,range_check=none,line_cd=2,if=var.prowl_approach
+  - run_action_list,name=cat_opening,if=buff.768.up.any&buff.prowl.up.any
+  - return,if=buff.prowl.up.any
   - call_action_list,name=survival
   - call_action_list,name=control
   - call_action_list,name=recovery
@@ -293,8 +338,8 @@ lists:
   - call_action_list,name=early_bear,if=(!config.auto_form|!action.768.known|action.cat_form.blocked|mana<action.cat_form.cost)&(buff.5487.up.any|buff.9634.up.any)
   - call_action_list,name=caster_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any&(!config.auto_form|action.cat_form.blocked|(!action.768.known&(!action.5487.known|action.bear_form.blocked)&(!action.9634.known|action.dire_bear_form.blocked))|mana<action.cat_form.cost|mana<action.bear_form.cost|mana<action.dire_bear_form.cost)
   cat_combat:
+  - run_action_list,name=cat_opening,if=buff.prowl.up.any
   - elunes_light,range_check=none,if=config.elunes_light&state.cds&action.elunes_light.ready&buff.1259799.down.any&target.in_melee&(player.combat|buff.prowl.up)&(target.boss|target.time_to_die>=12)
-  - ravage,if=buff.prowl.up&var.cat_rear
   - ferocious_bite,if=target.in_melee&combo_points>=3&target.time_to_die>0&target.time_to_die<3
   - shifting_power,range_check=none,if=config.use_shifting_power&target.in_melee&energy.deficit>=40+5*equipped.8345&(mana-action.shifting_power.cost)*100>=mana.max*config.mana_reserve
   - faerie_fire,if=buff.prowl.down.any&debuff.faerie_fire.remains.any<=1&target.time_to_die>=10
@@ -305,6 +350,11 @@ lists:
   - shred,if=var.cat_shred_allowed&var.cat_builder
   - claw,if=target.in_melee&var.cat_builder&(!var.cat_shred_allowed|!action.shred.known|action.shred.blocked)
   - attack_target,if=target.in_melee&!player.auto_attacking&buff.prowl.down
+  cat_opening:
+  - return,if=!var.cat_opening_allowed
+  - pounce,if=config.cat_opener=1&buff.prowl.up.any&var.cat_rear
+  - ravage,if=config.cat_opener=0&buff.prowl.up.any&var.cat_rear
+  - return
   early_bear:
   - demoralizing_roar,range_check=none,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y>=2&debuff.demoralizing_roar.remains.any<=2&(!config.respect_demo_shout|!var.demo_shout_present)
   - swipe,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y>=2&rage>=20

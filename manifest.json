@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.17.7",
+  "collection": "2026.11.17.8",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -28,13 +28,13 @@
     {
       "class_name": "Druid",
       "name": "Forever Druid - Cat 1-60",
-      "version": "2.3.16",
+      "version": "2.3.17",
       "path": "forever/custom/11_cat.yaml"
     },
     {
       "class_name": "Druid",
       "name": "Forever Druid - Feral Manual Forms 1-60",
-      "version": "2.3.13",
+      "version": "2.3.14",
       "path": "forever/custom/11_feral.yaml"
     },
     {
@@ -237,18 +237,18 @@
     },
     {
       "path": "README.md",
-      "bytes": 1762,
-      "sha256": "e4cfca00ad0e3b8ec0cecb76d2e78206866c24bb53c38b83bbabaf14edeeae46"
+      "bytes": 1758,
+      "sha256": "0e7a888096f88e7b189003cf16eac6023539ab438037652a6046dd1d8553c55b"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 7385,
-      "sha256": "62159ba13de23428906371d70cf9f6ee2c41f610c071716012342d17ef15d0b6"
+      "bytes": 8732,
+      "sha256": "3fca6a3e218c473942489e4bac57e9fa3530722a75c6283848134a67c3a0038b"
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 4711,
-      "sha256": "a1b386d01abe679dddf9d2b32903676a3ae80290e20a689baa108fbfa2ed6c58"
+      "bytes": 4916,
+      "sha256": "ae3af58cc2c716bf2dea0802ad46580d6922c554abf73d87c8e5d2cf311e9107"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -277,13 +277,13 @@
     },
     {
       "path": "forever/custom/11_cat.yaml",
-      "bytes": 16734,
-      "sha256": "a494319ba014af551316c80ba574434db57752ff858b8c9e3ddee3a5feeba106"
+      "bytes": 19915,
+      "sha256": "a17b3e23bb83157e20fd82a3c0f33860ed9148f15b2f277b9bfa2f8cd591ae95"
     },
     {
       "path": "forever/custom/11_feral.yaml",
-      "bytes": 23159,
-      "sha256": "f30d3c220df52b5b10faa68cfa930441f6bb25a85f86dba5641275df083a8d63"
+      "bytes": 25049,
+      "sha256": "a6300b692df097a5ced80945366c13256e6f7389acae1edfb7e2fe8d6c0f9acf"
     },
     {
       "path": "forever/custom/11_restoration.yaml",

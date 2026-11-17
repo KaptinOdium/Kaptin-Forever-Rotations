@@ -12,6 +12,10 @@ Use `KhanForeverBindings`. Bind the ordinary seals/Judgement and enabled self, g
 
 Bear, Cat, Balance and Restoration have separate profiles. **Manual Feral** follows the form you choose and does not automatically switch forms. Early leveling melee finishing, resource management, healing and optional mouseover utility have their own settings. Current mouseover Bash requires a caster; selected-target stun behavior is separate.
 
+Cat and Manual Feral include **Stealth and opener** settings: enable Auto Prowl and choose a **5-40 yard** approach distance (default 25, center to center). It only runs outside combat while already in Cat Form with a selected hostile enemy and known distance. Auto Prowl is OFF by default and does not grant permission to pull idle enemies. **Exclusive stealth opener** selects Ravage (default) or Pounce. Both require rear positioning in the inspected Forever data; while prowling, the profile waits for the selected learned/bound spell instead of falling through to another attack or racial. If you want it to open an idle selected enemy automatically, separately enable **Targeting > Allow attacks on an idle selected enemy**. Manually queued actions are still honored.
+
+War Stomp interrupts now work in the Cat profile and Cat/Bear modes of Manual Feral: an engaged selected or mouseover enemy must be casting, within the 8-yard center radius, non-boss and have a cast marked interruptible or stunnable. It requires standing still, more than 0.6 seconds remaining and the configured nearby-pull safeguards. Native learned/usable/binding checks remain; no form-cancel macro is added. Bind ordinary **War Stomp**, **Prowl**, and your chosen **Pounce/Ravage**. These are offline-validated decisions; actual client delivery still needs testing.
+
 Use `KhanForeverBindings`. Bind the learned abilities/forms and the exact self/group/mouseover variants you enable. Leave form yourself for recovery in manual-form play. Optional Find Herbs needs the learned ordinary binding. Party/raid healing requires working native focus or direct-member routing.
 
 ## Hunter
