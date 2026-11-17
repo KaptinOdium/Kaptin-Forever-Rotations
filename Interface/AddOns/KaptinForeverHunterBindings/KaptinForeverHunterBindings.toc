@@ -1,0 +1,9 @@
+## Interface: 16001
+## Title: Kaptin Forever Hunter Bindings
+## Notes: Hunter targeting, optional Hawk Assist, separate retarget and protective recalls, Classic potions and optional group-entry compatibility. Preserves keys and custom macros.
+## Author: Kaptin
+## Version: 1.0.3
+## OptionalDeps: SimulationcraftExtra
+## SavedVariables: KaptinForeverHunterGroupDB
+KaptinForeverHunterBindings.lua
+GroupEngagement.lua

@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+*.log
+*.bak
+*.zip
+dist/
+.env
+.env.*
+settings.yaml
+WTF/

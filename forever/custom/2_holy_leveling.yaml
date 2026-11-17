@@ -1,0 +1,502 @@
+# Forever Paladin profiles, updated 2026-11-16. Simia class-id schema (Paladin=2).
+# Source mechanics: https://github.com/sage3648/mythicsim-forever-engine
+# Syntax: https://auth.simia.pro/rotation/
+# Requires learned spell bindings; .player/.mouseover are explicit macro variants.
+# Deliberately no auto_target list: selecting an idle mob alone does not pull it.
+# Taunts use Seal of Fury + Judgement, not retail Provoke/Hand of Reckoning.
+# See ../README.md for targeting limits and what has actually been verified.
+spec: 2
+name: Forever Paladin - Holy 1-60
+version: 2.3.18
+author: Custom
+date: '2026-11-16'
+patch: Classic Forever
+entry: main
+movement_allowed: false
+description: Holy leveling and level-60 priorities; current Forever mechanics with mana and support controls.
+config:
+  overview:
+    section: 01 - Setup
+    type: note
+    label: Holy / levels 1-60
+    text: Train and bind learned spells; unavailable spells are skipped. Select this profile for this role. Self Might/Wisdom, healing and mouseover variants need their own Simia bindings.
+      Does not automatically select or pull enemies. The endgame priorities follow current Forever mechanics; they are not a personal gear simulation.
+  maintain_buffs:
+    section: 02 - Buffs
+    type: checkbox
+    label: Maintain self aura and blessing
+    value: true
+    default: true
+  use_wisdom:
+    section: 02 - Buffs
+    type: checkbox
+    label: Use Wisdom on self; otherwise Might
+    value: true
+    default: true
+  party_buffs:
+    section: 02 - Buffs
+    type: checkbox
+    label: Party Wisdom for healers / Might for physical DPS
+    value: false
+    default: false
+  party_buff_note:
+    section: 02 - Buffs
+    type: note
+    label: Party buff assignment
+    text: Automatic party buffing is off until party1-party4 blessing bindings are set. Wisdom is assigned to healer-role members. Might is assigned only to a manually selected physical-DPS
+      list; it is not applied to every DPS caster. Existing normal or Greater Might/Wisdom from any Paladin is left in place, including other ranks. This fills missing blessings; it
+      does not upgrade or replace another Paladin's blessing.
+  might_targets:
+    section: 02 - Buffs
+    type: unit_select
+    label: Party members for Might
+    filter: dps
+    max: 4
+  mouseover_stun:
+    section: 03 - Mouseover and control
+    type: checkbox
+    label: Hammer of Justice on hovered enemy casts
+    value: true
+    default: true
+  auto_stun:
+    section: 03 - Mouseover and control
+    type: checkbox
+    label: Also stun selected enemy interruptible casts
+    value: false
+    default: false
+  stun_note:
+    section: 03 - Mouseover and control
+    type: note
+    label: Hover control
+    text: Hovering an engaged non-boss enemy in range casts the stun only while it is casting or channeling. Turn off the checkbox to reserve it. Stuns do not work on every enemy; no
+      automatic crowd-control pull is made.
+  self_freedom:
+    section: 04 - Support
+    type: checkbox
+    label: Freedom on self when rooted
+    value: true
+    default: true
+  cleanse:
+    section: 04 - Support
+    type: checkbox
+    label: Self cleanse / purify
+    value: true
+    default: true
+  group_cleanse:
+    section: 04 - Support
+    type: checkbox
+    label: Cleanse party or raid members
+    value: true
+    default: true
+  support_bop:
+    section: 04 - Support
+    type: checkbox
+    label: Emergency Protection on low-health healer
+    value: false
+    default: false
+  bop_hp:
+    section: 04 - Support
+    type: slider
+    label: Healer Protection below health (%)
+    min: 5
+    max: 50
+    value: 25
+    default: 25
+  bop_note:
+    section: 04 - Support
+    type: note
+    label: Protection is physical immunity
+    text: Optional low-health fallback, not an attacker detector. It blocks physical damage; it does not stop magical damage. Never targets tanks. Check role assignments and bindings.
+  mouseover_res:
+    section: 04 - Support
+    type: checkbox
+    label: Resurrect dead friendly mouseover between fights
+    value: false
+    default: false
+  self_heal:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Self healing
+    value: true
+    default: true
+  heal_hp:
+    section: 05 - Healing and survival
+    type: slider
+    label: Combat self-heal below health (%)
+    min: 5
+    max: 80
+    value: 45
+    default: 45
+  rest_hp:
+    section: 05 - Healing and survival
+    type: slider
+    label: 'Between pulls: heal below health (%)'
+    min: 30
+    max: 100
+    value: 85
+    default: 85
+  lay_on_hands:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Emergency Lay on Hands
+    value: true
+    default: true
+  loh_hp:
+    section: 05 - Healing and survival
+    type: slider
+    label: Lay on Hands below health (%)
+    min: 5
+    max: 35
+    value: 15
+    default: 15
+  bubble:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Emergency Divine Shield / Protection (drops aggro)
+    value: false
+    default: false
+  bubble_hp:
+    section: 05 - Healing and survival
+    type: slider
+    label: Immunity below health (%)
+    min: 5
+    max: 25
+    value: 12
+    default: 12
+  solo_bubble_heal:
+    section: 05a - Solo bubble recovery
+    type: checkbox
+    label: 'Solo: bubble then heal; Lay on Hands fallback'
+    value: false
+    default: false
+  solo_bubble_hp:
+    section: 05a - Solo bubble recovery
+    type: slider
+    label: Start solo bubble recovery below health (%)
+    min: 5
+    max: 50
+    value: 30
+    default: 30
+  solo_bubble_heal_to:
+    section: 05a - Solo bubble recovery
+    type: slider
+    label: Heal inside bubble up to health (%)
+    min: 40
+    max: 95
+    value: 70
+    default: 70
+  solo_bubble_note:
+    section: 05a - Solo bubble recovery
+    type: note
+    label: Optional solo recovery only
+    text: Uses Divine Shield or Divine Protection before Lay on Hands when enough mana remains for a usable heal. Includes its own self-healing, even if ordinary self-healing or tank
+      hard-cast healing is off. Never runs in dungeons or raids, or with living groupmates. The loader cannot detect a party containing only dead/offline allies. Bind Holy Light @player,
+      Flash of Light @player and Holy Shock @player when learned. Lay on Hands retains its own checkbox and threshold. Group/tank emergency settings are unchanged.
+  health_items:
+    section: 06 - Mana and consumables
+    type: checkbox
+    label: Use tracked healing potion / healthstone
+    value: true
+    default: true
+  health_item_hp:
+    section: 06 - Mana and consumables
+    type: slider
+    label: Healing item below health (%)
+    min: 5
+    max: 60
+    value: 30
+    default: 30
+  health_item_note:
+    section: 06 - Mana and consumables
+    type: note
+    label: Healing items before emergency cooldowns
+    text: When not casting, ready healing potions and Healthstones are tried before solo bubble recovery and Lay on Hands. Unavailable items are skipped without waiting. Health is checked
+      again on the next evaluation; Lay on Hands remains available at its own threshold if an item was not enough. Items do not cancel a heal already casting; emergency spells can still
+      interrupt an unsafe cast. The optional solo bubble sequence stays disabled in dungeons and raids.
+  mana_items:
+    section: 06 - Mana and consumables
+    type: checkbox
+    label: Use tracked mana potion in combat
+    value: true
+    default: true
+  mana_item_pct:
+    section: 06 - Mana and consumables
+    type: slider
+    label: Mana potion below mana (%)
+    min: 5
+    max: 50
+    value: 20
+    default: 20
+  mana_floor:
+    section: 06 - Mana and consumables
+    type: slider
+    label: Mana reserve after damage spells (%)
+    min: 0
+    max: 80
+    value: 35
+    default: 35
+  racial_human:
+    section: 07 - Racials
+    type: checkbox
+    label: 'Human: Will to Survive when stunned'
+    value: true
+    default: true
+  racial_dwarf:
+    section: 07 - Racials
+    type: checkbox
+    label: 'Dwarf: Stoneform for cleanse / emergency armor'
+    value: true
+    default: true
+  racial_undead:
+    section: 07 - Racials
+    type: checkbox
+    label: 'Undead: Will of the Forsaken for fear / charm'
+    value: true
+    default: true
+  racial_note:
+    section: 07 - Racials
+    type: note
+    label: Only learned racials can cast
+    text: Passive racials require no action. Cannibalize remains manual; normal channels are protected from rotation interruption.
+  consecration:
+    section: 08 - Damage
+    type: checkbox
+    label: Consecration with AoE enabled
+    value: true
+    default: true
+  consecration_targets:
+    section: 08 - Damage
+    type: slider
+    label: Consecration combat enemies within 8 yards
+    min: 1
+    max: 8
+    value: 3
+    default: 3
+  stationary_consecration:
+    section: 08 - Damage
+    type: checkbox
+    label: Only drop Consecration while stationary
+    value: true
+    default: true
+  consecration_mana:
+    section: 08 - Damage
+    type: slider
+    label: Consecration minimum mana (%)
+    min: 10
+    max: 90
+    value: 40
+    default: 40
+  damage:
+    section: 08 - Damage
+    type: checkbox
+    label: Damage selected engaged enemy
+    value: true
+    default: true
+  heal_note:
+    section: 05 - Healing and survival
+    type: note
+    label: Healing priorities
+    text: Uses effective health, emergency heals, and affordable Vigil + Holy Shock for party damage. Divine Favor reserves mana for an available follow-up heal. Holy Light works before
+      Flash of Light is learned; moving group heals use Holy Shock. Oath is maintained when nobody needs healing. Use the tank selector if roles are not assigned.
+  oath_target:
+    section: 05 - Healing and survival
+    type: unit_select
+    label: Oath tank (optional explicit assignment)
+    filter: all
+    max: 1
+  party_healing:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Heal party / raid
+    value: true
+    default: true
+  flash_hp:
+    section: 05 - Healing and survival
+    type: slider
+    label: Flash of Light below effective health (%)
+    min: 40
+    max: 100
+    value: 85
+    default: 85
+  holy_light_hp:
+    section: 05 - Healing and survival
+    type: slider
+    label: Holy Light below effective health (%)
+    min: 15
+    max: 85
+    value: 55
+    default: 55
+  shock_hp:
+    section: 05 - Healing and survival
+    type: slider
+    label: Emergency Holy Shock below effective health (%)
+    min: 10
+    max: 75
+    value: 45
+    default: 45
+  group_loh:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Lay on Hands on critically injured group member
+    value: true
+    default: true
+  divine_favor:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Divine Favor for emergency healing
+    value: true
+    default: true
+  oath:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Maintain Oath of Light on one tank
+    value: true
+    default: true
+  vigil:
+    section: 05 - Healing and survival
+    type: checkbox
+    label: Light's Vigil + Holy Shock for party damage
+    value: true
+    default: true
+  vigil_count:
+    section: 05 - Healing and survival
+    type: slider
+    label: Party members below 70% for Vigil
+    min: 2
+    max: 5
+    value: 3
+    default: 3
+  healer_dps_hp:
+    section: 08 - Damage
+    type: slider
+    label: Only DPS if allies in healing range are above effective health (%)
+    min: 70
+    max: 100
+    value: 90
+    default: 90
+variables:
+  engaged: player.combat&target.exists&target.enemy&target.alive&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)
+  self_heal_needed: config.self_heal&((player.combat&player.health.effective.pct<config.heal_hp)|(!player.combat&player.health.effective.pct<config.rest_hp))
+  safe_aoe: state.aoe&target.in_melee&enemies.combat.8y>=config.consecration_targets&enemies.8y=enemies.combat.8y
+  self_forbearance: player.debuff.forbearance.up.any
+  temporary_blessing: buff.blessing_of_protection.up.any|buff.blessing_of_freedom.up.any
+  solo_recovery: config.solo_bubble_heal&!player.indungeon&!player.inraid&group.count(!cycle.is_player)=0
+  solo_immune: buff.divine_shield.up|buff.divine_protection.up
+  solo_recovering: var.solo_recovery&var.solo_immune&player.health.pct<config.solo_bubble_heal_to
+  solo_heal_in_progress: var.solo_recovery&var.solo_immune&(player.casting.holy_light|player.casting.flash_of_light)&(buff.divine_shield.remains>player.casting.remains+0.3|buff.divine_protection.remains>player.casting.remains+0.3)
+  solo_holy_light: action.holy_light.ready&!player.moving
+  solo_holy_light_fits: var.solo_holy_light&(buff.divine_shield.remains>gcd.remains+action.holy_light.cast_time+0.3|buff.divine_protection.remains>gcd.remains+action.holy_light.cast_time+0.3)
+  solo_flash_of_light: action.flash_of_light.ready&!player.moving
+  solo_flash_of_light_fits: var.solo_flash_of_light&(buff.divine_shield.remains>gcd.remains+action.flash_of_light.cast_time+0.3|buff.divine_protection.remains>gcd.remains+action.flash_of_light.cast_time+0.3)
+  solo_holy_shock: action.holy_shock.ready
+  solo_holy_shock_fits: var.solo_holy_shock&(buff.divine_shield.remains>gcd.remains+action.holy_shock.cast_time+0.3|buff.divine_protection.remains>gcd.remains+action.holy_shock.cast_time+0.3)
+  solo_divine_shield_budget: (var.solo_holy_light&mana>=action.divine_shield.cost+action.holy_light.cost&action.divine_shield.duration>action.divine_shield.execute_time+action.holy_light.cast_time+0.3)|(var.solo_flash_of_light&mana>=action.divine_shield.cost+action.flash_of_light.cost&action.divine_shield.duration>action.divine_shield.execute_time+action.flash_of_light.cast_time+0.3)|(var.solo_holy_shock&mana>=action.divine_shield.cost+action.holy_shock.cost&action.divine_shield.duration>action.divine_shield.execute_time+action.holy_shock.cast_time+0.3)
+  solo_divine_protection_budget: (var.solo_holy_light&mana>=action.divine_protection.cost+action.holy_light.cost&action.divine_protection.duration>action.divine_protection.execute_time+action.holy_light.cast_time+0.3)|(var.solo_flash_of_light&mana>=action.divine_protection.cost+action.flash_of_light.cost&action.divine_protection.duration>action.divine_protection.execute_time+action.flash_of_light.cast_time+0.3)|(var.solo_holy_shock&mana>=action.divine_protection.cost+action.holy_shock.cost&action.divine_protection.duration>action.divine_protection.execute_time+action.holy_shock.cast_time+0.3)
+  solo_heal_fits: var.solo_holy_light_fits|var.solo_flash_of_light_fits|var.solo_holy_shock_fits
+  self_known_wisdom: action.blessing_of_wisdom.known|action.19742.known|action.19850.known|action.19852.known|action.19853.known|action.19854.known|action.25290.known
+  self_has_wisdom: (buff.blessing_of_wisdom.up|buff.blessing_of_wisdom.up.any)|(buff.greater_blessing_of_wisdom.up|buff.greater_blessing_of_wisdom.up.any)|(buff.19742.up|buff.19742.up.any)|(buff.19850.up|buff.19850.up.any)|(buff.19852.up|buff.19852.up.any)|(buff.19853.up|buff.19853.up.any)|(buff.19854.up|buff.19854.up.any)|(buff.25290.up|buff.25290.up.any)|(buff.25894.up|buff.25894.up.any)|(buff.25918.up|buff.25918.up.any)
+  self_known_kings: action.blessing_of_kings.known|action.20217.known
+  self_has_kings: (buff.blessing_of_kings.up|buff.blessing_of_kings.up.any)|(buff.greater_blessing_of_kings.up|buff.greater_blessing_of_kings.up.any)|(buff.20217.up|buff.20217.up.any)|(buff.25898.up|buff.25898.up.any)
+  favor_holy_light: action.holy_light.ready&!player.moving&mana>=action.divine_favor.cost+action.holy_light.cost
+  favor_flash_of_light: action.flash_of_light.ready&!player.moving&mana>=action.divine_favor.cost+action.flash_of_light.cost
+  favor_holy_shock: action.holy_shock.ready&mana>=action.divine_favor.cost+action.holy_shock.cost
+lists:
+  main:
+  - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
+  - call_action_list,name=spell_queue
+  - return,if=player.channeling
+  - return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
+  - call_action_list,name=emergency
+  - call_action_list,name=racials
+  - call_action_list,name=control,if=player.combat
+  - return,if=player.casting
+  - call_action_list,name=consumables
+  - call_action_list,name=critical_healing
+  - call_action_list,name=self_healing
+  - call_action_list,name=support
+  - call_action_list,name=healing
+  - call_action_list,name=oath_maintenance
+  - call_action_list,name=buffs
+  - return,if=!config.damage|!var.engaged|(group.count(!cycle.is_player)>0&(group.count(cycle.range<=40&cycle.health.effective.pct<config.healer_dps_hp)>0|player.health.effective.pct<config.healer_dps_hp))|(group.count(!cycle.is_player)=0&config.self_heal&((config.party_healing&player.health.effective.pct<config.flash_hp)|(!config.party_healing&var.self_heal_needed)))
+  - call_action_list,name=holy_damage
+  racials:
+  - will_to_survive,range_check=none,if=config.racial_human&player.stunned
+  - will_of_the_forsaken,range_check=none,if=config.racial_undead&(player.feared|player.charmed)
+  - stoneform,range_check=none,if=config.racial_dwarf&(player.has_poison|player.has_disease|debuff_list.bleed.up|(player.combat&player.health.pct<30&nameplates.threat.count>0))
+  emergency:
+  - return,if=var.solo_heal_in_progress
+  - call_action_list,name=health_consumables,if=!player.casting
+  - call_action_list,name=solo_bubble_recovery,if=var.solo_recovery
+  - lay_on_hands.player,range_check=none,interrupt=true,if=config.lay_on_hands&player.combat&player.health.effective.pct<=config.loh_hp
+  - divine_shield,range_check=none,interrupt=true,if=config.bubble&!var.self_forbearance&player.combat&player.health.effective.pct<=config.bubble_hp&buff.divine_shield.down&buff.divine_protection.down
+  - divine_protection,range_check=none,interrupt=true,if=config.bubble&!var.self_forbearance&player.combat&player.health.effective.pct<=config.bubble_hp&buff.divine_shield.down&buff.divine_protection.down
+  - lay_on_hands,cycle=members,cycle_order=health.pct,interrupt=true,if=config.party_healing&config.group_loh&player.combat&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<=config.loh_hp
+  solo_bubble_recovery:
+  - divine_shield,range_check=none,interrupt=true,if=player.combat&!var.solo_immune&!var.self_forbearance&player.health.effective.pct<=config.solo_bubble_hp&var.solo_divine_shield_budget
+  - divine_protection,range_check=none,interrupt=true,if=player.combat&!var.solo_immune&!var.self_forbearance&player.health.effective.pct<=config.solo_bubble_hp&var.solo_divine_protection_budget
+  - return,if=var.solo_heal_in_progress
+  - holy_light.player,range_check=none,if=var.solo_recovering&!player.casting&var.solo_holy_light_fits&player.health.pct<=config.solo_bubble_hp
+  - flash_of_light.player,range_check=none,if=var.solo_recovering&!player.casting&var.solo_flash_of_light_fits
+  - holy_light.player,range_check=none,if=var.solo_recovering&!player.casting&var.solo_holy_light_fits
+  - holy_shock.player,range_check=none,if=var.solo_recovering&!player.casting&var.solo_holy_shock_fits
+  - return,if=var.solo_recovering&!player.casting&var.solo_heal_fits&gcd.remains>0
+  control:
+  - hammer_of_justice.mouseover,range_check=mouseover,interrupt=true,if=config.mouseover_stun&mouseover.exists&mouseover.enemy&mouseover.alive&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)&!mouseover.boss&(mouseover.casting|mouseover.channeling)
+  - hammer_of_justice,interrupt=true,if=config.auto_stun&var.engaged&!target.boss&(target.casting|target.channeling)&(target.casting.interruptible|target.incoming_cast.stunnable.up)
+  health_consumables:
+  - health_potion,range_check=none,if=config.health_items&player.combat&player.health.effective.pct<=config.health_item_hp&health_potion.ready
+  - healthstone,range_check=none,if=config.health_items&player.combat&player.health.effective.pct<=config.health_item_hp&healthstone.ready
+  consumables:
+  - call_action_list,name=health_consumables
+  - mana_potion,range_check=none,if=config.mana_items&player.combat&mana.pct<=config.mana_item_pct&(!config.health_items|player.health.pct>config.health_item_hp|(!health_potion.ready&!healthstone.ready))&mana_potion.ready
+  support:
+  - blessing_of_freedom.player,range_check=none,if=config.self_freedom&player.rooted&buff.blessing_of_freedom.down
+  - blessing_of_protection,cycle=members,cycle_order=health.pct,if=config.support_bop&player.combat&cycle.healer&!cycle.tank&cycle.range<=30&cycle.health.effective.pct<=config.bop_hp&!cycle.debuff.forbearance.up&cycle.buff.blessing_of_protection.down
+  - cleanse.player,range_check=none,if=config.cleanse&(player.dispelable.magic|player.dispelable.poison|player.dispelable.disease)
+  - purify.player,range_check=none,if=config.cleanse&(player.dispelable.poison|player.dispelable.disease)
+  - cleanse,cycle=members,cycle_order=role,if=config.group_cleanse&!cycle.is_player&cycle.range<=30&(cycle.dispelable.magic|cycle.dispelable.poison|cycle.dispelable.disease)
+  - purify,cycle=members,cycle_order=role,if=config.group_cleanse&!cycle.is_player&cycle.range<=30&(cycle.dispelable.poison|cycle.dispelable.disease)
+  - redemption.mouseover,range_check=mouseover,if=config.mouseover_res&!player.combat&!player.moving&mouseover.exists&mouseover.friendly&mouseover.dead
+  self_healing:
+  - holy_shock.player,range_check=none,if=var.self_heal_needed&player.combat&player.health.effective.pct<config.heal_hp
+  - flash_of_light.player,range_check=none,if=var.self_heal_needed&!player.moving
+  - holy_light.player,range_check=none,if=var.self_heal_needed&!player.moving
+  buffs:
+  - concentration_aura,range_check=none,if=config.maintain_buffs&buff.concentration_aura.down.any
+  - devotion_aura,range_check=none,if=config.maintain_buffs&!action.concentration_aura.known&buff.concentration_aura.down.any&buff.devotion_aura.down.any
+  - call_action_list,name=self_wisdom,if=config.maintain_buffs&config.use_wisdom&!var.temporary_blessing&buff.blessing_of_wisdom.down&!buff.blessing_of_wisdom.up.any&buff.greater_blessing_of_wisdom.down&!buff.greater_blessing_of_wisdom.up.any&buff.19742.down&!buff.19742.up.any&buff.19850.down&!buff.19850.up.any&buff.19852.down&!buff.19852.up.any&buff.19853.down&!buff.19853.up.any&buff.19854.down&!buff.19854.up.any&buff.25290.down&!buff.25290.up.any&buff.25894.down&!buff.25894.up.any&buff.25918.down&!buff.25918.up.any
+  - call_action_list,name=self_might,if=config.maintain_buffs&(!config.use_wisdom|(!var.self_known_wisdom&!var.self_has_wisdom))&!var.temporary_blessing&buff.blessing_of_might.down&!buff.blessing_of_might.up.any&buff.greater_blessing_of_might.down&!buff.greater_blessing_of_might.up.any&buff.19740.down&!buff.19740.up.any&buff.19834.down&!buff.19834.up.any&buff.19835.down&!buff.19835.up.any&buff.19836.down&!buff.19836.up.any&buff.19837.down&!buff.19837.up.any&buff.19838.down&!buff.19838.up.any&buff.25291.down&!buff.25291.up.any&buff.25782.down&!buff.25782.up.any&buff.25916.down&!buff.25916.up.any
+  - blessing_of_wisdom,cycle=party,if=config.party_buffs&!player.combat&!cycle.is_player&cycle.healer&cycle.range<=30&cycle.buff.blessing_of_protection.down&!cycle.buff.blessing_of_protection.up.any&cycle.buff.blessing_of_freedom.down&!cycle.buff.blessing_of_freedom.up.any&cycle.buff.blessing_of_wisdom.down&!cycle.buff.blessing_of_wisdom.up.any&cycle.buff.greater_blessing_of_wisdom.down&!cycle.buff.greater_blessing_of_wisdom.up.any&cycle.buff.19742.down&!cycle.buff.19742.up.any&cycle.buff.19850.down&!cycle.buff.19850.up.any&cycle.buff.19852.down&!cycle.buff.19852.up.any&cycle.buff.19853.down&!cycle.buff.19853.up.any&cycle.buff.19854.down&!cycle.buff.19854.up.any&cycle.buff.25290.down&!cycle.buff.25290.up.any&cycle.buff.25894.down&!cycle.buff.25894.up.any&cycle.buff.25918.down&!cycle.buff.25918.up.any
+  - blessing_of_might,cycle=party,if=config.party_buffs&!player.combat&!cycle.is_player&!cycle.healer&config.might_targets.has(cycle.name)&cycle.range<=30&cycle.buff.blessing_of_protection.down&!cycle.buff.blessing_of_protection.up.any&cycle.buff.blessing_of_freedom.down&!cycle.buff.blessing_of_freedom.up.any&cycle.buff.blessing_of_might.down&!cycle.buff.blessing_of_might.up.any&cycle.buff.greater_blessing_of_might.down&!cycle.buff.greater_blessing_of_might.up.any&cycle.buff.19740.down&!cycle.buff.19740.up.any&cycle.buff.19834.down&!cycle.buff.19834.up.any&cycle.buff.19835.down&!cycle.buff.19835.up.any&cycle.buff.19836.down&!cycle.buff.19836.up.any&cycle.buff.19837.down&!cycle.buff.19837.up.any&cycle.buff.19838.down&!cycle.buff.19838.up.any&cycle.buff.25291.down&!cycle.buff.25291.up.any&cycle.buff.25782.down&!cycle.buff.25782.up.any&cycle.buff.25916.down&!cycle.buff.25916.up.any
+  - call_action_list,name=paladin_loot,if=config.lootnearby&!player.combat&(!target.exists|target.dead)
+  paladin_loot:
+  - interact_target,if=target.lootable&target.range<=5
+  - interact_mouseover,if=mouseover.lootable&mouseover.range<=5
+  self_might:
+  - blessing_of_might.player,range_check=none
+  self_wisdom:
+  - blessing_of_wisdom.player,range_check=none
+  critical_healing:
+  - holy_shock,cycle=party,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&config.vigil&!player.inraid&cycle.range<=40&(cycle.buff.1310909.up|cycle.buff.1311593.up|cycle.buff.1311597.up)&(cycle.health.effective.pct<95|group.count(cycle.range<=40&cycle.health.effective.pct<70)>=2)
+  - divine_favor,range_check=none,if=config.divine_favor&state.cds&config.party_healing&player.combat&buff.divine_favor.down&group.count((config.self_heal|!cycle.is_player)&cycle.range<=40&cycle.health.effective.pct<config.shock_hp&((var.favor_holy_light&cycle.health.effective.pct<config.holy_light_hp)|(var.favor_flash_of_light&cycle.health.effective.pct<config.flash_hp)|var.favor_holy_shock))>0
+  - holy_light,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&buff.divine_favor.up&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.holy_light_hp
+  - holy_shock,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&cycle.range<=40&cycle.health.effective.pct<config.shock_hp
+  - holy_light,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.shock_hp&cycle.health.effective.pct<config.holy_light_hp
+  - flash_of_light,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.shock_hp&cycle.health.effective.pct<config.flash_hp
+  oath_maintenance:
+  - oath_of_light,cycle=config.oath_target,if=config.party_healing&config.oath&cycle.range<=40&cycle.buff.oath_of_light.remains<30
+  - oath_of_light,cycle=tanks,if=config.party_healing&config.oath&!config.oath_target&cycle.range<=40&cycle.buff.oath_of_light.up&cycle.buff.oath_of_light.remains<30
+  - oath_of_light,cycle=tanks,if=config.party_healing&config.oath&!config.oath_target&cycle.range<=40&group.count(cycle.buff.oath_of_light.up)=0
+  healing:
+  - lights_vigil,cycle=party,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&config.vigil&!player.inraid&player.combat&!player.moving&action.holy_shock.ready&mana>=action.lights_vigil.cost+action.holy_shock.cost&group.count(cycle.range<=40&cycle.health.effective.pct<70)>=config.vigil_count&cycle.range<=20&cycle.buff.1310909.down&cycle.buff.1311593.down&cycle.buff.1311597.down&cycle.health.effective.pct<70
+  - holy_light,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.holy_light_hp
+  - flash_of_light,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.flash_hp
+  - holy_light,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.flash_hp
+  - holy_shock,cycle=members,cycle_order=health.pct,if=config.party_healing&(config.self_heal|!cycle.is_player)&player.moving&cycle.range<=40&cycle.health.effective.pct<config.flash_hp
+  holy_damage:
+  - seal_of_righteousness,range_check=none,if=buff.seal_of_righteousness.remains<2&(mana-action.seal_of_righteousness.cost)*100>=mana.max*config.mana_floor
+  - holy_strike,if=target.in_melee&(mana-action.holy_strike.cost)*100>=mana.max*config.mana_floor
+  - judgement,if=buff.seal_of_righteousness.up&(mana-action.judgement.cost)*100>=mana.max*config.mana_floor
+  - consecration,range_check=none,if=config.consecration&var.safe_aoe&(!config.stationary_consecration|!player.moving)&mana.pct>=config.consecration_mana&(mana-action.consecration.cost)*100>=mana.max*config.mana_floor
+  - hammer_of_wrath,if=target.health.pct<20&(!player.moving|action.hammer_of_wrath.cast_time=0)&(mana-action.hammer_of_wrath.cost)*100>=mana.max*config.mana_floor
+  - attack_target,if=target.in_melee&!player.auto_attacking

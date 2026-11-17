@@ -1,0 +1,7 @@
+## Interface: 16001
+## Title: Kaptin Forever Shaman Bindings
+## Notes: Additive Shaman self/focus/mouseover variants and Classic potion fallbacks. Preserves existing keys and custom macros.
+## Author: Kaptin
+## Version: 1.0.0
+## OptionalDeps: SimulationcraftExtra
+KaptinForeverShamanBindings.lua

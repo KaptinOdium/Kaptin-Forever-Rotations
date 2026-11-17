@@ -1,0 +1,316 @@
+# Reviewed against current MythicSim Forever presets on 2026-11-05.
+# https://api.mythicsim.com/api/forever/rotations
+# Mechanics: https://github.com/sage3648/mythicsim-forever-engine (8e9b8df)
+# Syntax: https://auth.simia.pro/rotation/
+# Self/focus/mouseover casts require their matching macro bindings.
+# Simulation reference adapted for leveling and reactive utility; not live-verified.
+# Solo Clearcasting Starfire checked with native SimC at every level 20-59 and a level 60 holdout.
+spec: 11
+name: Forever Druid - Restoration 1-60
+version: 2.3.14
+author: Custom
+date: '2026-11-12'
+patch: Classic Forever
+entry: main
+movement_allowed: buff.natures_swiftness.up
+description: Restoration leveling with optional safe damage and reactive level-60 healing.
+config:
+  setup:
+    section: Setup
+    type: note
+    label: Forever 1-60 and level 60
+    text: Uses learned and bound abilities. Damage needs an engaged selected enemy by default. Bind self/focus/mouseover variants with the companion binding helper. No automatic target
+      cycling.
+  start_selected:
+    section: Targeting
+    type: checkbox
+    label: Allow attacks on an idle selected enemy
+    default: false
+  find_herbs:
+    section: Buffs
+    type: checkbox
+    label: Maintain Find Herbs between fights
+    default: true
+  maintain_buffs:
+    section: Buffs
+    type: checkbox
+    label: Maintain buffs between fights
+    default: true
+  use_thorns:
+    section: Buffs
+    type: checkbox
+    label: Maintain Thorns on yourself and assigned tanks
+    default: true
+  self_heal:
+    section: Recovery
+    type: checkbox
+    label: Heal yourself between fights
+    default: true
+  rest_hp:
+    section: Recovery
+    type: slider
+    label: 'Between fights: heal below health (%)'
+    min: 30
+    max: 95
+    default: 85
+  rest_direct_hp:
+    section: Recovery
+    type: slider
+    label: 'Between fights: direct self-heal below health (%)'
+    min: 10
+    max: 95
+    default: 60
+  health_pot_hp:
+    section: Recovery
+    type: slider
+    label: Health potion below health (%)
+    min: 5
+    max: 60
+    default: 25
+  mana_pot_pct:
+    section: Recovery
+    type: slider
+    label: Mana potion below mana (%)
+    min: 0
+    max: 50
+    default: 20
+  use_innervate:
+    section: Recovery
+    type: checkbox
+    label: Use Innervate on yourself at low mana
+    default: true
+  innervate_pct:
+    section: Recovery
+    type: slider
+    label: Innervate below mana (%)
+    min: 5
+    max: 60
+    default: 25
+  use_barkskin:
+    section: Defensives
+    type: checkbox
+    label: Use Barkskin when hurt in combat
+    default: true
+  barkskin_hp:
+    section: Defensives
+    type: slider
+    label: Barkskin below health (%)
+    min: 10
+    max: 80
+    default: 50
+  mouseover_bash:
+    section: Mouseover
+    type: checkbox
+    label: Bash engaged mouseover casts in Bear Form
+    default: true
+  auto_bash:
+    section: Interrupts
+    type: checkbox
+    label: Bash casts on selected target in Bear Form
+    default: true
+  rebirth_mouseover:
+    section: Mouseover
+    type: checkbox
+    label: Rebirth a dead friendly mouseover
+    default: false
+  dispels:
+    section: Support
+    type: checkbox
+    label: Remove Curse and Poison on group in caster form
+    default: true
+    description: Uses the live dispellable type. Does not remove magic or disease, which Druids cannot cleanse.
+  mana_reserve:
+    section: Resources
+    type: slider
+    label: Mana to retain after damage spells (%)
+    min: 0
+    max: 50
+    default: 15
+  resto_info:
+    section: Healing
+    type: note
+    label: Reactive healing, not a fixed damage-sim loop
+    text: Prioritizes emergencies, an active Nature's Swiftness Healing Touch, HoT-assisted Swiftmend, tank maintenance and group recovery. An affordable emergency Rejuvenation can bypass
+      the routine mana floor while moving or when no direct heal is ready. Leave animal or Moonkin form yourself to heal. Lets routine HoTs expire for Bloom. Automatic party AoE is disabled
+      in raids because documented YAML cannot count one raid subgroup. Use Wild Growth manually there.
+  emergency_hp:
+    section: Healing
+    type: slider
+    label: Emergency instant heal below health (%)
+    min: 10
+    max: 50
+    default: 30
+  swiftmend_hp:
+    section: Healing
+    type: slider
+    label: Swiftmend below health (%)
+    min: 20
+    max: 80
+    default: 55
+  regrowth_hp:
+    section: Healing
+    type: slider
+    label: Fast Regrowth below health (%)
+    min: 20
+    max: 75
+    default: 50
+  touch_hp:
+    section: Healing
+    type: slider
+    label: Healing Touch below health (%)
+    min: 30
+    max: 90
+    default: 70
+  hot_hp:
+    section: Healing
+    type: slider
+    label: Rejuvenation below health (%)
+    min: 50
+    max: 95
+    default: 85
+  tank_hot_hp:
+    section: Healing
+    type: slider
+    label: Keep tank Rejuvenation below health (%)
+    min: 60
+    max: 100
+    default: 95
+  use_natures_swiftness:
+    section: Healing
+    type: checkbox
+    label: Nature's Swiftness for emergency Healing Touch
+    default: true
+  wild_growth:
+    section: Party Healing
+    type: checkbox
+    label: Wild Growth for injured party members
+    default: true
+  wild_growth_count:
+    section: Party Healing
+    type: slider
+    label: Wild Growth minimum injured members
+    min: 2
+    max: 5
+    default: 3
+  tranquility:
+    section: Party Healing
+    type: checkbox
+    label: Tranquility for party emergency
+    default: true
+  damage:
+    section: Damage
+    type: checkbox
+    label: Damage selected engaged enemies while healing is safe
+    default: true
+  damage_safe_hp:
+    section: Damage
+    type: slider
+    label: Minimum group health before damage (%)
+    min: 70
+    max: 100
+    default: 90
+  buff_group:
+    section: Buffs
+    type: checkbox
+    label: Mark group members and give Thorns to assigned tanks
+    default: true
+  early_melee_finish:
+    section: "Early leveling mana"
+    type: "checkbox"
+    label: "Before learning forms: finish weakened mobs with melee"
+    default: true
+  early_melee_hp:
+    section: "Early leveling mana"
+    type: "slider"
+    label: "Switch to melee below enemy health (%)"
+    min: 10
+    max: 50
+    default: 30
+  early_melee_info:
+    section: "Early leveling mana"
+    type: "note"
+    label: "Save mana once weapon swings start"
+    text: "Before Bear/Cat/Moonkin Form is learned, finish a weakened engaged enemy already in melee. Requires at least 50% health and no detected extra attackers. Paid damage resumes if the enemy leaves melee; free spells and healing retain their priorities. No automatic movement or target changes."
+variables:
+  early_caster_stage: "config.early_melee_finish&!action.5487.known&!action.9634.known&!action.768.known&!action.24858.known&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any&buff.783.down.any&buff.1066.down.any&player.combat&player.health.pct>=50&enemies.combat.8y<=1&nameplates.threat.count<=1"
+  early_melee_finish_active: "var.early_caster_stage&target.exists&target.alive&target.enemy&target.attackable&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)&target.in_melee&!target.boss&target.health.pct>0&target.health.pct<=config.early_melee_hp"
+  early_melee_saving: "var.early_melee_finish_active&player.auto_attacking"
+  between_pull_buffs: config.maintain_buffs&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any
+  resting_caster: '!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any'
+  healing_caster: buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any
+lists:
+  survival:
+  - health_potion,range_check=none,if=player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
+  - barkskin,range_check=none,if=config.use_barkskin&player.combat&player.health.pct<config.barkskin_hp&buff.barkskin.down
+  recovery:
+  - mana_potion,range_check=none,if=player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<=config.mana_pot_pct&mana_potion.ready
+  - innervate.player,range_check=none,if=config.use_innervate&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<config.innervate_pct&buff.innervate.down.any
+  - swiftmend.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.rest_hp&(buff.rejuvenation.up|buff.regrowth.up)
+  - healing_touch.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))
+  - rejuvenation.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.rest_hp&buff.rejuvenation.down
+  - regrowth.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(buff.regrowth.down|player.health.effective.pct<config.rest_direct_hp)&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))
+  buffs:
+  - call_action_list,name=self_mark,if=var.between_pull_buffs&!buff.gift_of_the_wild.up.any&(!buff.mark_of_the_wild.up.any|(buff.mark_of_the_wild.up&buff.mark_of_the_wild.remains>0&buff.mark_of_the_wild.remains<60))
+  - call_action_list,name=self_thorns,if=var.between_pull_buffs&config.use_thorns&(!buff.thorns.up.any|(buff.thorns.up&buff.thorns.remains>0&buff.thorns.remains<30))
+  - call_action_list,name=group_buffs,if=var.between_pull_buffs&config.buff_group&group.count(1)>1
+  self_mark:
+  - mark_of_the_wild,range_check=none,if=!target.exists|target.enemy
+  - mark_of_the_wild.player,range_check=none
+  self_thorns:
+  - thorns,range_check=none,if=!target.exists|target.enemy
+  - thorns.player,range_check=none
+  group_buffs:
+  - thorns,cycle=tanks,range_check=none,if=!cycle.is_player&config.use_thorns&cycle.range<=30&((cycle.buff.thorns.down&!cycle.buff.thorns.up.any)|(cycle.buff.thorns.up&cycle.buff.thorns.remains>0&cycle.buff.thorns.remains<30))
+  - mark_of_the_wild,cycle=members,range_check=none,if=!cycle.is_player&cycle.range<=30&cycle.buff.mark_of_the_wild.down&!cycle.buff.mark_of_the_wild.up.any&cycle.buff.gift_of_the_wild.down&!cycle.buff.gift_of_the_wild.up.any
+  control:
+  - bash.mouseover,range_check=mouseover,if=config.mouseover_bash&(buff.5487.up.any|buff.9634.up.any)&mouseover.exists&mouseover.enemy&mouseover.alive&mouseover.combat&!mouseover.boss&(mouseover.targeting_party|mouseover.threat>=0)&(mouseover.casting|mouseover.channeling)
+  - bash,if=config.auto_bash&(buff.5487.up.any|buff.9634.up.any)&target.exists&target.enemy&target.alive&target.combat&!target.boss&(target.targeting_party|target.threat>=0)&(target.casting|target.channeling)&(target.casting.interruptible|target.incoming_cast.stunnable.up)
+  - rebirth.mouseover,range_check=mouseover,if=config.rebirth_mouseover&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&mouseover.exists&mouseover.friendly&mouseover.dead
+  dispels:
+  - remove_curse,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.curse
+  - abolish_poison,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any
+  - cure_poison,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any
+  caster_damage:
+  - attack_target,if=var.early_melee_finish_active&!player.auto_attacking
+  - moonfire,if=(!var.early_melee_saving|action.moonfire.cost=0)&dot.moonfire.remains<=0&target.time_to_die>=8&(action.moonfire.cost=0|(mana-action.moonfire.cost)*100>=mana.max*config.mana_reserve)
+  - starfire,if=(!var.early_melee_saving|action.starfire.cost=0)&group.count(!cycle.is_player)=0&!player.moving&buff.clearcasting.up&action.starfire.cost=0&target.time_to_die>action.starfire.cast_time
+  - wrath,if=(!var.early_melee_saving|action.wrath.cost=0)&!player.moving&(action.wrath.cost=0|(mana-action.wrath.cost)*100>=mana.max*config.mana_reserve)
+  - attack_target,if=target.in_melee&!player.auto_attacking
+  loot:
+  - interact_target,if=target.lootable&target.range<=5
+  - interact_mouseover,if=mouseover.lootable&mouseover.range<=5
+  main:
+  - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
+  - call_action_list,name=spell_queue
+  - return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
+  - return,if=player.casting|player.channeling
+  - return,if=buff.prowl.up&!player.combat&!config.start_selected
+  - call_action_list,name=survival
+  - call_action_list,name=urgent_healing,if=var.healing_caster
+  - call_action_list,name=recovery
+  - call_action_list,name=control
+  - call_action_list,name=dispels
+  - call_action_list,name=party_healing,if=var.healing_caster
+  - call_action_list,name=routine_healing,if=var.healing_caster
+  - call_action_list,name=buffs
+  - call_action_list,name=loot,if=config.lootnearby&!player.combat&(!target.exists|target.dead)
+  - 2383,range_check=none,ignore_usable=true,if=config.find_herbs&action.2383.known&!player.combat&!player.auto_attacking&buff.prowl.down.any&buff.20580.down.any&buff.2383.down.any&buff.8387.down.any&(!config.start_selected|!target.exists|!target.enemy|target.dead)
+  - return,if=!config.damage|(group.count(!cycle.is_player)>0&(group.count(cycle.range<=40&cycle.health.effective.pct<config.damage_safe_hp)>0|player.health.effective.pct<config.damage_safe_hp))
+  - return,if=!(target.exists&target.alive&target.enemy&((player.combat&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking))|(config.start_selected&!player.combat)))
+  - call_action_list,name=caster_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any
+  urgent_healing:
+  - healing_touch,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&config.use_natures_swiftness&buff.natures_swiftness.up&cycle.range<=40&(cycle.health.effective.pct<config.touch_hp|cycle.health.effective.pct<config.emergency_hp)
+  - swiftmend,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up)
+  - natures_swiftness,range_check=none,if=config.use_natures_swiftness&player.combat&buff.natures_swiftness.down&action.healing_touch.ready&mana>=action.natures_swiftness.cost+action.healing_touch.cost&group.count(cycle.health.effective.pct<config.emergency_hp&cycle.range<=40)>0
+  - regrowth,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp
+  - healing_touch,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp
+  - rejuvenation,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp&cycle.buff.rejuvenation.down&(player.moving|(!action.regrowth.ready&!action.healing_touch.ready))
+  party_healing:
+  - tranquility,range_check=none,if=config.tranquility&state.cds&player.combat&!player.inraid&!player.moving&group.count(cycle.range<=30&cycle.health.effective.pct<50)>=3
+  - wild_growth,cycle=party,cycle_order=health.pct,if=config.wild_growth&player.combat&!player.inraid&!player.moving&cycle.range<=30&cycle.health.effective.pct<80&group.count(cycle.range<=30&cycle.health.effective.pct<80)>=config.wild_growth_count
+  routine_healing:
+  - regrowth,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.regrowth_hp
+  - rejuvenation,cycle=tanks,cycle_order=health.pct,if=player.combat&cycle.range<=40&cycle.health.effective.pct<config.tank_hot_hp&cycle.buff.rejuvenation.down&mana.pct>20
+  - healing_touch,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.touch_hp
+  - rejuvenation,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<config.hot_hp&cycle.buff.rejuvenation.down&mana.pct>15
+  - regrowth,cycle=tanks,cycle_order=health.pct,if=player.combat&!player.moving&cycle.range<=40&cycle.health.effective.pct<80&cycle.buff.regrowth.down&mana.pct>45

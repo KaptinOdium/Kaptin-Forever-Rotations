@@ -1,0 +1,7 @@
+## Interface: 16001
+## Title: Kaptin Forever Warrior Bindings
+## Notes: Additive Warrior mouseover/focus variants and Classic health potion fallback. Preserves existing keys and custom macros.
+## Author: Kaptin
+## Version: 1.0.0
+## OptionalDeps: SimulationcraftExtra
+KaptinForeverWarriorBindings.lua

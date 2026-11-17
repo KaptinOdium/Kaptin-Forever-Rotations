@@ -1,0 +1,292 @@
+# Reviewed against current MythicSim Forever presets on 2026-11-05.
+# https://api.mythicsim.com/api/forever/rotations
+# Mechanics: https://github.com/sage3648/mythicsim-forever-engine (8e9b8df)
+# Syntax: https://auth.simia.pro/rotation/
+# Self/focus/mouseover casts require their matching macro bindings.
+# Simulation reference adapted for leveling and reactive utility; not live-verified.
+spec: 11
+name: "Forever Druid - Balance 1-60"
+version: 2.3.14
+author: "Custom"
+date: '2026-11-12'
+patch: "Classic Forever"
+entry: "main"
+description: "Balance caster leveling and level-60 DoT, Eclipse and mana priorities."
+config:
+  setup:
+    section: "Setup"
+    type: "note"
+    label: "Forever 1-60 and level 60"
+    text: "Uses learned and bound abilities. Damage needs an engaged selected enemy by default. Bind self/focus/mouseover variants with the companion binding helper. No automatic target cycling."
+  start_selected:
+    section: "Targeting"
+    type: "checkbox"
+    label: "Allow attacks on an idle selected enemy"
+    default: false
+  find_herbs:
+    section: "Buffs"
+    type: "checkbox"
+    label: "Maintain Find Herbs between fights"
+    default: true
+  maintain_buffs:
+    section: "Buffs"
+    type: "checkbox"
+    label: "Maintain buffs between fights"
+    default: true
+  use_thorns:
+    section: "Buffs"
+    type: "checkbox"
+    label: "Maintain Thorns on yourself and assigned tanks"
+    default: true
+  buff_group:
+    section: "Buffs"
+    type: "checkbox"
+    label: "Mark group members and give Thorns to tanks"
+    default: true
+  self_heal:
+    section: "Recovery"
+    type: "checkbox"
+    label: "Heal yourself between fights"
+    default: true
+  rest_hp:
+    section: "Recovery"
+    type: "slider"
+    label: "Between fights: heal below health (%)"
+    min: 30
+    max: 95
+    default: 85
+  rest_direct_hp:
+    section: "Recovery"
+    type: "slider"
+    label: "Between fights: direct self-heal below health (%)"
+    min: 10
+    max: 95
+    default: 60
+  health_pot_hp:
+    section: "Recovery"
+    type: "slider"
+    label: "Health potion below health (%)"
+    min: 5
+    max: 60
+    default: 25
+  mana_pot_pct:
+    section: "Recovery"
+    type: "slider"
+    label: "Mana potion below mana (%)"
+    min: 0
+    max: 50
+    default: 20
+  use_innervate:
+    section: "Recovery"
+    type: "checkbox"
+    label: "Use Innervate on yourself at low mana"
+    default: true
+  innervate_pct:
+    section: "Recovery"
+    type: "slider"
+    label: "Innervate below mana (%)"
+    min: 5
+    max: 60
+    default: 25
+  use_barkskin:
+    section: "Defensives"
+    type: "checkbox"
+    label: "Use Barkskin when hurt in combat"
+    default: true
+  barkskin_hp:
+    section: "Defensives"
+    type: "slider"
+    label: "Barkskin below health (%)"
+    min: 10
+    max: 80
+    default: 50
+  mouseover_bash:
+    section: "Mouseover"
+    type: "checkbox"
+    label: "Bash engaged mouseover casts in Bear Form"
+    default: true
+  mouseover_moonfire:
+    section: "Mouseover"
+    type: "checkbox"
+    label: "Moonfire on a hovered enemy fighting your group"
+    default: true
+  mouseover_pull:
+    section: "Mouseover"
+    type: "checkbox"
+    label: "Allow mouseover Moonfire to pull an idle mob during combat"
+    default: false
+  mouseover_faerie_fire:
+    section: "Mouseover"
+    type: "checkbox"
+    label: "Faerie Fire on a hovered enemy already in combat"
+    default: false
+  auto_bash:
+    section: "Interrupts"
+    type: "checkbox"
+    label: "Bash casts on selected target in Bear Form"
+    default: true
+  rebirth_mouseover:
+    section: "Mouseover"
+    type: "checkbox"
+    label: "Rebirth a dead friendly mouseover"
+    default: false
+  dispels:
+    section: "Support"
+    type: "checkbox"
+    label: "Remove Curse and Poison on group in caster form"
+    default: true
+  mana_reserve:
+    section: "Resources"
+    type: "slider"
+    label: "Mana to retain after damage spells (%)"
+    min: 0
+    max: 50
+    default: 15
+  balance_info:
+    section: "Balance"
+    type: "note"
+    label: "Caster leveling and endgame"
+    text: "Maintains damaging debuffs on enemies that will live long enough. Eclipse empowers Starfire; Wrath is the usual filler. Verified zero-cost damage spells can use Clearcasting even below the mana reserve. Hurricane is cursor-targeted and opt-in: place the cursor on the pack."
+  auto_form:
+    section: "Balance"
+    type: "checkbox"
+    label: "Use Moonkin Form when learned"
+    default: true
+  starfire_without_eclipse:
+    section: "Balance"
+    type: "checkbox"
+    label: "Use unempowered Starfire filler (builds without Eclipse only)"
+    default: false
+  combat_self_heal:
+    section: "Recovery"
+    type: "checkbox"
+    label: "Emergency self-healing (leave Moonkin Form to heal)"
+    default: true
+  combat_heal_hp:
+    section: "Recovery"
+    type: "slider"
+    label: "Emergency self-heal below health (%)"
+    min: 10
+    max: 65
+    default: 40
+  hurricane:
+    section: "Area Damage"
+    type: "checkbox"
+    label: "Cast Hurricane at cursor on packs"
+    default: false
+  hurricane_targets:
+    section: "Area Damage"
+    type: "slider"
+    label: "Hurricane minimum enemies near target"
+    min: 3
+    max: 8
+    default: 4
+  hurricane_mana:
+    section: "Area Damage"
+    type: "slider"
+    label: "Hurricane minimum mana (%)"
+    min: 20
+    max: 90
+    default: 50
+  dots_ttd:
+    section: "Balance"
+    type: "slider"
+    label: "Minimum remaining target life for DoTs (seconds)"
+    min: 4
+    max: 15
+    default: 8
+  early_melee_finish:
+    section: "Early leveling mana"
+    type: "checkbox"
+    label: "Before learning forms: finish weakened mobs with melee"
+    default: true
+  early_melee_hp:
+    section: "Early leveling mana"
+    type: "slider"
+    label: "Switch to melee below enemy health (%)"
+    min: 10
+    max: 50
+    default: 30
+  early_melee_info:
+    section: "Early leveling mana"
+    type: "note"
+    label: "Save mana once weapon swings start"
+    text: "Before Bear/Cat/Moonkin Form is learned, finish a weakened engaged enemy already in melee. Requires at least 50% health and no detected extra attackers. Paid damage resumes if the enemy leaves melee; free spells and healing retain their priorities. No automatic movement or target changes."
+variables:
+  early_caster_stage: "config.early_melee_finish&!action.5487.known&!action.9634.known&!action.768.known&!action.24858.known&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any&buff.783.down.any&buff.1066.down.any&player.combat&player.health.pct>=50&enemies.combat.8y<=1&nameplates.threat.count<=1"
+  early_melee_finish_active: "var.early_caster_stage&target.exists&target.alive&target.enemy&target.attackable&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)&target.in_melee&!target.boss&target.health.pct>0&target.health.pct<=config.early_melee_hp"
+  early_melee_saving: "var.early_melee_finish_active&player.auto_attacking"
+  early_hover_melee_saving: "var.early_caster_stage&player.auto_attacking&mouseover.exists&mouseover.alive&mouseover.enemy&mouseover.attackable&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)&mouseover.in_melee&!mouseover.boss&mouseover.health.pct>0&mouseover.health.pct<=config.early_melee_hp"
+  between_pull_buffs: "config.maintain_buffs&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any"
+  selected_engaged: "target.exists&target.alive&target.enemy&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)"
+  moonfire_hover_allowed: "(mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0))|(!mouseover.combat&config.mouseover_pull&var.selected_engaged)"
+lists:
+  survival:
+    - "health_potion,range_check=none,if=player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready"
+    - "barkskin,range_check=none,if=config.use_barkskin&player.combat&player.health.pct<config.barkskin_hp&buff.barkskin.down"
+  recovery:
+    - "mana_potion,range_check=none,if=player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<=config.mana_pot_pct&mana_potion.ready"
+    - "innervate.player,range_check=none,if=config.use_innervate&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<config.innervate_pct&buff.innervate.down.any"
+    - "swiftmend.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.rest_hp&(buff.rejuvenation.up|buff.regrowth.up)"
+    - "healing_touch.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))"
+    - "rejuvenation.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.rest_hp&buff.rejuvenation.down"
+    - "regrowth.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(buff.regrowth.down|player.health.effective.pct<config.rest_direct_hp)&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))"
+  buffs:
+    - "call_action_list,name=self_mark,if=var.between_pull_buffs&!buff.gift_of_the_wild.up.any&(!buff.mark_of_the_wild.up.any|(buff.mark_of_the_wild.up&buff.mark_of_the_wild.remains>0&buff.mark_of_the_wild.remains<60))"
+    - "call_action_list,name=self_thorns,if=var.between_pull_buffs&config.use_thorns&(!buff.thorns.up.any|(buff.thorns.up&buff.thorns.remains>0&buff.thorns.remains<30))"
+    - "call_action_list,name=group_buffs,if=var.between_pull_buffs&config.buff_group&group.count(1)>1"
+  self_mark:
+    - "mark_of_the_wild,range_check=none,if=!target.exists|target.enemy"
+    - "mark_of_the_wild.player,range_check=none"
+  self_thorns:
+    - "thorns,range_check=none,if=!target.exists|target.enemy"
+    - "thorns.player,range_check=none"
+  group_buffs:
+    - "thorns,cycle=tanks,range_check=none,if=!cycle.is_player&config.use_thorns&cycle.range<=30&((cycle.buff.thorns.down&!cycle.buff.thorns.up.any)|(cycle.buff.thorns.up&cycle.buff.thorns.remains>0&cycle.buff.thorns.remains<30))"
+    - "mark_of_the_wild,cycle=members,range_check=none,if=!cycle.is_player&cycle.range<=30&cycle.buff.mark_of_the_wild.down&!cycle.buff.mark_of_the_wild.up.any&cycle.buff.gift_of_the_wild.down&!cycle.buff.gift_of_the_wild.up.any"
+  control:
+    - "bash.mouseover,range_check=mouseover,if=config.mouseover_bash&(buff.5487.up.any|buff.9634.up.any)&mouseover.exists&mouseover.enemy&mouseover.alive&mouseover.combat&!mouseover.boss&(mouseover.targeting_party|mouseover.threat>=0)&(mouseover.casting|mouseover.channeling)"
+    - "bash,if=config.auto_bash&(buff.5487.up.any|buff.9634.up.any)&target.exists&target.enemy&target.alive&target.combat&!target.boss&(target.targeting_party|target.threat>=0)&(target.casting|target.channeling)&(target.casting.interruptible|target.incoming_cast.stunnable.up)"
+    - "rebirth.mouseover,range_check=mouseover,if=config.rebirth_mouseover&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&mouseover.exists&mouseover.friendly&mouseover.dead"
+  dispels:
+    - "remove_curse,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.curse"
+    - "abolish_poison,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any"
+    - "cure_poison,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any"
+  loot:
+    - "interact_target,if=target.lootable&target.range<=5"
+    - "interact_mouseover,if=mouseover.lootable&mouseover.range<=5"
+  main:
+    - "return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted"
+    - "call_action_list,name=spell_queue"
+    - "return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)"
+    - "return,if=player.casting|player.channeling"
+    - "return,if=buff.prowl.up&!player.combat&!config.start_selected"
+    - "call_action_list,name=survival"
+    - "call_action_list,name=emergency_heal"
+    - "call_action_list,name=control"
+    - "call_action_list,name=recovery"
+    - "call_action_list,name=dispels"
+    - "call_action_list,name=buffs"
+    - "call_action_list,name=loot,if=config.lootnearby&!player.combat&(!target.exists|target.dead)"
+    - "2383,range_check=none,ignore_usable=true,if=config.find_herbs&action.2383.known&!player.combat&!player.auto_attacking&buff.prowl.down.any&buff.20580.down.any&buff.2383.down.any&buff.8387.down.any&(!config.start_selected|!target.exists|!target.enemy|target.dead)"
+    - "faerie_fire.mouseover,range_check=mouseover,if=config.mouseover_faerie_fire&player.combat&buff.prowl.down.any&buff.20580.down.any&mouseover.exists&mouseover.alive&mouseover.enemy&mouseover.attackable&mouseover.combat&!mouseover.debuff.faerie_fire.up.any&(action.faerie_fire.cost=0|(mana-action.faerie_fire.cost)*100>=mana.max*config.mana_reserve)"
+    - "moonfire.mouseover,range_check=mouseover,if=(!var.early_hover_melee_saving|action.moonfire.cost=0)&config.mouseover_moonfire&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.combat&mouseover.exists&mouseover.alive&mouseover.attackable&var.moonfire_hover_allowed&mouseover.debuff.moonfire.down&(action.moonfire.cost=0|(mana-action.moonfire.cost)*100>=mana.max*config.mana_reserve)"
+    - "return,if=!(target.exists&target.alive&target.enemy&((player.combat&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking))|(config.start_selected&!player.combat)))"
+    - "moonkin_form,range_check=none,if=config.auto_form&buff.24858.down.any&(!config.combat_self_heal|player.health.effective.pct>=config.combat_heal_hp)&(mana-action.moonkin_form.cost)*100>=mana.max*config.mana_reserve"
+    - "call_action_list,name=balance_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any"
+  emergency_heal:
+    - "swiftmend.player,range_check=none,if=buff.24858.down.any&config.combat_self_heal&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.combat_heal_hp&(buff.rejuvenation.up|buff.regrowth.up)"
+    - "regrowth.player,range_check=none,if=buff.24858.down.any&config.combat_self_heal&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.combat_heal_hp"
+    - "healing_touch.player,range_check=none,if=buff.24858.down.any&config.combat_self_heal&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.combat_heal_hp"
+    - "rejuvenation.player,range_check=none,if=buff.24858.down.any&config.combat_self_heal&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.combat_heal_hp&buff.rejuvenation.down"
+  balance_damage:
+    - attack_target,if=var.early_melee_finish_active&!player.auto_attacking
+    - "hurricane.cursor,range_check=none,if=(!var.early_melee_saving|action.hurricane.cost=0)&config.hurricane&state.aoe&!player.moving&enemies.around_target>=config.hurricane_targets&mana.pct>=config.hurricane_mana&(action.hurricane.cost=0|(mana-action.hurricane.cost)*100>=mana.max*config.mana_reserve)"
+    - "insect_swarm,if=(!var.early_melee_saving|action.insect_swarm.cost=0)&dot.insect_swarm.remains<=0&target.time_to_die>=config.dots_ttd&(action.insect_swarm.cost=0|(mana-action.insect_swarm.cost)*100>=mana.max*config.mana_reserve)"
+    - "moonfire,if=(!var.early_melee_saving|action.moonfire.cost=0)&dot.moonfire.remains<=0&target.time_to_die>=config.dots_ttd&(action.moonfire.cost=0|(mana-action.moonfire.cost)*100>=mana.max*config.mana_reserve)"
+    - "wrath,if=(!var.early_melee_saving|action.wrath.cost=0)&!player.moving&buff.408255.stack<=2&((dot.insect_swarm.remains<action.starfire.cast_time&target.time_to_die>10&(action.5570.known|action.24974.known|action.24975.known|action.24976.known|action.24977.known))|(dot.moonfire.remains<action.starfire.cast_time&target.time_to_die>6))&(action.wrath.cost=0|(mana-action.wrath.cost)*100>=mana.max*config.mana_reserve)"
+    - "starfire,if=(!var.early_melee_saving|action.starfire.cost=0)&!player.moving&buff.408255.up&target.time_to_die>action.starfire.cast_time&(action.starfire.cost=0|(mana-action.starfire.cost)*100>=mana.max*config.mana_reserve)"
+    - "starfire,if=(!var.early_melee_saving|action.starfire.cost=0)&config.starfire_without_eclipse&!player.moving&target.time_to_die>action.starfire.cast_time&(action.starfire.cost=0|(mana-action.starfire.cost)*100>=mana.max*config.mana_reserve)"
+    - "wrath,if=(!var.early_melee_saving|action.wrath.cost=0)&!player.moving&(action.wrath.cost=0|(mana-action.wrath.cost)*100>=mana.max*config.mana_reserve)"
+    - "moonfire,if=(!var.early_melee_saving|action.moonfire.cost=0)&player.moving&target.time_to_die>0&target.time_to_die<4&mana.pct>50&(action.moonfire.cost=0|(mana-action.moonfire.cost)*100>=mana.max*config.mana_reserve)"
+    - "attack_target,if=target.in_melee&!player.auto_attacking"

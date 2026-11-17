@@ -1,0 +1,10 @@
+## Interface: 16001
+## Title: Kaptin Forever Warlock Bindings
+## Notes: Warlock targeting variants, optional pet engagement and controller bridges, safe Shoot and Classic consumable fallbacks. Existing keys and custom macros are preserved.
+## Author: Kaptin
+## Version: 1.3.3
+## OptionalDeps: SimulationcraftExtra
+## SavedVariablesPerCharacter: KhanForeverWarlockGroundDB, KhanForeverWarlockPetDB
+KhanForeverWarlockBindings.lua
+GroundTargeting.lua
+PetEngagement.lua

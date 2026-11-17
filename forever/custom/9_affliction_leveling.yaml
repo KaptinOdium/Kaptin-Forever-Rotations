@@ -1,0 +1,545 @@
+# WoW Forever only. Source notes: research/warlock-20261108/mechanics.md
+# Runtime: https://auth.simia.pro/rotation/ ; offline validated, not live certified.
+spec: 9
+name: Forever Warlock - Affliction 1-60
+version: 1.3.3
+author: Kaptin
+date: '2026-11-14'
+patch: Classic Forever
+entry: main
+description: Affliction leveling and normal dungeons. Learned-spell fallbacks, pet support and configurable recovery.
+config:
+  setup:
+    section: Setup
+    type: note
+    label: 'Forever leveling: learned and bound spells'
+    text: Select a target and start the fight yourself by default. Set up your pet autocasts manually. The matching key must be bound for every enabled spell, Pet
+      Attack and Shoot. Pet Spell Lock, Devour Magic and Sacrifice remain manual. No automatic target cycling.
+  start_selected:
+    section: Targeting
+    type: checkbox
+    label: Allow pulling your idle selected enemy
+    default: false
+  pet_attack:
+    section: Pet
+    type: checkbox
+    label: Send your living pet to your selected engaged enemy
+    default: true
+  auto_summon:
+    section: Pet
+    type: checkbox
+    label: Summon a missing pet between fights
+    default: true
+  pet_choice:
+    section: Pet
+    type: dropdown
+    label: Pet to summon when missing
+    options:
+    - label: 'Auto: Voidwalker solo, Imp in groups'
+      value: 0
+    - label: Imp
+      value: 1
+    - label: Voidwalker
+      value: 2
+    - label: Succubus
+      value: 3
+    - label: Felhunter
+      value: 4
+    default: 0
+  pet_note:
+    section: Pet
+    type: note
+    label: Existing pets and sacrifice buffs are preserved
+    text: Never replaces a living pet. If the chosen summon is unavailable, Imp is the fallback. Automatic summoning pauses while a Demonic Sacrifice buff is present;
+      choose your Pact pet manually.
+  health_funnel:
+    section: Pet
+    type: checkbox
+    label: Heal your pet between fights with Health Funnel
+    default: false
+  funnel_pet_hp:
+    section: Pet
+    type: slider
+    label: Health Funnel below pet health (%)
+    min: 10
+    max: 85
+    default: 60
+  funnel_self_hp:
+    section: Pet
+    type: slider
+    label: Health Funnel requires your health above (%)
+    min: 70
+    max: 100
+    default: 90
+  armor:
+    section: Buffs
+    type: checkbox
+    label: Maintain Demon Armor / early Demon Skin between fights
+    default: true
+  soul_link:
+    section: Buffs
+    type: checkbox
+    label: Maintain learned Soul Link with a living pet
+    default: true
+  life_tap:
+    section: Mana
+    type: checkbox
+    label: Use Life Tap in combat
+    default: true
+  tap_between:
+    section: Mana
+    type: checkbox
+    label: Also Life Tap between fights
+    default: false
+  tap_mana:
+    section: Mana
+    type: slider
+    label: Life Tap below mana (%)
+    min: 5
+    max: 70
+    default: 35
+  tap_min_hp:
+    section: Mana
+    type: slider
+    label: Life Tap only above current health (%)
+    min: 60
+    max: 95
+    default: 80
+  tap_note:
+    section: Mana
+    type: note
+    label: Health floor is checked before Life Tap
+    text: The loader does not expose the actual health conversion. This is a pre-cast health floor, not a guaranteed remaining-health percentage. No tapping while
+      eating or drinking.
+  sustain_recovery:
+    section: Mana
+    type: checkbox
+    label: Coordinate Life Tap, Drain Life and wand recovery
+    default: true
+    description: When mana is low, Drain Life can heal you up to the Life Tap health floor even above the normal healing threshold. Reserve mana before you run dry.
+      Requires learned, bound Life Tap, Drain Life and Shoot; never lowers your Life Tap health floor.
+  drain_reserve:
+    section: Mana
+    type: slider
+    label: Start recovery with this many Drain Life costs left
+    min: 1
+    max: 3
+    default: 2
+  sustain_note:
+    section: Mana
+    type: note
+    label: Recovery fallbacks
+    text: The reserve trigger is capped at 70% mana. While hurt, ordinary damage preserves one Drain Life cost where possible. If recovery cannot cast, prefer your
+      wand and pet; ordinary filler remains a last fallback when neither can be selected. At very low health and mana, use a ready consumable or stop and recover.
+      This cannot create mana from nothing. Disable coordinated recovery to use the separate health/mana thresholds.
+  health_potion:
+    section: Survival
+    type: checkbox
+    label: Use configured health potion in emergencies
+    default: true
+  health_pot_hp:
+    section: Survival
+    type: slider
+    label: Health potion below health (%)
+    min: 5
+    max: 50
+    default: 25
+  healthstone:
+    section: Survival
+    type: checkbox
+    label: 'Use Healthstone: requires supplied custom macro'
+    default: false
+  stone_hp:
+    section: Survival
+    type: slider
+    label: Healthstone below health (%)
+    min: 5
+    max: 60
+    default: 35
+  stone_setup:
+    section: Survival
+    type: note
+    label: Healthstone setup
+    text: Paste Healthstone-macro.txt into the Healthstone action custom macro, assign its key, then enable automatic Healthstone. The companion adds Classic stone
+      detection.
+  mana_potion:
+    section: Mana
+    type: checkbox
+    label: Use configured mana potion in combat
+    default: false
+  mana_pot_pct:
+    section: Mana
+    type: slider
+    label: Mana potion below mana (%)
+    min: 0
+    max: 40
+    default: 15
+  drain_heal:
+    section: Survival
+    type: checkbox
+    label: Drain Life when hurt in combat
+    default: true
+  drain_hp:
+    section: Survival
+    type: slider
+    label: Drain Life below health (%)
+    min: 20
+    max: 85
+    default: 60
+  death_coil:
+    section: Survival
+    type: checkbox
+    label: Emergency Death Coil on your engaged target
+    default: false
+    description: Horror may send enemies toward another pack. Enable only if you want this emergency control.
+  coil_hp:
+    section: Survival
+    type: slider
+    label: Emergency Death Coil below health (%)
+    min: 10
+    max: 60
+    default: 30
+  mouseover_corruption:
+    section: Mouseover DoTs
+    type: checkbox
+    label: Corruption on an engaged mouseover enemy
+    default: false
+    description: Requires Corruption @mouseover to be bound. Existing Corruption is not refreshed early.
+  mouseover_agony:
+    section: Mouseover DoTs
+    type: checkbox
+    label: Agony on an engaged mouseover enemy
+    default: true
+    description: Requires Bane of Agony @mouseover (called Curse of Agony in some spell lists). Preserves your existing Agony, Doom and Havoc.
+  mouseover_immolate:
+    section: Mouseover DoTs
+    type: checkbox
+    label: Immolate on an engaged mouseover enemy
+    default: true
+    description: Requires Immolate @mouseover. Stop moving for its cast; existing Immolate is not refreshed early.
+  mouseover_min_hp:
+    section: Mouseover DoTs
+    type: slider
+    label: Skip new DoTs below enemy health (%) - 0 allows any living enemy
+    min: 0
+    max: 80
+    default: 0
+  mouseover_dot_note:
+    section: Mouseover DoTs
+    type: note
+    label: Keep hovering to apply each enabled missing DoT
+    text: 'Corruption, Agony, then Immolate are applied one cast/global at a time. Only the current hovered enemy is affected; your selected target stays unchanged.
+      Wait for existing casts/channels to finish. Stop moving for cast-time spells. Low-mana and health recovery take priority. The enemy must be recognized as fighting
+      your group. For pet-only enemies, install the optional Pet-Bridge and enable /kaptinpetdots on after reloading. Disable mouseover Fear/Banish when spreading
+      DoTs: those controls take priority and controlled mobs are skipped.'
+  mouseover_fear:
+    section: Mouseover Control
+    type: checkbox
+    label: Fear an engaged mouseover enemy
+    default: false
+    description: Takes priority over mouseover DoTs; disable for DoT spreading. Can cause extra pulls. Bosses and already feared targets are skipped. Bind Fear @mouseover.
+  mouseover_banish:
+    section: Mouseover Control
+    type: checkbox
+    label: Banish an engaged mouseover demon / elemental
+    default: false
+    description: Uses native spell usability. Do not hover targets you want the group to damage.
+  mouseover_coil:
+    section: Mouseover Control
+    type: checkbox
+    label: Death Coil to stop an engaged mouseover cast
+    default: false
+  curse_choice:
+    section: Curses
+    type: dropdown
+    label: Utility curse on longer fights
+    options:
+    - label: None
+      value: 0
+    - label: Curse of the Elements
+      value: 1
+    - label: Curse of Weakness
+      value: 2
+    - label: Curse of Tongues
+      value: 3
+    default: 0
+  curse_ttd:
+    section: Curses
+    type: slider
+    label: Minimum target life for utility curse (seconds)
+    min: 5
+    max: 40
+    default: 15
+  use_agony:
+    section: Damage over time
+    type: checkbox
+    label: Maintain Bane of Agony
+    default: true
+  agony_ttd:
+    section: Damage over time
+    type: slider
+    label: Minimum target life for Agony (seconds)
+    min: 8
+    max: 30
+    default: 14
+  use_corruption:
+    section: Damage over time
+    type: checkbox
+    label: Maintain Corruption
+    default: true
+  corruption_ttd:
+    section: Damage over time
+    type: slider
+    label: Minimum target life for Corruption (seconds)
+    min: 4
+    max: 25
+    default: 8
+  use_siphon:
+    section: Damage over time
+    type: checkbox
+    label: Maintain learned Siphon Life
+    default: true
+  siphon_ttd:
+    section: Damage over time
+    type: slider
+    label: Minimum target life for Siphon Life (seconds)
+    min: 6
+    max: 30
+    default: 12
+  use_immolate:
+    section: Damage over time
+    type: checkbox
+    label: Use Immolate on targets that live long enough
+    default: true
+  immolate_ttd:
+    section: Damage over time
+    type: slider
+    label: Minimum target life for Immolate (seconds)
+    min: 4
+    max: 25
+    default: 12
+  unknown_dots:
+    section: Damage over time
+    type: checkbox
+    label: Apply DoTs to healthy targets when lifetime is unknown
+    default: true
+  use_doom:
+    section: Damage over time
+    type: checkbox
+    label: Use Bane of Doom on bosses with over 65 seconds left
+    default: false
+  use_amplify:
+    section: Cooldowns
+    type: checkbox
+    label: Amplify Curse before a new Bane of Agony
+    default: true
+  use_racials:
+    section: Cooldowns
+    type: checkbox
+    label: Use learned damage racials on longer fights
+    default: true
+  racial_break:
+    section: Survival
+    type: checkbox
+    label: Use learned racial escape from crowd control
+    default: true
+  wand:
+    section: Wand
+    type: checkbox
+    label: Use wand filler at low mana or to finish a dying target
+    default: true
+  wand_mana:
+    section: Wand
+    type: slider
+    label: Prefer wand below mana (%)
+    min: 0
+    max: 60
+    default: 20
+  wand_ttd:
+    section: Wand
+    type: slider
+    label: Prefer wand below known remaining target life (seconds)
+    min: 0
+    max: 6
+    default: 3
+  collect_shards:
+    section: Soul Shards
+    type: toggle
+    spell: 1120
+    label: 'Collect shards: Drain Soul finishers'
+    description: Temporary toggle, starts OFF. Disable when stocked; bag shard count is not exported.
+  shard_note:
+    section: Soul Shards
+    type: note
+    label: Shard count and preparation are manual
+    text: Create Healthstone / Soulstone and manage shard stock yourself. Drain Soul finishes a target below 20% while collection is enabled. No invented retail Soul
+      Shard resource checks.
+  rain_of_fire:
+    section: Area damage
+    type: checkbox
+    label: Use Rain of Fire while stationary
+    default: false
+  rain_placement:
+    section: Area damage
+    type: dropdown
+    label: Rain of Fire placement
+    options:
+    - label: 'Normal: at your cursor'
+      value: 0
+    - label: 'Experimental: controller targeting + automatic confirmation'
+      value: 1
+    default: 0
+  aoe_targets:
+    section: Area damage
+    type: slider
+    label: Minimum enemies near selected target
+    min: 3
+    max: 8
+    default: 4
+  aoe_mana:
+    section: Area damage
+    type: slider
+    label: Minimum mana for area channels (%)
+    min: 10
+    max: 80
+    default: 35
+  hellfire:
+    section: Area damage
+    type: checkbox
+    label: Hellfire on engaged nearby packs while stationary
+    default: false
+  hellfire_hp:
+    section: Area damage
+    type: slider
+    label: Minimum health to start Hellfire (%)
+    min: 65
+    max: 95
+    default: 85
+  aoe_note:
+    section: Area damage
+    type: note
+    label: Choose how Rain of Fire is placed
+    text: 'Normal mode casts at your cursor. Experimental controller mode needs the Ground Export Bridge patch and companion setup with two dedicated keys. The loader
+      attempts native confirmation only for an owned Rain of Fire circle. Live placement is unverified: test before relying on it. Controller mode never falls back
+      to cursor placement. Avoid crowd-controlled or idle mobs in the circle. Hellfire also damages you and stops below 55% health.'
+  wrack_first:
+    section: Affliction
+    type: checkbox
+    label: Prefer Wrack over normal DoT setup when usable
+    default: false
+    description: Optional preference for your talent setup; this is not a measured DPS-optimum claim. Normal DoTs remain available while moving or before Wrack is
+      learned.
+variables:
+  grouped: group.count(1)>1
+  selected_engaged: target.exists&target.alive&target.enemy&target.attackable&target.combat&(target.targeting_party|target.threat>=0|pet.attacking_target)
+  can_attack: var.selected_engaged|(config.start_selected&!player.combat&target.exists&target.alive&target.enemy&target.attackable)
+  hover_engaged: mouseover.exists&mouseover.alive&mouseover.enemy&mouseover.attackable&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)
+  hover_fight: player.combat|(pet.alive&mouseover.threat=0&var.hover_engaged)
+  hover_cc: mouseover.debuff.banish.up.any|mouseover.debuff.fear.up.any|mouseover.debuff.polymorph.up.any|mouseover.debuff.sap.up.any|mouseover.debuff.seduction.up.any|mouseover.debuff.hibernate.up.any|mouseover.debuff.repentance.up.any
+  hover_dot_target: var.hover_engaged&!var.hover_cc&mouseover.health.pct>=config.mouseover_min_hp
+  hover_bane_free: mouseover.debuff.bane_of_agony.down&mouseover.debuff.bane_of_doom.down&mouseover.debuff.bane_of_havoc.down
+  sacrificed: buff.18789.up.any|buff.18790.up.any|buff.18791.up.any|buff.18792.up.any
+  unknown_healthy: config.unknown_dots&target.time_to_die<=0&target.health.pct>=50
+  agony_lifetime: target.time_to_die>=config.agony_ttd|var.unknown_healthy
+  corruption_lifetime: target.time_to_die>=config.corruption_ttd|var.unknown_healthy
+  siphon_lifetime: target.time_to_die>=config.siphon_ttd|var.unknown_healthy
+  immolate_lifetime: target.time_to_die>=config.immolate_ttd|var.unknown_healthy
+  curse_lifetime: target.time_to_die>=config.curse_ttd|var.unknown_healthy
+  bane_free: dot.bane_of_agony.remains<=0&dot.bane_of_doom.remains<=0&dot.bane_of_havoc.remains<=0
+  finishing: (target.time_to_die>0&target.time_to_die<=3)|(target.time_to_die<=0&target.health.pct<=10)
+  drain_window: target.time_to_die>3|(target.time_to_die<=0&target.health.pct>10)
+  paired_recovery: config.sustain_recovery&config.life_tap&action.life_tap.known&!action.life_tap.blocked&config.drain_heal&action.drain_life.known&!action.drain_life.blocked
+  mana_pressure: mana.pct<config.tap_mana|(var.paired_recovery&action.drain_life.cost>0&mana<action.drain_life.cost*config.drain_reserve&mana.pct<70)
+  need_drain: config.drain_heal&action.drain_life.known&!action.drain_life.blocked&(player.health.pct<config.drain_hp|(var.paired_recovery&var.mana_pressure&player.health.pct<=config.tap_min_hp))
+  protect_drain_mana: player.combat&var.paired_recovery&range.drain_life.target&!var.finishing&player.health.pct<=config.tap_min_hp&action.drain_life.cost>0
+  want_wand: config.wand&(mana.pct<=config.wand_mana|(target.time_to_die>0&target.time_to_die<=config.wand_ttd)|(config.sustain_recovery&var.mana_pressure&player.health.pct<=config.tap_min_hp))
+  can_tap: config.life_tap&mana.pct<config.tap_mana&player.health.pct>config.tap_min_hp
+lists:
+  main:
+  - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
+  - call_action_list,name=spell_queue
+  - return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
+  - call_action_list,name=survival
+  - stop_casting,if=player.channeling&((player.casting.spell_id=755|player.casting.spell_id=3698|player.casting.spell_id=3699|player.casting.spell_id=3700|player.casting.spell_id=11693|player.casting.spell_id=11694|player.casting.spell_id=11695)&(player.health.pct<65|player.combat|!pet.alive|pet.health.pct>=95))
+  - stop_casting,if=player.channeling&((player.casting.spell_id=1949|player.casting.spell_id=11683|player.casting.spell_id=11684)&player.health.pct<55)
+  - return,if=player.casting|player.channeling
+  - call_action_list,name=control
+  - call_action_list,name=maintenance,if=!player.combat&!var.hover_fight
+  - call_action_list,name=mouseover_damage,if=var.hover_fight&(!config.sustain_recovery|(!var.mana_pressure&!var.need_drain))
+  - return,if=!var.can_attack
+  - return,if=target.debuff.banish.up.any|target.debuff.fear.up.any|target.debuff.polymorph.up.any|target.debuff.sap.up.any|target.debuff.seduction.up.any
+  - petattack,range_check=none,if=config.pet_attack&pet.alive&!pet.attacking_target
+  - call_action_list,name=mana_recovery,if=player.combat
+  - call_action_list,name=wand,if=config.sustain_recovery
+  - call_action_list,name=cooldowns
+  - drain_soul,if=config.collect_shards&player.combat&!player.moving&target.health.pct<=20&(!var.protect_drain_mana|mana>=action.drain_soul.cost+action.drain_life.cost)
+  - call_action_list,name=area_damage
+  - call_action_list,name=damage
+  - call_action_list,name=recovery_fallback,if=config.sustain_recovery
+  survival:
+  - will_to_survive,range_check=none,if=config.racial_break&player.stunned
+  - will_of_the_forsaken,range_check=none,if=config.racial_break&(player.feared|player.charmed)
+  - escape_artist,range_check=none,if=config.racial_break&player.combat&player.rooted
+  - healthstone,range_check=none,interrupt=true,if=config.healthstone&player.combat&player.health.pct<=config.stone_hp&healthstone.ready
+  - health_potion,range_check=none,interrupt=true,if=config.health_potion&player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
+  - death_coil,interrupt=true,if=config.death_coil&player.combat&var.selected_engaged&player.health.pct<config.coil_hp&!target.boss&target.debuff.death_coil.down.any&target.debuff.banish.down.any&target.debuff.polymorph.down.any&target.debuff.sap.down.any&target.debuff.seduction.down.any
+  maintenance:
+  - demon_armor,range_check=none,if=config.armor&buff.demon_armor.down.any
+  - demon_skin,range_check=none,if=config.armor&!action.demon_armor.known&buff.demon_armor.down.any&buff.demon_skin.down.any
+  - soul_link,range_check=none,if=config.soul_link&pet.alive&buff.soul_link.down.any&buff.25228.down.any&buff.18814.down.any&!pet.buff.25228.up&!pet.buff.18814.up
+  - call_action_list,name=summon,if=config.auto_summon&!pet.alive&!player.moving&!var.sacrificed
+  - health_funnel,range_check=none,if=config.health_funnel&pet.alive&pet.range<=20&pet.health.pct<config.funnel_pet_hp&player.health.pct>config.funnel_self_hp&!player.moving&(!config.sustain_recovery|player.health.pct>config.tap_min_hp)
+  - life_tap,range_check=none,if=config.tap_between&var.can_tap
+  summon:
+  - summon_felhunter,range_check=none,if=config.pet_choice=4&cooldown.summon_felhunter.cast_count>0
+  - summon_succubus,range_check=none,if=config.pet_choice=3&cooldown.summon_succubus.cast_count>0
+  - summon_voidwalker,range_check=none,if=(config.pet_choice=2|(config.pet_choice=0&!var.grouped))&cooldown.summon_voidwalker.cast_count>0
+  - summon_imp,range_check=none
+  mana_recovery:
+  - mana_potion,range_check=none,if=config.mana_potion&(mana.pct<=config.mana_pot_pct|(config.sustain_recovery&var.need_drain&action.drain_life.known&!action.drain_life.blocked&mana<action.drain_life.cost))&mana_potion.ready&(!config.health_potion|player.health.pct>config.health_pot_hp|!health_potion.ready)
+  - drain_life,if=config.sustain_recovery&var.need_drain&!player.moving&var.drain_window
+  - life_tap,range_check=none,if=config.life_tap&var.mana_pressure&player.health.pct>config.tap_min_hp&!var.finishing
+  - drain_life,if=!config.sustain_recovery&config.drain_heal&player.health.pct<config.drain_hp&!player.moving&(target.time_to_die<=0|target.time_to_die>2)
+  control:
+  - death_coil.mouseover,range_check=mouseover,if=config.mouseover_coil&player.combat&var.hover_engaged&!mouseover.boss&(mouseover.casting|mouseover.channeling)&mouseover.debuff.death_coil.down.any
+  - banish.mouseover,range_check=mouseover,if=config.mouseover_banish&player.combat&var.hover_engaged&!mouseover.boss&!player.moving&mouseover.debuff.banish.down.any&(mouseover.creature_type=3|mouseover.creature_type=4)
+  - fear.mouseover,range_check=mouseover,if=config.mouseover_fear&player.combat&var.hover_engaged&!mouseover.boss&!player.moving&mouseover.debuff.fear.down.any&mouseover.debuff.banish.down.any
+  mouseover_damage:
+  - corruption.mouseover,range_check=mouseover,if=(config.mouseover_corruption&var.hover_dot_target&mouseover.debuff.corruption.down&(!player.moving|action.corruption.cast_time=0))&(!var.protect_drain_mana|mana>=action.corruption.cost+action.drain_life.cost)
+  - bane_of_agony.mouseover,range_check=mouseover,if=(config.mouseover_agony&var.hover_dot_target&var.hover_bane_free&(!player.moving|action.bane_of_agony.cast_time=0))&(!var.protect_drain_mana|mana>=action.bane_of_agony.cost+action.drain_life.cost)
+  - immolate.mouseover,range_check=mouseover,if=(config.mouseover_immolate&var.hover_dot_target&mouseover.debuff.immolate.down&(!player.moving|action.immolate.cast_time=0))&(!var.protect_drain_mana|mana>=action.immolate.cost+action.drain_life.cost)
+  cooldowns:
+  - blood_fury,range_check=none,if=config.use_racials&state.cds&player.combat&player.health.pct>=80&(target.boss|target.time_to_die>=12)
+  - berserking,range_check=none,if=config.use_racials&state.cds&player.combat&(target.boss|target.time_to_die>=12)
+  - eureka,range_check=none,if=config.use_racials&state.cds&player.combat&(target.boss|target.time_to_die>=12)
+  area_damage:
+  - hellfire,range_check=none,if=(config.hellfire&state.aoe&!player.moving&player.health.pct>=config.hellfire_hp&mana.pct>=config.aoe_mana&enemies.combat.8y>=config.aoe_targets&enemies.8y=enemies.combat.8y)&(!var.protect_drain_mana|mana>=action.hellfire.cost+action.drain_life.cost)
+  - rain_of_fire.cursor,range_check=none,if=(config.rain_of_fire&config.rain_placement=0&state.aoe&!player.moving&mana.pct>=config.aoe_mana&enemies.around_target>=config.aoe_targets&(target.time_to_die<=0|target.time_to_die>=5))&(!var.protect_drain_mana|mana>=action.rain_of_fire.cost+action.drain_life.cost)
+  - rain_of_fire.controller,ignore_queue=true,if=(config.rain_of_fire&config.rain_placement=1&state.aoe&player.combat&var.selected_engaged&!player.moving&mana.pct>=config.aoe_mana&enemies.around_target>=config.aoe_targets&(target.time_to_die<=0|target.time_to_die>=5))&(!var.protect_drain_mana|mana>=action.rain_of_fire.cost+action.drain_life.cost)
+  curses:
+  - curse_of_the_elements,if=(config.curse_choice=1&var.curse_lifetime&target.debuff.curse_of_the_elements.down.any)&(!var.protect_drain_mana|mana>=action.curse_of_the_elements.cost+action.drain_life.cost)
+  - curse_of_weakness,if=(config.curse_choice=2&var.curse_lifetime&target.debuff.curse_of_weakness.down.any)&(!var.protect_drain_mana|mana>=action.curse_of_weakness.cost+action.drain_life.cost)
+  - curse_of_tongues,if=(config.curse_choice=3&var.curse_lifetime&target.debuff.curse_of_tongues.down.any)&(!var.protect_drain_mana|mana>=action.curse_of_tongues.cost+action.drain_life.cost)
+  banes:
+  - bane_of_doom,if=(config.use_doom&target.boss&target.time_to_die>65&var.bane_free)&(!var.protect_drain_mana|mana>=action.bane_of_doom.cost+action.drain_life.cost)
+  - amplify_curse,range_check=none,if=(config.use_amplify&state.cds&config.use_agony&var.agony_lifetime&var.bane_free&action.bane_of_agony.ready&buff.amplify_curse.down.any&mana>=action.amplify_curse.cost+action.bane_of_agony.cost)&(!var.protect_drain_mana|mana>=action.amplify_curse.cost+action.drain_life.cost)
+  - bane_of_agony,if=(config.use_agony&var.agony_lifetime&var.bane_free)&(!var.protect_drain_mana|mana>=action.bane_of_agony.cost+action.drain_life.cost)
+  wand:
+  - shoot,if=var.want_wand&!player.moving&swing.ranged.remains>=9999
+  - return,if=var.want_wand&!player.moving&swing.ranged.remains<9999
+  recovery_fallback:
+  - shadow_bolt,ignore_movement=true,if=buff.17941.up.any
+  - wrack,if=!player.moving
+  - incinerate,if=!player.moving
+  - shadow_bolt,if=!player.moving
+  damage:
+  - shadow_bolt,ignore_movement=true,if=(buff.17941.up.any)&(!var.protect_drain_mana|mana>=action.shadow_bolt.cost+action.drain_life.cost)
+  - wrack,if=(config.wrack_first&!player.moving)&(!var.protect_drain_mana|mana>=action.wrack.cost+action.drain_life.cost)
+  - call_action_list,name=curses
+  - call_action_list,name=banes
+  - corruption,if=(config.use_corruption&var.corruption_lifetime&dot.corruption.remains<=0&(!player.moving|action.corruption.cast_time=0)&(1))&(!var.protect_drain_mana|mana>=action.corruption.cost+action.drain_life.cost)
+  - siphon_life,if=(config.use_siphon&var.siphon_lifetime&dot.siphon_life.remains<=0&(!player.moving|action.siphon_life.cast_time=0)&(1))&(!var.protect_drain_mana|mana>=action.siphon_life.cost+action.drain_life.cost)
+  - immolate,if=(config.use_immolate&var.immolate_lifetime&dot.immolate.remains<=0&(!player.moving|action.immolate.cast_time=0)&(1)&!action.wrack.known)&(!var.protect_drain_mana|mana>=action.immolate.cost+action.drain_life.cost)
+  - call_action_list,name=wand
+  - wrack,if=(!player.moving)&(!var.protect_drain_mana|mana>=action.wrack.cost+action.drain_life.cost)
+  - shadow_bolt,if=(!player.moving)&(!var.protect_drain_mana|mana>=action.shadow_bolt.cost+action.drain_life.cost)

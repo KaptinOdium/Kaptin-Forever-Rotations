@@ -1,0 +1,661 @@
+# Forever only. See README.txt and RESEARCH.md. Offline validated; live testing required.
+spec: 7
+name: Forever Shaman - Enhancement 1-60
+version: 1.0.2
+author: Kaptin
+date: '2026-11-16'
+patch: Classic Forever
+entry: main
+description: 'Enhancement: movement-aware leveling and normal dungeons; reactive healing, shock control and stable totem slots.'
+config:
+  setup:
+    section: Setup
+    type: note
+    label: 'Forever 1-60: solo and normal dungeons'
+    text: Only learned, usable and bound spells can run. Start combat yourself by default. Use the matching Shaman companion for self/focus/mouseover variants.
+      This profile does not move your character, spend talents, assign keys or change your target.
+  damage:
+    section: Targeting
+    type: checkbox
+    label: Enable damage on your selected enemy
+    default: true
+  start_selected:
+    section: Targeting
+    type: checkbox
+    label: Allow pulling your idle selected enemy
+    default: false
+  movement_note:
+    section: Movement
+    type: note
+    label: 'WASD: you control movement'
+    text: Hardcasts wait until you stop. Instant spells, interrupts and available instant heals work while moving. Five Maelstrom stacks apply to Lightning
+      Bolt only. Healing casts are preserved; the optional interrupt setting can cancel your Lightning Bolt/Chain Lightning. There is no automatic movement,
+      target switching, line_cd or added rotation delay.
+  mobile_shock:
+    section: Movement
+    type: checkbox
+    label: Use Earth Shock as mobile damage when not reserving shocks
+    default: true
+  preserve_wolf:
+    section: Movement
+    type: checkbox
+    label: Preserve your manually selected Ghost Wolf form
+    default: true
+  self_heal:
+    section: Healing
+    type: checkbox
+    label: Heal yourself
+    default: true
+  party_heal:
+    section: Healing
+    type: checkbox
+    label: Heal party / raid members through native focus routing
+    default: false
+  heal_hp:
+    section: Healing
+    type: slider
+    label: Direct heal below effective health (%)
+    min: 30
+    max: 90
+    default: 65
+  rest_hp:
+    section: Healing
+    type: slider
+    label: 'Between fights: self-heal below effective health (%)'
+    min: 40
+    max: 95
+    default: 85
+  emergency_hp:
+    section: Healing
+    type: slider
+    label: Emergency fast heal below effective health (%)
+    min: 10
+    max: 60
+    default: 30
+  natures_swiftness:
+    section: Healing
+    type: checkbox
+    label: Nature's Swiftness before emergency Healing Wave
+    default: true
+  riptide:
+    section: Healing
+    type: checkbox
+    label: Maintain learned Riptide on injured allies
+    default: true
+  riptide_hp:
+    section: Healing
+    type: slider
+    label: Riptide below effective health (%)
+    min: 40
+    max: 95
+    default: 80
+  riptide_mana:
+    section: Healing
+    type: slider
+    label: Non-emergency Riptide minimum mana (%)
+    min: 0
+    max: 60
+    default: 20
+  chain_heal:
+    section: Healing
+    type: checkbox
+    label: Chain Heal for group damage (party positioning must support bounces)
+    default: true
+  chain_count:
+    section: Healing
+    type: slider
+    label: 'Chain Heal: injured group members required'
+    min: 2
+    max: 5
+    default: 3
+  chain_hp:
+    section: Healing
+    type: slider
+    label: 'Chain Heal: count members below health (%)'
+    min: 40
+    max: 95
+    default: 75
+  damage_safe_hp:
+    section: Healing
+    type: slider
+    label: 'Restoration: allow damage only when group health is above (%)'
+    min: 60
+    max: 100
+    default: 85
+  heal_note:
+    section: Healing
+    type: note
+    label: Healing priorities and routing
+    text: Health includes incoming heals. Riptide is a heal over time, not an emergency direct heal. Chain Heal uses nearby injured counts as a heuristic;
+      the loader does not expose ally-to-ally bounce distance. Member cycling needs working native focus routing and each heal @focus binding. Do not enable
+      group healing until that routing is tested. Self-healing is independent.
+  health_potion:
+    section: Survival
+    type: checkbox
+    label: Use available health potion in combat
+    default: true
+  health_pot_hp:
+    section: Survival
+    type: slider
+    label: Health potion below health (%)
+    min: 5
+    max: 50
+    default: 25
+  mana_potion:
+    section: Mana
+    type: checkbox
+    label: Use available mana potion in combat
+    default: false
+  mana_pot_pct:
+    section: Mana
+    type: slider
+    label: Mana potion below mana (%)
+    min: 5
+    max: 40
+    default: 20
+  mana_saver:
+    section: Mana
+    type: checkbox
+    label: Reserve one Healing Wave cost while hurt
+    default: true
+  damage_mana:
+    section: Mana
+    type: slider
+    label: 'Restoration: minimum mana for damage (%)'
+    min: 10
+    max: 80
+    default: 35
+  melee_finish:
+    section: Mana
+    type: checkbox
+    label: Use melee to finish a weak nearby enemy
+    default: true
+  melee_finish_hp:
+    section: Mana
+    type: slider
+    label: Melee finisher below target health (%)
+    min: 5
+    max: 30
+    default: 20
+  melee_mana:
+    section: Mana
+    type: slider
+    label: Prefer melee below mana (%) when already in melee
+    min: 0
+    max: 40
+    default: 20
+  mana_note:
+    section: Mana
+    type: note
+    label: No forced running into melee
+    text: Melee conservation only applies within 5 yards. At range, affordable filler remains available. Damage can wait to preserve a heal while hurt;
+      emergency healing and interrupts never spend from a damage budget. At zero mana, use melee or stop and recover. Eating and drinking are preserved
+      outside combat.
+  interrupt:
+    section: Interrupts
+    type: checkbox
+    label: Earth Shock interrupt on selected engaged caster
+    default: true
+  mouseover_interrupt:
+    section: Interrupts
+    type: checkbox
+    label: Earth Shock on engaged mouseover casters
+    default: false
+  cancel_damage_for_interrupt:
+    section: Interrupts
+    type: checkbox
+    label: Cancel your Lightning Bolt / Chain Lightning for an interrupt
+    default: true
+  preserve_shock:
+    section: Interrupts
+    type: checkbox
+    label: Reserve shared shock cooldown while target is casting
+    default: true
+  shock_reserve_all:
+    section: Interrupts
+    type: checkbox
+    label: Reserve shocks entirely for interrupts
+    default: false
+  war_stomp:
+    section: Interrupts
+    type: checkbox
+    label: War Stomp if Earth Shock cannot stop a nearby cast
+    default: false
+  interrupt_note:
+    section: Interrupts
+    type: note
+    label: Every interruptible cast, not a spell-name allowlist
+    text: Only living engaged hostile casters qualify. Mouseover means the native mouseover unit; no custom icon or nameplate changes are included. A new
+      native icon is not guaranteed. Earth Shock shares its cooldown with other shocks. Uninterruptible casts are not Earth-Shocked. War Stomp skips bosses
+      and requires stationary casting; stun immunity is not reliably exported. Optional cast cancellation affects your Lightning Bolt/Chain Lightning only;
+      healing casts are preserved.
+  purge:
+    section: Utility
+    type: checkbox
+    label: Purge dispellable magic from the selected enemy
+    default: false
+  purge_mana:
+    section: Utility
+    type: slider
+    label: Minimum mana for Purge (%)
+    min: 10
+    max: 80
+    default: 40
+  dispels:
+    section: Utility
+    type: checkbox
+    label: Cure your poison / disease
+    default: true
+  party_dispels:
+    section: Utility
+    type: checkbox
+    label: Cure group poison / disease through focus routing
+    default: false
+  frost_slow:
+    section: Utility
+    type: checkbox
+    label: Frost Shock low-health engaged non-boss enemies moving away
+    default: false
+  racial_defense:
+    section: Racials
+    type: checkbox
+    label: Use learned racial crowd-control escapes / Stoneform
+    default: true
+  racials:
+    section: Racials
+    type: checkbox
+    label: Use learned damage racials on durable enemies
+    default: true
+  shields:
+    section: Buffs
+    type: checkbox
+    label: Maintain a learned personal elemental shield
+    default: true
+  shield_choice:
+    section: Buffs
+    type: dropdown
+    label: Personal shield preference
+    default: 0
+    options:
+    - label: Water Shield (mana)
+      value: 0
+    - label: Lightning Shield (damage)
+      value: 1
+  shield_note:
+    section: Buffs
+    type: note
+    label: Water Shield when learned
+    text: 'All three profiles prefer Water Shield by default; Lightning Shield is the unlearned-spell fallback. Existing saved Lightning Shield preferences
+      remain unchanged: select Water Shield here to switch. Bind the ordinary Water Shield action. A missing shield is refreshed; remaining charges are
+      not overwritten.'
+  imbue_choice:
+    section: Buffs
+    type: dropdown
+    label: Main-hand weapon imbue
+    default: 1
+    options:
+    - label: Manual
+      value: 0
+    - label: Automatic leveling (Windfury > Flametongue > Rockbiter)
+      value: 1
+    - label: Windfury Weapon
+      value: 2
+    - label: Flametongue Weapon
+      value: 3
+    - label: Rockbiter Weapon
+      value: 4
+    - label: Frostbrand Weapon
+      value: 5
+  imbue_note:
+    section: Buffs
+    type: note
+    label: Main hand only, between fights
+    text: Automatic leveling uses Windfury when trained, otherwise Flametongue, then Rockbiter. Enhancement defaults to Automatic; Elemental and Restoration
+      default to Manual. Bind the ordinary chosen imbue. A learned but unavailable preferred imbue does not select a lower one. Any existing temporary enchant
+      is kept, including another imbue, oil or stone; let it expire or remove it yourself before changing. Off-hand imbues remain manual. Weapon totem effects
+      and imbues can coexist.
+  use_totems:
+    section: Totems
+    type: checkbox
+    label: Maintain selected totems during worthwhile fights
+    default: true
+  totems_stationary:
+    section: Totems
+    type: checkbox
+    label: Drop combat totems only while stationary
+    default: true
+  totem_mana:
+    section: Totems
+    type: slider
+    label: Minimum mana for routine totems (%)
+    min: 5
+    max: 70
+    default: 35
+  totem_ttd:
+    section: Totems
+    type: slider
+    label: Minimum estimated target life for routine totems (seconds)
+    min: 3
+    max: 30
+    default: 10
+  earth_totem:
+    section: Totems
+    type: dropdown
+    label: Earth slot
+    default: 1
+    options:
+    - label: None
+      value: 0
+    - label: Strength of Earth
+      value: 1
+    - label: Stoneskin
+      value: 2
+  air_totem:
+    section: Totems
+    type: dropdown
+    label: Air slot
+    default: 1
+    options:
+    - label: None
+      value: 0
+    - label: Windfury
+      value: 1
+    - label: Grace of Air
+      value: 2
+    - label: Windwall
+      value: 3
+  water_totem:
+    section: Totems
+    type: dropdown
+    label: Water slot
+    default: 1
+    options:
+    - label: None
+      value: 0
+    - label: Mana Spring
+      value: 1
+    - label: Healing Stream
+      value: 2
+  fire_totem:
+    section: Totems
+    type: dropdown
+    label: Fire slot
+    default: 2
+    options:
+    - label: None
+      value: 0
+    - label: Searing
+      value: 1
+    - label: Magma on packs; Searing otherwise
+      value: 2
+  magma_count:
+    section: Totems
+    type: slider
+    label: 'Magma: minimum nearby engaged enemies'
+    min: 2
+    max: 6
+    default: 3
+  grounding:
+    section: Totems
+    type: checkbox
+    label: Grounding during an engaged enemy cast targeting the party
+    default: false
+  mana_tide:
+    section: Totems
+    type: checkbox
+    label: Learned Mana Tide when your mana is low
+    default: true
+  mana_tide_pct:
+    section: Totems
+    type: slider
+    label: Mana Tide below mana (%)
+    min: 10
+    max: 70
+    default: 35
+  totem_note:
+    section: Totems
+    type: note
+    label: Slots, movement and positioning
+    text: Routine totems preserve existing detected occupants, including manual utility and Mana Tide. Enabled emergency Mana Tide/Grounding can replace
+      the current water/air totem. Test totem detection first; disable this option if an active totem is repeatedly proposed. No automatic twisting or recall.
+      Optional Fire Nova setup can replace a tracked Searing/Magma left over 20 yards away; other totems still need manual relocation. Searing/Magma require
+      AoE enabled, an engaged selected target and no idle enemies counted nearby. Nearby crowd control and exact Chain Lightning bounces still require your
+      judgement. Earthbind, Tremor and resistance/cleansing totems remain manual encounter tools.
+  fire_nova:
+    section: Fire Nova
+    type: checkbox
+    label: Use Fire Nova on packs around your fire totem
+    default: false
+  nova_targets:
+    section: Fire Nova
+    type: slider
+    label: Minimum enemies within 10 yards of the fire totem
+    min: 3
+    max: 10
+    default: 3
+  nova_mana:
+    section: Fire Nova
+    type: slider
+    label: Minimum mana for Fire Nova (%)
+    min: 10
+    max: 80
+    default: 40
+  nova_ttd:
+    section: Fire Nova
+    type: slider
+    label: Minimum estimated target life (seconds)
+    min: 3
+    max: 20
+    default: 6
+  nova_prepare:
+    section: Fire Nova
+    type: checkbox
+    label: Place the selected fire totem for a nearby pack
+    default: true
+  nova_reposition:
+    section: Fire Nova
+    type: checkbox
+    label: Replace a tracked Searing/Magma left over 20 yards away
+    default: true
+  nova_note:
+    section: Fire Nova
+    type: note
+    label: Current loader required; verify totem tracking
+    text: Off until enabled. Requires a tracked owned Searing/Magma within 20 yards and at least 3 enemies within its 10-yard blast. AoE must be on; detected
+      enemies within 30 yards must all be in combat. Counts cannot prove nearby enemies are free of crowd control. Disable around protected mobs. Setup
+      requires a stationary pack within 8 yards, routine totems enabled and a Fire slot choice. Magma is preferred for the pack choice, otherwise Searing.
+      Utility totems and unknown ranks are preserved. Missing position/count data skips Nova; it never falls back to an assumed hit. Mana must cover setup,
+      Nova and your reserved heal. Bind Fire Nova and the chosen totem normally.
+  flame_shock:
+    section: Damage
+    type: checkbox
+    label: Flame Shock only when its damage has time to tick
+    default: true
+  flame_ttd:
+    section: Damage
+    type: slider
+    label: Minimum expected target life for Flame Shock (seconds)
+    min: 5
+    max: 25
+    default: 10
+  earth_shock_damage:
+    section: Damage
+    type: checkbox
+    label: Earth Shock as damage when shock reservation permits
+    default: true
+  chain_lightning:
+    section: Damage
+    type: checkbox
+    label: Chain Lightning for engaged packs
+    default: true
+  chain_targets:
+    section: Damage
+    type: slider
+    label: Chain Lightning minimum nearby enemies
+    min: 2
+    max: 6
+    default: 3
+  chain_mana:
+    section: Damage
+    type: slider
+    label: Chain Lightning minimum mana (%)
+    min: 10
+    max: 80
+    default: 40
+  cooldowns:
+    section: Cooldowns
+    type: checkbox
+    label: Use learned offensive cooldowns with the loader cooldown toggle
+    default: true
+  cooldown_ttd:
+    section: Cooldowns
+    type: slider
+    label: Minimum expected target life for cooldowns (seconds)
+    min: 5
+    max: 40
+    default: 15
+  stormstrike:
+    section: Enhancement
+    type: checkbox
+    label: Use Stormstrike in melee
+    default: true
+  maelstrom:
+    section: Enhancement
+    type: checkbox
+    label: Spend five Maelstrom stacks on instant Lightning Bolt
+    default: true
+  ranged_pull:
+    section: Enhancement
+    type: checkbox
+    label: Use Lightning Bolt when outside melee range
+    default: true
+variables:
+  windfury_learned: action.windfury_weapon.known|action.8232.known|action.8235.known|action.10486.known|action.16362.known
+  flametongue_learned: action.flametongue_weapon.known|action.8024.known|action.8027.known|action.8030.known|action.16339.known|action.16341.known|action.16342.known
+  imbue_window: config.imbue_choice>0&!player.combat&weapon.id>0&!mainhand.enchant.up
+  grouped: group.count(!cycle.is_player)>0
+  engaged: target.exists&target.alive&target.enemy&target.attackable&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)
+  can_attack: var.engaged|(config.start_selected&!player.combat&target.exists&target.alive&target.enemy&target.attackable)
+  hover_engaged: mouseover.exists&mouseover.alive&mouseover.enemy&mouseover.attackable&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)
+  target_cc: target.debuff.polymorph.up.any|target.debuff.sap.up.any|target.debuff.banish.up.any|target.debuff.seduction.up.any|target.debuff.hibernate.up.any|target.debuff.repentance.up.any|target.debuff.fear.up.any
+  hover_cc: mouseover.debuff.polymorph.up.any|mouseover.debuff.sap.up.any|mouseover.debuff.banish.up.any|mouseover.debuff.seduction.up.any|mouseover.debuff.hibernate.up.any|mouseover.debuff.repentance.up.any|mouseover.debuff.fear.up.any
+  can_damage: config.damage&var.can_attack&!var.target_cc
+  target_cast: target.casting|target.channeling
+  hover_cast: mouseover.casting|mouseover.channeling
+  mobile_heal: '!player.moving|action.healing_wave.cast_time=0|buff.natures_swiftness.up.any'
+  hurt_member: group.count(cycle.range<=40&cycle.health.effective.pct<config.damage_safe_hp)>0
+  emergency_member: group.count(!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp)>0
+  heal_reserve: action.healing_wave.cost*(config.mana_saver&config.self_heal&action.healing_wave.known&!action.healing_wave.blocked&player.health.effective.pct<config.rest_hp)
+  finish_melee: config.melee_finish&target.range<=5&(target.health.pct<=config.melee_finish_hp|mana.pct<=config.melee_mana)
+  long_fight: target.time_to_die>=config.totem_ttd|(target.time_to_die<=0&target.health.pct>=70)
+  dot_lifetime: target.time_to_die>=config.flame_ttd|(target.time_to_die<=0&target.health.pct>=70)
+  cooldown_window: target.boss|target.time_to_die>=config.cooldown_ttd
+  shock_damage: '!config.shock_reserve_all&(!config.preserve_shock|(!var.target_cast&!(config.mouseover_interrupt&var.hover_engaged&var.hover_cast)))'
+  earth_free: totem.strength_of_earth_totem.down&totem.stoneskin_totem.down&totem.earthbind_totem.down&totem.tremor_totem.down&totem.stoneclaw_totem.down
+  air_free: totem.windfury_totem.down&totem.grace_of_air_totem.down&totem.windwall_totem.down&totem.grounding_totem.down&totem.nature_resistance_totem.down&totem.tranquil_air_totem.down
+  water_free: totem.mana_spring_totem.down&totem.healing_stream_totem.down&totem.mana_tide_totem.down&totem.poison_cleansing_totem.down&totem.disease_cleansing_totem.down&totem.fire_resistance_totem.down
+  fire_free: totem.searing_totem.down&totem.magma_totem.down&totem.frost_resistance_totem.down&totem.flametongue_totem.down
+  totem_window: config.use_totems&player.combat&var.engaged&!var.target_cc&(!config.totems_stationary|!player.moving)&mana.pct>=config.totem_mana&var.long_fight
+  safe_fire: state.aoe&target.range<=20&enemies.20y=enemies.combat.20y&enemies.combat.20y>0
+  safe_chain: enemies.around_target>=config.chain_targets&enemies.30y=enemies.combat.30y&enemies.combat.30y>=config.chain_targets
+  nova_window: config.fire_nova&state.aoe&player.combat&var.can_damage&action.fire_nova.known&!action.fire_nova.blocked&mana.pct>=config.nova_mana&(target.time_to_die>=config.nova_ttd|(target.time_to_die<=0&target.health.pct>=70))&!(config.maelstrom&buff.408505.stack>=5&action.lightning_bolt.cast_time=0&action.lightning_bolt.ready)
+  nova_safe_area: enemies.30y=enemies.combat.30y&enemies.combat.30y>=config.nova_targets
+  fire_nova_area: ((totem.searing_totem.up&minion.2523.up&minion.2523.distance<=20&minion.2523.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance<=20&minion.3902.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance<=20&minion.3903.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance<=20&minion.3904.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance<=20&minion.7400.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance<=20&minion.7402.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance<=20&minion.5929.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance<=20&minion.7464.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance<=20&minion.7465.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance<=20&minion.7466.enemies.10>=config.nova_targets))&var.nova_safe_area
+  fire_near: (totem.searing_totem.up&minion.2523.up&minion.2523.distance<=20)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance<=20)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance<=20)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance<=20)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance<=20)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance<=20)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance<=20)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance<=20)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance<=20)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance<=20)
+  fire_far: ((totem.searing_totem.up&minion.2523.up&minion.2523.distance>20&minion.2523.distance<100000000)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance>20&minion.3902.distance<100000000)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance>20&minion.3903.distance<100000000)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance>20&minion.3904.distance<100000000)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance>20&minion.7400.distance<100000000)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance>20&minion.7402.distance<100000000)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance>20&minion.5929.distance<100000000)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance>20&minion.7464.distance<100000000)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance>20&minion.7465.distance<100000000)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance>20&minion.7466.distance<100000000))&!var.fire_near
+  nova_replace: var.fire_free|(config.nova_reposition&var.fire_far&totem.frost_resistance_totem.down&totem.flametongue_totem.down)
+  nova_setup: var.nova_window&config.nova_prepare&config.use_totems&config.fire_totem>0&!player.moving&target.range<=8&enemies.combat.8y>=config.nova_targets&var.nova_safe_area&!var.fire_nova_area&var.nova_replace&cooldown.fire_nova.remains<=0
+lists:
+  main:
+  - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
+  - call_action_list,name=spell_queue
+  - return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
+  - call_action_list,name=survival
+  - return,if=config.preserve_wolf&buff.ghost_wolf.up.any
+  - call_action_list,name=cast_interrupts,if=config.cancel_damage_for_interrupt&(player.casting.lightning_bolt|player.casting.chain_lightning)
+  - return,if=player.casting|player.channeling
+  - call_action_list,name=healing
+  - call_action_list,name=control
+  - call_action_list,name=dispels
+  - call_action_list,name=buffs
+  - call_action_list,name=imbues,if=var.imbue_window
+  - call_action_list,name=mana
+  - return,if=!var.can_damage
+  - call_action_list,name=nova
+  - call_action_list,name=totems
+  - call_action_list,name=cooldowns
+  - attack_target,if=target.range<=5&!player.auto_attacking
+  - call_action_list,name=damage
+  survival:
+  - health_potion,range_check=none,if=config.health_potion&player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
+  - stoneform,range_check=none,if=config.racial_defense&player.combat&(player.dispelable.poison|player.dispelable.disease|player.health.pct<=25)
+  - will_of_the_forsaken,range_check=none,if=config.racial_defense&(player.feared|player.charmed)
+  healing:
+  - healing_wave.player,range_check=none,ignore_movement=true,if=config.self_heal&buff.natures_swiftness.up.any&action.healing_wave.cast_time=0&(player.health.effective.pct<config.heal_hp|player.health.effective.pct<config.emergency_hp)
+  - healing_wave,cycle=members,cycle_order=health.pct,ignore_movement=true,if=config.party_heal&buff.natures_swiftness.up.any&action.healing_wave.cast_time=0&!cycle.is_player&cycle.range<=40&(cycle.health.effective.pct<config.heal_hp|cycle.health.effective.pct<config.emergency_hp)
+  - natures_swiftness,range_check=none,if=config.natures_swiftness&player.combat&buff.natures_swiftness.down.any&action.healing_wave.known&!action.healing_wave.blocked&mana>=action.healing_wave.cost+action.natures_swiftness.cost&((config.self_heal&player.health.effective.pct<config.emergency_hp)|(config.party_heal&var.emergency_member))
+  - lesser_healing_wave.player,range_check=none,if=config.self_heal&player.health.effective.pct<config.emergency_hp&(!player.moving|action.lesser_healing_wave.cast_time=0)
+  - lesser_healing_wave,cycle=members,cycle_order=health.pct,if=config.party_heal&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp&(!player.moving|action.lesser_healing_wave.cast_time=0)
+  - healing_wave.player,range_check=none,if=config.self_heal&player.health.effective.pct<config.emergency_hp&(!player.moving|action.healing_wave.cast_time=0)
+  - healing_wave,cycle=members,cycle_order=health.pct,if=config.party_heal&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp&(!player.moving|action.healing_wave.cast_time=0)
+  - chain_heal,cycle=members,cycle_order=health.pct,if=config.party_heal&config.chain_heal&player.combat&cycle.range<=40&cycle.health.effective.pct<config.chain_hp&(!player.moving|action.chain_heal.cast_time=0)&group.count(cycle.range<=40&cycle.health.effective.pct<config.chain_hp)>=config.chain_count
+  - healing_wave.player,range_check=none,if=config.self_heal&((player.combat&player.health.effective.pct<config.heal_hp)|(!player.combat&player.health.effective.pct<config.rest_hp))&(!player.moving|action.healing_wave.cast_time=0)
+  - healing_wave,cycle=members,cycle_order=health.pct,if=config.party_heal&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<config.heal_hp&(!player.moving|action.healing_wave.cast_time=0)
+  - lesser_healing_wave.player,range_check=none,if=config.self_heal&((player.combat&player.health.effective.pct<config.heal_hp)|(!player.combat&player.health.effective.pct<config.rest_hp))&(!player.moving|action.lesser_healing_wave.cast_time=0)
+  - lesser_healing_wave,cycle=members,cycle_order=health.pct,if=config.party_heal&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<config.heal_hp&(!player.moving|action.lesser_healing_wave.cast_time=0)
+  - riptide.player,range_check=none,if=config.self_heal&config.riptide&player.health.effective.pct<config.riptide_hp&buff.riptide.down&mana.pct>=config.riptide_mana
+  - riptide,cycle=members,cycle_order=health.pct,if=config.party_heal&config.riptide&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<config.riptide_hp&cycle.buff.riptide.down&mana.pct>=config.riptide_mana
+  cast_interrupts:
+  - earth_shock.mouseover,range_check=mouseover,interrupt=true,if=config.mouseover_interrupt&player.combat&var.hover_engaged&!var.hover_cc&var.hover_cast&mouseover.casting.interruptible
+  - earth_shock,interrupt=true,if=config.interrupt&player.combat&var.engaged&!var.target_cc&var.target_cast&target.casting.interruptible
+  control:
+  - earth_shock.mouseover,range_check=mouseover,if=config.mouseover_interrupt&player.combat&var.hover_engaged&!var.hover_cc&var.hover_cast&mouseover.casting.interruptible
+  - earth_shock,if=config.interrupt&player.combat&var.engaged&!var.target_cc&var.target_cast&target.casting.interruptible
+  - war_stomp,range_check=none,if=config.war_stomp&player.combat&var.engaged&!var.target_cc&!target.boss&target.range<=8&var.target_cast&!player.moving&(!action.earth_shock.ready|!target.casting.interruptible)
+  - purge,if=config.purge&var.engaged&!var.target_cc&target.purgeable.magic&mana.pct>=config.purge_mana
+  - frost_shock,if=config.frost_slow&var.engaged&!var.target_cc&!target.boss&target.health.pct<=25&target.range>5&target.moving&target.closing_speed<-1&debuff.frost_shock.down.any&var.shock_damage
+  dispels:
+  - cure_poison.player,range_check=none,if=config.dispels&player.dispelable.poison
+  - cure_disease.player,range_check=none,if=config.dispels&player.dispelable.disease
+  - cure_poison,cycle=members,cycle_order=health.pct,if=config.party_dispels&!cycle.is_player&cycle.range<=40&cycle.dispelable.poison
+  - cure_disease,cycle=members,cycle_order=health.pct,if=config.party_dispels&!cycle.is_player&cycle.range<=40&cycle.dispelable.disease
+  buffs:
+  - water_shield,range_check=none,if=config.shields&config.shield_choice=0&buff.water_shield.down.any
+  - lightning_shield,range_check=none,if=config.shields&config.shield_choice=1&buff.lightning_shield.down.any
+  - lightning_shield,range_check=none,if=config.shields&config.shield_choice=0&!action.water_shield.known&buff.lightning_shield.down.any
+  - water_shield,range_check=none,if=config.shields&config.shield_choice=1&!action.lightning_shield.known&buff.water_shield.down.any
+  imbues:
+  - windfury_weapon,range_check=none,if=config.imbue_choice=1|config.imbue_choice=2
+  - flametongue_weapon,range_check=none,if=config.imbue_choice=3|(config.imbue_choice=1&!var.windfury_learned)
+  - rockbiter_weapon,range_check=none,if=config.imbue_choice=4|(config.imbue_choice=1&!var.windfury_learned&!var.flametongue_learned)
+  - frostbrand_weapon,range_check=none,if=config.imbue_choice=5
+  mana:
+  - mana_potion,range_check=none,if=config.mana_potion&player.combat&mana.pct<=config.mana_pot_pct&mana_potion.ready&(!config.health_potion|player.health.pct>config.health_pot_hp|!health_potion.ready)
+  - mana_tide_totem,range_check=none,if=config.mana_tide&state.cds&player.combat&mana.pct<=config.mana_tide_pct&totem.mana_tide_totem.down&(!config.totems_stationary|!player.moving)
+  nova:
+  - fire_nova,range_check=none,if=(var.nova_window&var.fire_nova_area)&(action.fire_nova.cost=0|mana>=action.fire_nova.cost+var.heal_reserve)
+  - magma_totem,range_check=none,if=(var.nova_setup&config.fire_totem=2&action.magma_totem.ready&mana>=action.magma_totem.cost+action.fire_nova.cost+var.heal_reserve&mana-action.magma_totem.cost>=mana.max*config.nova_mana/100)&(action.magma_totem.cost=0|mana>=action.magma_totem.cost+var.heal_reserve)
+  - searing_totem,range_check=none,if=(var.nova_setup&(config.fire_totem=1|!action.magma_totem.known|action.magma_totem.blocked)&action.searing_totem.ready&mana>=action.searing_totem.cost+action.fire_nova.cost+var.heal_reserve&mana-action.searing_totem.cost>=mana.max*config.nova_mana/100)&(action.searing_totem.cost=0|mana>=action.searing_totem.cost+var.heal_reserve)
+  totems:
+  - grounding_totem,range_check=none,if=(config.grounding&player.combat&var.engaged&var.target_cast&target.targeting_party&totem.grounding_totem.down&(!config.totems_stationary|!player.moving))&(action.grounding_totem.cost=0|mana>=action.grounding_totem.cost+var.heal_reserve)
+  - strength_of_earth_totem,range_check=none,if=(var.totem_window&config.earth_totem=1&var.earth_free)&(action.strength_of_earth_totem.cost=0|mana>=action.strength_of_earth_totem.cost+var.heal_reserve)
+  - stoneskin_totem,range_check=none,if=(var.totem_window&config.earth_totem=2&var.earth_free)&(action.stoneskin_totem.cost=0|mana>=action.stoneskin_totem.cost+var.heal_reserve)
+  - windfury_totem,range_check=none,if=(var.totem_window&config.air_totem=1&var.air_free)&(action.windfury_totem.cost=0|mana>=action.windfury_totem.cost+var.heal_reserve)
+  - grace_of_air_totem,range_check=none,if=(var.totem_window&config.air_totem=2&var.air_free)&(action.grace_of_air_totem.cost=0|mana>=action.grace_of_air_totem.cost+var.heal_reserve)
+  - windwall_totem,range_check=none,if=(var.totem_window&config.air_totem=3&var.air_free)&(action.windwall_totem.cost=0|mana>=action.windwall_totem.cost+var.heal_reserve)
+  - mana_spring_totem,range_check=none,if=(var.totem_window&config.water_totem=1&var.water_free)&(action.mana_spring_totem.cost=0|mana>=action.mana_spring_totem.cost+var.heal_reserve)
+  - healing_stream_totem,range_check=none,if=(var.totem_window&config.water_totem=2&var.water_free)&(action.healing_stream_totem.cost=0|mana>=action.healing_stream_totem.cost+var.heal_reserve)
+  - magma_totem,range_check=none,if=(var.can_damage&var.totem_window&config.fire_totem=2&var.fire_free&state.aoe&target.range<=8&enemies.combat.8y>=config.magma_count&var.safe_fire)&(action.magma_totem.cost=0|mana>=action.magma_totem.cost+var.heal_reserve)
+  - searing_totem,range_check=none,if=(var.can_damage&var.totem_window&config.fire_totem>0&var.fire_free&var.safe_fire)&(action.searing_totem.cost=0|mana>=action.searing_totem.cost+var.heal_reserve)
+  cooldowns:
+  - rage_of_the_farseer,range_check=none,if=(config.cooldowns&state.cds&var.engaged&target.range<=5&var.cooldown_window)&(action.rage_of_the_farseer.cost=0|mana>=action.rage_of_the_farseer.cost+var.heal_reserve)
+  - lightning_mastery,range_check=none,if=(config.cooldowns&state.cds&var.engaged&var.cooldown_window&!player.moving&action.lightning_bolt.ready&mana>=action.lightning_bolt.cost)&(action.lightning_mastery.cost=0|mana>=action.lightning_mastery.cost+var.heal_reserve)
+  - blood_fury,range_check=none,if=(config.racials&state.cds&var.engaged&var.cooldown_window&player.health.pct>=80)&(action.blood_fury.cost=0|mana>=action.blood_fury.cost+var.heal_reserve)
+  - berserking,range_check=none,if=(config.racials&state.cds&var.engaged&var.cooldown_window)&(action.berserking.cost=0|mana>=action.berserking.cost+var.heal_reserve)
+  damage:
+  - stormstrike,if=(config.stormstrike&target.range<=5&(!config.maelstrom|buff.408505.stack<5|buff.408505.remains>gcd))&(action.stormstrike.cost=0|mana>=action.stormstrike.cost+var.heal_reserve)
+  - lightning_bolt,ignore_movement=true,if=config.maelstrom&buff.408505.stack>=5&action.lightning_bolt.cast_time=0
+  - return,if=var.finish_melee&player.auto_attacking
+  - flame_shock,if=(config.flame_shock&var.dot_lifetime&dot.flame_shock.remains<=0&var.shock_damage)&(action.flame_shock.cost=0|mana>=action.flame_shock.cost+var.heal_reserve)
+  - earth_shock,if=(config.earth_shock_damage&var.shock_damage&target.range<=20)&(action.earth_shock.cost=0|mana>=action.earth_shock.cost+var.heal_reserve)
+  - lightning_bolt,if=(config.ranged_pull&target.range>5&!player.moving)&(action.lightning_bolt.cost=0|mana>=action.lightning_bolt.cost+var.heal_reserve)

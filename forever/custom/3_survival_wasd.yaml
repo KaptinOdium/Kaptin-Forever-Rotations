@@ -1,0 +1,604 @@
+# Forever only. Offline decision checks do not establish live key delivery.
+spec: 3
+name: Forever Hunter - Survival WASD 1-60
+version: 1.0.8
+author: Kaptin
+date: '2026-11-16'
+patch: Classic Forever
+entry: main
+description: 'Survival: manual movement, pet care, mana conservation and learned Forever abilities.'
+config:
+  setup:
+    section: Setup
+    type: note
+    label: Forever Hunter - manual WASD and positioning
+    text: Choose the profile matching your talents. Install the included companion, then assign or AutoBind your spells, Pet Attack and Auto Shot @stop_attack;
+      optional retargeting needs Auto Shot @retarget_stop. You choose targets and start pulls. Optional combat retargeting can acquire a target only when
+      yours is dead or missing. No movement, pet training or gear changes.
+  damage:
+    section: Targeting
+    type: checkbox
+    label: Enable damage on the selected enemy
+    default: true
+  start_selected:
+    section: Targeting
+    type: checkbox
+    label: Allow pulling your idle selected enemy
+    default: false
+  dungeon_selected_combat:
+    section: Targeting
+    type: checkbox
+    label: Join selected fighting enemy in dungeons
+    default: false
+  retarget_combat:
+    section: Targeting
+    type: checkbox
+    label: Acquire a target in combat when yours dies or is missing
+    default: false
+  retarget_note:
+    section: Targeting
+    type: note
+    label: Optional Target Enemy binding
+    text: Off by default. Bind the native Target Enemy action and Auto Shot @retarget_stop (companion 1.0.3). While you are in combat, with damage enabled
+      and a nearby combat-enemy indication, a dead/missing target can trigger Target Enemy after existing attacks have stopped. Every living selection is
+      preserved, including friendly, controlled, idle or distant targets. Target Enemy chooses the nearest enemy; it does not filter candidates to your
+      fight. Keep idle-target pulling OFF. If it selects an idle enemy, attacks wait and you choose another target. The retarget stop recalls the pet without
+      issuing a stance change; eligible Pet Attack sends it to the new enemy. A missing retarget-stop key never falls back to the Passive protective recall.
+      Target presses use the native 200 ms repeat limit; ordinary rotation timing is unchanged.
+  dungeon_entry_note:
+    section: Targeting
+    type: note
+    label: Optional dungeon entry without group proof
+    text: Off by default. In a grouped dungeon, permits attacks on the living hostile enemy you selected only after that enemy is already in combat. It
+      cannot prove whom the enemy is fighting. Keep idle-target pulling OFF; normal damage, crowd-control, immunity and range checks still apply. Does not
+      apply in open world, raids, PvP instances or solo. No group bridge or Force Combat is needed. If using this mode, /kaptinhuntergroup off disables
+      the separate optional bridge. You still select the tank's enemy and control movement; Auto Shot waits until stationary and in range.
+  group_entry_note:
+    section: Targeting
+    type: note
+    label: Join the selected group fight
+    text: An enemy already fighting your group can be attacked before you personally enter combat. Keep idle-target pulling OFF. If the loader cannot recognize
+      the group relationship, the optional group-engagement compatibility patch can supply verified group engagement; see INSTALL.txt. It does not choose
+      targets or enable Force Combat.
+  protect_cc:
+    section: Targeting
+    type: checkbox
+    label: Stop your attacks and pet on recognized breakable CC
+    default: true
+  avoid_immunity:
+    section: Targeting
+    type: checkbox
+    label: Pause damage into recognized physical immunity
+    default: true
+  stop_note:
+    section: Targeting
+    type: note
+    label: Stop key is required for existing attacks
+    text: Auto Shot @stop_attack stops your attacks and calls the pet back in Passive mode for recognized CC, immunity or damage OFF. Ordinary retargeting
+      uses the separate @retarget_stop command, which does not issue a pet stance change. Protective recall is independent of permanent-pet care. Passive
+      can disrupt summoned hawks on Forever; the optional Hawk Assist mode can resume them on an eligible summon. The profile cannot detect every CC or
+      queued attack; manual control takes priority. Stopping new recommendations alone cannot stop existing auto-attacks.
+  auto_shot:
+    section: Ranged
+    type: checkbox
+    label: Start Auto Shot on the selected engaged enemy
+    default: true
+  aimed:
+    section: Ranged
+    type: checkbox
+    label: Use Aimed Shot while stationary
+    default: true
+  sniper:
+    section: Ranged
+    type: checkbox
+    label: Use learned Sniper Shot while stationary
+    default: true
+  aimed_ttd:
+    section: Ranged
+    type: slider
+    label: Aimed Shot minimum target lifetime (seconds)
+    min: 3
+    max: 20
+    default: 6
+  sniper_ttd:
+    section: Ranged
+    type: slider
+    label: Sniper Shot minimum target lifetime (seconds)
+    min: 5
+    max: 25
+    default: 10
+  arcane:
+    section: Ranged
+    type: checkbox
+    label: Use Arcane Shot when Summon Hawk is not taking its shared cooldown
+    default: true
+  hawk_attack:
+    section: Pet damage
+    type: checkbox
+    label: Use learned Summon Hawk
+    default: true
+  hawk_assist:
+    section: Pet damage
+    type: checkbox
+    label: Use Assist mode when summoning hawks (requires @assist key)
+    default: false
+  hawk_assist_note:
+    section: Pet damage
+    type: note
+    label: Optional workaround for hawks returning on Passive
+    text: Bind Summon Hawk @assist and enable this option to switch your pet to Assist when an eligible Hawk is summoned. Assist stays active and can follow
+      your attacks onto other targets. Recognized CC blocks this variant; protective recall can still set Passive. This option does not change stance while
+      idle or when the variant is unbound. Leave it OFF to control pet stance yourself. Live recovery still needs confirmation.
+  hawk_cap:
+    section: Pet damage
+    type: checkbox
+    label: Manage two hawks with a timed refresh and Arcane Shot fallback
+    default: true
+  hawk_refresh:
+    section: Pet damage
+    type: slider
+    label: Refresh oldest hawk below remaining seconds
+    min: 0
+    max: 10
+    default: 5
+  hawk_ttd:
+    section: Pet damage
+    type: slider
+    label: Summon Hawk minimum target lifetime (seconds)
+    min: 3
+    max: 20
+    default: 6
+  hawk_note:
+    section: Pet damage
+    type: note
+    label: Refresh the oldest hawk near expiry
+    text: Below two owned hawks, Summon Hawk is eligible. At two, Arcane Shot and other eligible priorities continue while the oldest hawk has at least
+      the configured time remaining; below it, Summon Hawk becomes eligible again. Bind and enable Arcane Shot. Remaining time is estimated from the native
+      oldest summon age and an 18-second lifespan; live hawk detection and timing need verification. Hawks already alive when the loader attaches may have
+      unknown age. The count includes hawks on previous targets. Disable this policy for unrestricted refreshes; it is not a measured DPS claim.
+  movement_note:
+    section: Ranged
+    type: note
+    label: Stop briefly to shoot
+    text: Aimed Shot and Sniper Shot wait for you to stop. Auto Shot needs a short standing window. Instant shots remain eligible while moving; native range
+      and usability still apply. Auto Shot continues during Aimed / Sniper on Forever, so no old swing-clipping rule is used. You must move out of the ranged
+      dead zone yourself.
+  serpent:
+    section: Stings and mark
+    type: checkbox
+    label: Apply Serpent Sting to sufficiently durable targets
+    default: true
+  sting_ttd:
+    section: Stings and mark
+    type: slider
+    label: Serpent Sting minimum target lifetime (seconds)
+    min: 5
+    max: 20
+    default: 9
+  unknown_dots:
+    section: Stings and mark
+    type: checkbox
+    label: Allow Sting / long attacks on healthy targets with unknown lifetime
+    default: true
+  mark:
+    section: Stings and mark
+    type: checkbox
+    label: Apply Hunter's Mark; also supports Expose Prey in melee
+    default: true
+  mark_ttd:
+    section: Stings and mark
+    type: slider
+    label: Hunter's Mark minimum target lifetime (seconds)
+    min: 0
+    max: 15
+    default: 0
+  mouseover_serpent:
+    section: Mouseover
+    type: checkbox
+    label: Serpent Sting on a second, already engaged enemy
+    default: false
+  hover_hp:
+    section: Mouseover
+    type: slider
+    label: Mouseover Sting minimum enemy health (%)
+    min: 20
+    max: 100
+    default: 60
+  hover_note:
+    section: Mouseover
+    type: note
+    label: One optional strict mouseover key
+    text: Requires Serpent Sting @mouseover. A hostile unit needs confirmed player threat or must be targeting the group. Selected pet targets are supported
+      before your first hit; untagged pet-only mouseovers cannot be reliably identified by the native loader and are left alone.
+  use_pet:
+    section: Pet care
+    type: checkbox
+    label: Manage permanent pet (turn OFF for a petless / Lone Wolf build)
+    default: true
+  pet_attack:
+    section: Pet care
+    type: checkbox
+    label: Send a living pet to the selected engaged enemy
+    default: true
+  call_pet:
+    section: Pet care
+    type: checkbox
+    label: Call a missing pet between fights
+    default: true
+  revive_pet:
+    section: Pet care
+    type: checkbox
+    label: Revive a dead pet between fights while stationary
+    default: true
+  mend:
+    section: Pet care
+    type: checkbox
+    label: Mend Pet while stationary when a safe channel is possible
+    default: true
+  mend_hp:
+    section: Pet care
+    type: slider
+    label: Combat Mend Pet below pet health (%)
+    min: 15
+    max: 80
+    default: 50
+  mend_idle_hp:
+    section: Pet care
+    type: slider
+    label: Between fights Mend Pet below pet health (%)
+    min: 30
+    max: 95
+    default: 80
+  mend_self_hp:
+    section: Pet care
+    type: slider
+    label: Combat Mend Pet requires player health above (%)
+    min: 35
+    max: 90
+    default: 60
+  pet_note:
+    section: Pet care
+    type: note
+    label: Pet setup stays under your control
+    text: For Lone Wolf, turn OFF Manage permanent pet and dismiss your pet manually; Summon Hawk is separate. Train and feed the pet, enable Bite/Claw
+      and other desired autocasts, and turn Growl off in groups. Mend Pet is a channel. No automatic combat resurrection or pet replacement. Call Pet respects
+      native dead/unavailable flags; a missing dead pet may require one failed Call Pet attempt before the loader recognizes that it needs Revive Pet.
+  mana_floor:
+    section: Mana
+    type: slider
+    label: Conserve mana below (%)
+    min: 0
+    max: 40
+    default: 15
+  mana_recovery:
+    section: Mana
+    type: checkbox
+    label: Low-mana priorities and cooldown reserve
+    default: false
+  recovery_pct:
+    section: Mana
+    type: slider
+    label: Use recovery priorities at or below mana (%)
+    min: 10
+    max: 60
+    default: 30
+  recovery_sting:
+    section: Mana
+    type: checkbox
+    label: Allow Serpent Sting upkeep during recovery (regen builds)
+    default: false
+  recovery_note:
+    section: Mana
+    type: note
+    label: Save for useful cooldowns before spending on filler
+    text: 'Off by default. At or below the threshold, prioritize eligible Rapid Fire, Bestial Wrath, Summon Hawk, then safe Multi-Shot / Aimed Shot. Paid
+      Mark, Sting, Arcane, Sniper and melee damage wait; free attacks, Auto Shot, the pet, healing and defensive controls remain available. While enabled,
+      damage also protects the live cost of an eligible ready offensive cooldown, even above the threshold. Cooldowns may spend the normal mana floor but
+      preserve Mend Pet mana. Burst, Rapid Fire opt-in, target lifetime, pet melee, movement, hawk and AoE checks still apply. If your build relies on Rapid
+      Recuperation, enable Serpent Sting upkeep during recovery. That option allows your selected target''s missing Sting after cooldowns, with the same
+      mana reserves; it does not infer your passive talents or add paid mouseover Stings. This saves for cooldowns; it does not restore mana or latch recovery
+      until a second threshold. Missing keys cannot be detected in expressions: a known unbound cooldown may reserve mana, but at full mana its extra reserve
+      releases for other affordable attacks. Bind both cooldowns or disable the unused option. The normal mana floor and Mend reserve stay protected.'
+  reserve_mend:
+    section: Mana
+    type: checkbox
+    label: Preserve one Mend Pet cost while the pet is injured
+    default: true
+  reserve_pet_hp:
+    section: Mana
+    type: slider
+    label: Preserve Mend Pet mana below pet health (%)
+    min: 30
+    max: 95
+    default: 80
+  mana_potion:
+    section: Mana
+    type: checkbox
+    label: Use a bound mana potion in combat
+    default: false
+  mana_pot_pct:
+    section: Mana
+    type: slider
+    label: Mana potion below mana (%)
+    min: 0
+    max: 35
+    default: 10
+  mana_note:
+    section: Mana
+    type: note
+    label: Auto Shot and pet remain available when mana is low
+    text: Paid damage respects a configurable mana floor and an injured-pet healing reserve. Free attacks remain eligible. Drink between fights; no unverified
+      Aspect of the Viper is used. Current spell costs come from the loader, including rank and patch changes.
+  aspects:
+    section: Buffs
+    type: checkbox
+    label: Maintain your chosen combat aspect
+    default: true
+  aspect:
+    section: Buffs
+    type: dropdown
+    label: Preferred combat aspect
+    default: 2
+    options:
+    - label: Hawk (ranged)
+      value: 0
+    - label: Monkey (defense)
+      value: 1
+    - label: Beast (melee)
+      value: 2
+  trueshot:
+    section: Buffs
+    type: checkbox
+    label: Maintain learned Trueshot Aura
+    default: true
+  aspect_note:
+    section: Buffs
+    type: note
+    label: Stable aspect preference
+    text: No automatic aspect swapping on every range change. Beast falls back to Monkey before it is learned; Hawk also falls back to Monkey at early levels.
+      Travel aspects are preserved between fights and replaced with your chosen combat aspect once an engagement is recognized.
+  melee:
+    section: Melee
+    type: checkbox
+    label: Use learned melee attacks when the enemy is in reach
+    default: true
+  raptor:
+    section: Melee
+    type: checkbox
+    label: Queue Raptor Strike when mana allows
+    default: true
+  wing_clip:
+    section: Melee
+    type: checkbox
+    label: Wing Clip an engaged enemy chasing you
+    default: false
+  concussive:
+    section: Control
+    type: checkbox
+    label: Concussive Shot when an engaged enemy is closing on you
+    default: true
+  intimidation:
+    section: Control
+    type: checkbox
+    label: Intimidation for a caster / health emergency on your pet target
+    default: true
+  intimidation_hp:
+    section: Control
+    type: slider
+    label: Intimidation emergency player health (%)
+    min: 10
+    max: 60
+    default: 35
+  scatter:
+    section: Control
+    type: checkbox
+    label: Scatter Shot an engaged caster not being attacked by your pet
+    default: false
+  mouseover_scatter:
+    section: Control
+    type: checkbox
+    label: Scatter Shot an engaged mouseover caster (requires key)
+    default: false
+  focus_scatter:
+    section: Control
+    type: checkbox
+    label: Scatter Shot an engaged focus caster (requires key)
+    default: false
+  control_note:
+    section: Control
+    type: note
+    label: Control is not a guaranteed interrupt
+    text: Intimidation requires the pet already targeting your selected enemy; the stun arrives on a pet attack. Scatter is opt-in, caster-only and checks
+      known breakable CC / damage-over-time effects. Scatter waits while your pet targets the selected enemy, including for mouseover/focus. A pet attacking
+      a different enemy and other players can still break it. Bosses are excluded. Traps and Tranquilizing Shot remain manual.
+  health_potion:
+    section: Defense
+    type: checkbox
+    label: Use a bound health potion in combat
+    default: true
+  potion_hp:
+    section: Defense
+    type: slider
+    label: Health potion below health (%)
+    min: 5
+    max: 50
+    default: 25
+  deterrence:
+    section: Defense
+    type: checkbox
+    label: Deterrence when low on health under melee pressure
+    default: true
+  deterrence_hp:
+    section: Defense
+    type: slider
+    label: Deterrence below health (%)
+    min: 10
+    max: 60
+    default: 35
+  racials:
+    section: Defense
+    type: checkbox
+    label: Use available racial fear / root / poison defenses
+    default: true
+  bestial_wrath:
+    section: Cooldowns
+    type: checkbox
+    label: Bestial Wrath once the pet reaches melee of a durable target
+    default: true
+  rapid_fire:
+    section: Cooldowns
+    type: checkbox
+    label: Allow Rapid Fire with Burst on (long cooldown)
+    default: false
+  cooldown_ttd:
+    section: Cooldowns
+    type: slider
+    label: Offensive cooldown minimum target lifetime (seconds)
+    min: 8
+    max: 45
+    default: 18
+  cooldown_note:
+    section: Cooldowns
+    type: note
+    label: Long cooldowns stay deliberate
+    text: Bestial Wrath requires Burst on and the pet in melee of your selected target; an attack command alone is not enough. Rapid Fire is off by default
+      and never fires from pack size alone. Readiness, Feign Death, Disengage, traps and Volley remain manual. Feign Death pauses the profile until you
+      end it yourself.
+  multi:
+    section: AoE
+    type: checkbox
+    label: Allow Multi-Shot with AoE toggle on
+    default: false
+  multi_count:
+    section: AoE
+    type: slider
+    label: Minimum enemies near target for Multi-Shot
+    min: 2
+    max: 5
+    default: 3
+  aoe_note:
+    section: AoE
+    type: note
+    label: Enable Multi-Shot only when the pack is safe
+    text: Multi-Shot shares Aimed Shot cooldown and takes a short stationary cast. Counted nearby enemies must be in combat and recognized CC must be clear.
+      Counts cannot prove secondary targets belong to your fight or detect every controlled mob; turn it off near other packs. Volley placement is manual.
+variables:
+  valid: target.exists&target.alive&target.enemy&target.attackable
+  engaged: var.valid&target.combat&(target.targeting_party|target.threat>=0|(pet.alive&pet.attacking_target))
+  dungeon_selected_combat: config.dungeon_selected_combat&player.indungeon&!player.inraid&!player.ininstancedpvp&group.count(!cycle.is_player)>0&var.valid&target.combat
+  can_attack: var.engaged|var.dungeon_selected_combat|(config.start_selected&!player.combat&var.valid)
+  fighting: player.combat|var.engaged
+  target_cc: target.debuff.polymorph.up.any|target.debuff.sap.up.any|target.debuff.gouge.up.any|target.debuff.blind.up.any|target.debuff.freezing_trap.up.any|target.debuff.hibernate.up.any|target.debuff.repentance.up.any|target.debuff.seduction.up.any|target.debuff.banish.up.any|target.debuff.fear.up.any|target.debuff.scatter_shot.up.any|target.debuff.shackle_undead.up.any|target.debuff.scare_beast.up.any|target.debuff.psychic_scream.up.any|target.debuff.intimidating_shout.up.any|target.debuff.howl_of_terror.up.any|target.debuff.turn_undead.up.any
+  hover_cc: mouseover.debuff.polymorph.up.any|mouseover.debuff.sap.up.any|mouseover.debuff.gouge.up.any|mouseover.debuff.blind.up.any|mouseover.debuff.freezing_trap.up.any|mouseover.debuff.hibernate.up.any|mouseover.debuff.repentance.up.any|mouseover.debuff.seduction.up.any|mouseover.debuff.banish.up.any|mouseover.debuff.fear.up.any|mouseover.debuff.scatter_shot.up.any|mouseover.debuff.shackle_undead.up.any|mouseover.debuff.scare_beast.up.any|mouseover.debuff.psychic_scream.up.any|mouseover.debuff.intimidating_shout.up.any|mouseover.debuff.howl_of_terror.up.any|mouseover.debuff.turn_undead.up.any
+  focus_cc: focus.debuff.polymorph.up.any|focus.debuff.sap.up.any|focus.debuff.gouge.up.any|focus.debuff.blind.up.any|focus.debuff.freezing_trap.up.any|focus.debuff.hibernate.up.any|focus.debuff.repentance.up.any|focus.debuff.seduction.up.any|focus.debuff.banish.up.any|focus.debuff.fear.up.any|focus.debuff.scatter_shot.up.any|focus.debuff.shackle_undead.up.any|focus.debuff.scare_beast.up.any|focus.debuff.psychic_scream.up.any|focus.debuff.intimidating_shout.up.any|focus.debuff.howl_of_terror.up.any|focus.debuff.turn_undead.up.any
+  protected_target: (config.protect_cc&var.target_cc)|(config.avoid_immunity&(target.buff.divine_shield.up.any|target.buff.ice_block.up.any|target.buff.blessing_of_protection.up.any))
+  attacks_active: player.auto_attacking|swing.ranged.remains<9999|(pet.alive&pet.attacking_target)
+  retarget_needed: config.retarget_combat&config.damage&player.combat&(!target.exists|target.dead)&enemies.combat.40y>=1
+  melee_pressure: var.engaged&target.in_melee&target.threat>=2&!target.casting&!target.channeling
+  sting_lifetime: target.time_to_die>=config.sting_ttd|(config.unknown_dots&target.time_to_die<=0&target.health.pct>=70)
+  hawk_lifetime: target.time_to_die>=config.hawk_ttd|(config.unknown_dots&target.time_to_die<=0&target.health.pct>=70)
+  aimed_lifetime: target.time_to_die>=config.aimed_ttd|(config.unknown_dots&target.time_to_die<=0&target.health.pct>=70)
+  sniper_lifetime: target.time_to_die>=config.sniper_ttd|(config.unknown_dots&target.time_to_die<=0&target.health.pct>=70)
+  mark_lifetime: target.time_to_die>=config.mark_ttd|(target.time_to_die<=0&target.health.pct>=40)
+  cooldown_window: target.boss|target.time_to_die>=config.cooldown_ttd
+  bestial_window: config.use_pet&config.bestial_wrath&state.cds&var.engaged&var.cooldown_window&pet.alive&pet.attacking_target&pet.in_melee.target&pet.health.pct>=40&pet.buff.bestial_wrath.down.any
+  rapid_window: config.rapid_fire&state.cds&var.engaged&var.cooldown_window&buff.rapid_fire.down.any&((!player.moving&range.auto_shot.target)|(config.melee&target.in_melee))
+  low_mana: config.mana_recovery&var.fighting&mana.pct<=config.recovery_pct
+  mend_reserve: action.mend_pet.cost*(config.use_pet&config.reserve_mend&config.mend&pet.alive&pet.health.pct<=config.reserve_pet_hp&action.mend_pet.known&!action.mend_pet.blocked)
+  mana_budget: mana.max*config.mana_floor/100+var.mend_reserve
+  mend_channel: (player.casting.spell_id=136|player.casting.spell_id=3111|player.casting.spell_id=3661|player.casting.spell_id=3662|player.casting.spell_id=13542|player.casting.spell_id=13543|player.casting.spell_id=13544)
+  shot_cast: (player.casting.spell_id=19434|player.casting.spell_id=20900|player.casting.spell_id=20901|player.casting.spell_id=20902|player.casting.spell_id=20903|player.casting.spell_id=20904|player.casting.spell_id=1310687|player.casting.spell_id=1310785|player.casting.spell_id=1310786|player.casting.spell_id=2643)
+  travel_aspect: buff.aspect_of_the_cheetah.up.any|buff.aspect_of_the_pack.up.any
+  aspect_window: config.aspects&(var.fighting|!var.travel_aspect)
+  hover_engaged: mouseover.exists&mouseover.alive&mouseover.enemy&mouseover.attackable&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)
+  focus_engaged: focus.exists&focus.alive&focus.enemy&focus.attackable&focus.combat&(focus.targeting_party|focus.threat>=0)
+  cluster_cc: cluster.debuff.polymorph.count.any>0|cluster.debuff.sap.count.any>0|cluster.debuff.gouge.count.any>0|cluster.debuff.blind.count.any>0|cluster.debuff.freezing_trap.count.any>0|cluster.debuff.hibernate.count.any>0|cluster.debuff.repentance.count.any>0|cluster.debuff.seduction.count.any>0|cluster.debuff.banish.count.any>0|cluster.debuff.fear.count.any>0|cluster.debuff.scatter_shot.count.any>0|cluster.debuff.shackle_undead.count.any>0|cluster.debuff.scare_beast.count.any>0|cluster.debuff.psychic_scream.count.any>0|cluster.debuff.intimidating_shout.count.any>0|cluster.debuff.howl_of_terror.count.any>0|cluster.debuff.turn_undead.count.any>0
+  area_clear: config.multi&state.aoe&var.engaged&!var.target_cc&!var.hover_cc&!var.focus_cc&!var.cluster_cc&enemies.50y=enemies.combat.50y&enemies.combat.50y>=config.multi_count&enemies.around_target>=config.multi_count
+  rapid_reserve: action.rapid_fire.cost*(config.mana_recovery&var.rapid_window&action.rapid_fire.known&!action.rapid_fire.blocked&cooldown.rapid_fire.remains<=0&action.rapid_fire.cost+var.mend_reserve<=mana.max)
+  bestial_reserve: action.bestial_wrath.cost*(config.mana_recovery&var.bestial_window&action.bestial_wrath.known&!action.bestial_wrath.blocked&cooldown.bestial_wrath.remains<=0&action.bestial_wrath.cost+var.mend_reserve<=mana.max)
+  cooldown_reserve: var.rapid_reserve*(var.rapid_reserve>=var.bestial_reserve)+var.bestial_reserve*(var.bestial_reserve>var.rapid_reserve)
+  target_sting_free: debuff.serpent_sting.down&debuff.viper_sting.down&debuff.scorpid_sting.down
+  hover_sting_free: mouseover.debuff.serpent_sting.down&mouseover.debuff.viper_sting.down&mouseover.debuff.scorpid_sting.down
+  target_scatter_clear: target.debuff.serpent_sting.down.any&target.debuff.lacerating_strikes.down.any&target.debuff.immolation_trap.down.any&target.debuff.explosive_trap.down.any
+  mouseover_scatter_clear: mouseover.debuff.serpent_sting.down.any&mouseover.debuff.lacerating_strikes.down.any&mouseover.debuff.immolation_trap.down.any&mouseover.debuff.explosive_trap.down.any
+  focus_scatter_clear: focus.debuff.serpent_sting.down.any&focus.debuff.lacerating_strikes.down.any&focus.debuff.immolation_trap.down.any&focus.debuff.explosive_trap.down.any
+lists:
+  main:
+  - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted|buff.feign_death.up.any
+  - call_action_list,name=spell_queue
+  - return,if=!var.fighting&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
+  - stop_casting,if=player.casting&var.shot_cast&(var.protected_target|!config.damage)
+  - auto_shot.stop_attack,range_check=none,ignore_usable=true,ignore_queue=true,if=var.attacks_active&(var.protected_target|!config.damage)
+  - stop_casting,if=player.channeling&var.mend_channel&(!pet.alive|pet.health.pct>=95|(var.fighting&(var.melee_pressure|player.health.pct<config.mend_self_hp)))
+  - call_action_list,name=defense
+  - return,if=player.casting|player.channeling
+  - auto_shot.retarget_stop,range_check=none,ignore_usable=true,ignore_queue=true,if=var.retarget_needed&var.attacks_active
+  - target_enemy,delay=200,off_gcd=true,if=var.retarget_needed&!var.attacks_active
+  - call_action_list,name=pet_care
+  - call_action_list,name=buffs
+  - call_action_list,name=controls
+  - return,if=!config.damage|!var.can_attack|var.protected_target
+  - petattack,range_check=none,if=config.use_pet&config.pet_attack&pet.alive&!pet.attacking_target
+  - auto_shot,if=config.auto_shot&!player.moving&swing.ranged.remains>=9999&range.auto_shot.target
+  - run_action_list,name=mana_recovery,if=var.low_mana
+  - hunters_mark,if=config.mark&var.mark_lifetime&debuff.hunters_mark.down.any&(action.hunters_mark.cost=0|(!var.low_mana&mana>=action.hunters_mark.cost+var.mana_budget&(!config.mana_recovery|mana>=action.hunters_mark.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - call_action_list,name=cooldowns
+  - call_action_list,name=mouseover_damage
+  - call_action_list,name=melee,if=config.melee&target.in_melee
+  - call_action_list,name=ranged
+  defense:
+  - will_of_the_forsaken,range_check=none,if=config.racials&(player.feared|player.charmed)
+  - escape_artist,range_check=none,if=config.racials&var.fighting&player.rooted
+  - stoneform,range_check=none,if=config.racials&var.fighting&(player.dispelable.poison|player.dispelable.disease)
+  - health_potion,range_check=none,interrupt=true,if=config.health_potion&var.fighting&player.health.pct<=config.potion_hp&health_potion.ready
+  - deterrence,range_check=none,interrupt=true,if=config.deterrence&var.melee_pressure&player.health.pct<=config.deterrence_hp&buff.deterrence.down.any
+  - mana_potion,range_check=none,if=config.mana_potion&var.fighting&mana.pct<=config.mana_pot_pct&mana_potion.ready&player.health.pct>config.potion_hp&!player.casting&!player.channeling
+  pet_care:
+  - revive_pet,range_check=none,if=config.use_pet&config.revive_pet&!var.fighting&!player.moving&pet.dead&!pet.alive
+  - call_pet,range_check=none,if=config.use_pet&config.call_pet&!var.fighting&!pet.exists&!pet.dead&!pet.unavailable
+  - mend_pet,range_check=none,if=config.use_pet&config.mend&pet.alive&pet.range<=20&!player.moving&((!var.fighting&pet.health.pct<config.mend_idle_hp)|(var.fighting&pet.health.pct<config.mend_hp&player.health.pct>=config.mend_self_hp&!var.melee_pressure))
+  buffs:
+  - aspect_of_the_beast,range_check=none,if=var.aspect_window&config.aspect=2&buff.aspect_of_the_beast.down.any&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_beast.cost=0|(!var.low_mana&mana>=action.aspect_of_the_beast.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_beast.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
+  - aspect_of_the_hawk,range_check=none,if=var.aspect_window&config.aspect=0&buff.aspect_of_the_hawk.down.any&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_hawk.cost=0|(!var.low_mana&mana>=action.aspect_of_the_hawk.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_hawk.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
+  - aspect_of_the_monkey,range_check=none,if=var.aspect_window&buff.aspect_of_the_monkey.down.any&(config.aspect=1|(config.aspect=2&!action.aspect_of_the_beast.known)|(config.aspect=0&!action.aspect_of_the_hawk.known))&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_monkey.cost=0|(!var.low_mana&mana>=action.aspect_of_the_monkey.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_monkey.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
+  - trueshot_aura,range_check=none,if=config.trueshot&buff.trueshot_aura.down.any&(!config.mana_recovery|!var.fighting|(action.trueshot_aura.cost=0|(!var.low_mana&mana>=action.trueshot_aura.cost+var.mana_budget&(!config.mana_recovery|mana>=action.trueshot_aura.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
+  controls:
+  - intimidation,range_check=none,if=config.use_pet&config.intimidation&var.engaged&!var.protected_target&!target.boss&pet.alive&pet.attacking_target&((target.casting|target.channeling)|(target.threat>=2&player.health.pct<=config.intimidation_hp))&pet.buff.intimidation.down.any
+  - concussive_shot,if=config.concussive&var.engaged&!var.protected_target&!target.boss&target.threat>=2&target.moving&target.closing_speed>0&debuff.concussive_shot.down.any&debuff.wing_clip.down.any
+  - scatter_shot,if=config.scatter&var.engaged&!var.protected_target&!pet.attacking_target&!target.boss&(target.casting|target.channeling)&var.target_scatter_clear
+  - scatter_shot.mouseover,if=config.mouseover_scatter&var.hover_engaged&!var.hover_cc&!pet.attacking_target&!mouseover.boss&(mouseover.casting|mouseover.channeling)&var.mouseover_scatter_clear
+  - scatter_shot.focus,if=config.focus_scatter&var.focus_engaged&!var.focus_cc&!pet.attacking_target&!focus.boss&(focus.casting|focus.channeling)&var.focus_scatter_clear
+  cooldowns:
+  - bestial_wrath,range_check=none,if=var.bestial_window&(!config.mana_recovery|mana>=action.bestial_wrath.cost+var.mend_reserve)
+  - rapid_fire,range_check=none,if=var.rapid_window&(!config.mana_recovery|mana>=action.rapid_fire.cost+var.mend_reserve)
+  mouseover_damage:
+  - serpent_sting.mouseover,range_check=mouseover,if=config.mouseover_serpent&var.hover_engaged&!var.hover_cc&mouseover.health.pct>=config.hover_hp&var.hover_sting_free&(action.serpent_sting.cost=0|(!var.low_mana&mana>=action.serpent_sting.cost+var.mana_budget&(!config.mana_recovery|mana>=action.serpent_sting.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  melee:
+  - attack_target,if=!player.auto_attacking
+  - wing_clip,if=config.wing_clip&var.melee_pressure&target.moving&!target.boss&debuff.wing_clip.down.any&debuff.concussive_shot.down.any&(action.wing_clip.cost=0|mana>=action.wing_clip.cost+var.mana_budget)
+  - mongoose_bite,if=(action.mongoose_bite.cost=0|(!var.low_mana&mana>=action.mongoose_bite.cost+var.mana_budget&(!config.mana_recovery|mana>=action.mongoose_bite.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - counterattack,if=(action.counterattack.cost=0|(!var.low_mana&mana>=action.counterattack.cost+var.mana_budget&(!config.mana_recovery|mana>=action.counterattack.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - strider_kick,if=(action.strider_kick.cost=0|(!var.low_mana&mana>=action.strider_kick.cost+var.mana_budget&(!config.mana_recovery|mana>=action.strider_kick.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - raptor_strike,if=config.raptor&(action.raptor_strike.cost=0|(!var.low_mana&mana>=action.raptor_strike.cost+var.mana_budget&(!config.mana_recovery|mana>=action.raptor_strike.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  ranged:
+  - summon_hawk.assist,if=config.hawk_assist&!var.target_cc&config.hawk_attack&(!config.hawk_cap|minion.264850.count<2|minion.264850.max_elapsed>18-config.hawk_refresh)&var.hawk_lifetime&(!player.moving|action.summon_hawk.cast_time=0)&(action.summon_hawk.cost=0|(mana>=action.summon_hawk.cost+var.mana_budget&(!config.mana_recovery|mana>=action.summon_hawk.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - summon_hawk,if=!config.hawk_assist&config.hawk_attack&(!config.hawk_cap|minion.264850.count<2|minion.264850.max_elapsed>18-config.hawk_refresh)&var.hawk_lifetime&(!player.moving|action.summon_hawk.cast_time=0)&(action.summon_hawk.cost=0|(mana>=action.summon_hawk.cost+var.mana_budget&(!config.mana_recovery|mana>=action.summon_hawk.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - 2643,if=var.area_clear&!player.moving&(action.2643.cost=0|(mana>=action.2643.cost+var.mana_budget&(!config.mana_recovery|mana>=action.2643.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - serpent_sting,if=config.serpent&var.sting_lifetime&var.target_sting_free&(action.serpent_sting.cost=0|(!var.low_mana&mana>=action.serpent_sting.cost+var.mana_budget&(!config.mana_recovery|mana>=action.serpent_sting.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - aimed_shot,if=config.aimed&!player.moving&var.aimed_lifetime&(action.aimed_shot.cost=0|(mana>=action.aimed_shot.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aimed_shot.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - sniper_shot,if=config.sniper&!player.moving&var.sniper_lifetime&(action.sniper_shot.cost=0|(!var.low_mana&mana>=action.sniper_shot.cost+var.mana_budget&(!config.mana_recovery|mana>=action.sniper_shot.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - arcane_shot,if=config.arcane&(action.arcane_shot.cost=0|(!var.low_mana&mana>=action.arcane_shot.cost+var.mana_budget&(!config.mana_recovery|mana>=action.arcane_shot.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  mana_recovery:
+  - rapid_fire,range_check=none,if=var.rapid_window&(!config.mana_recovery|mana>=action.rapid_fire.cost+var.mend_reserve)
+  - bestial_wrath,range_check=none,if=var.bestial_window&(!config.mana_recovery|mana>=action.bestial_wrath.cost+var.mend_reserve)
+  - serpent_sting,if=config.recovery_sting&config.serpent&var.sting_lifetime&var.target_sting_free&(action.serpent_sting.cost=0|(mana>=action.serpent_sting.cost+var.mana_budget&(!config.mana_recovery|mana>=action.serpent_sting.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - summon_hawk.assist,if=config.hawk_assist&!var.target_cc&config.hawk_attack&(!config.hawk_cap|minion.264850.count<2|minion.264850.max_elapsed>18-config.hawk_refresh)&var.hawk_lifetime&(!player.moving|action.summon_hawk.cast_time=0)&(action.summon_hawk.cost=0|(mana>=action.summon_hawk.cost+var.mana_budget&(!config.mana_recovery|mana>=action.summon_hawk.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - summon_hawk,if=!config.hawk_assist&config.hawk_attack&(!config.hawk_cap|minion.264850.count<2|minion.264850.max_elapsed>18-config.hawk_refresh)&var.hawk_lifetime&(!player.moving|action.summon_hawk.cast_time=0)&(action.summon_hawk.cost=0|(mana>=action.summon_hawk.cost+var.mana_budget&(!config.mana_recovery|mana>=action.summon_hawk.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - 2643,if=var.area_clear&!player.moving&(action.2643.cost=0|(mana>=action.2643.cost+var.mana_budget&(!config.mana_recovery|mana>=action.2643.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - aimed_shot,if=config.aimed&!player.moving&var.aimed_lifetime&(action.aimed_shot.cost=0|(mana>=action.aimed_shot.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aimed_shot.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - call_action_list,name=mouseover_damage
+  - call_action_list,name=melee,if=config.melee&target.in_melee
+  - hunters_mark,if=config.mark&var.mark_lifetime&debuff.hunters_mark.down.any&(action.hunters_mark.cost=0|(!var.low_mana&mana>=action.hunters_mark.cost+var.mana_budget&(!config.mana_recovery|mana>=action.hunters_mark.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - serpent_sting,if=config.serpent&var.sting_lifetime&var.target_sting_free&(action.serpent_sting.cost=0|(!var.low_mana&mana>=action.serpent_sting.cost+var.mana_budget&(!config.mana_recovery|mana>=action.serpent_sting.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - sniper_shot,if=config.sniper&!player.moving&var.sniper_lifetime&(action.sniper_shot.cost=0|(!var.low_mana&mana>=action.sniper_shot.cost+var.mana_budget&(!config.mana_recovery|mana>=action.sniper_shot.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
+  - arcane_shot,if=config.arcane&(action.arcane_shot.cost=0|(!var.low_mana&mana>=action.arcane_shot.cost+var.mana_budget&(!config.mana_recovery|mana>=action.arcane_shot.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))

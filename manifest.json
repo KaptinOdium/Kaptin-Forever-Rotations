@@ -1,0 +1,374 @@
+{
+  "collection": "2026.11.17",
+  "profiles": [
+    {
+      "class_name": "Paladin",
+      "name": "Forever Paladin - Protection 1-60",
+      "version": "2.7.3",
+      "path": "forever/custom/2_protection_leveling.yaml"
+    },
+    {
+      "class_name": "Paladin",
+      "name": "Forever Paladin - Retribution 1-60",
+      "version": "2.5.6",
+      "path": "forever/custom/2_retribution_leveling.yaml"
+    },
+    {
+      "class_name": "Paladin",
+      "name": "Forever Paladin - Holy 1-60",
+      "version": "2.3.18",
+      "path": "forever/custom/2_holy_leveling.yaml"
+    },
+    {
+      "class_name": "Druid",
+      "name": "Forever Druid - Bear 1-60",
+      "version": "2.3.14",
+      "path": "forever/custom/11_bear.yaml"
+    },
+    {
+      "class_name": "Druid",
+      "name": "Forever Druid - Cat 1-60",
+      "version": "2.3.14",
+      "path": "forever/custom/11_cat.yaml"
+    },
+    {
+      "class_name": "Druid",
+      "name": "Forever Druid - Feral Manual Forms 1-60",
+      "version": "2.3.11",
+      "path": "forever/custom/11_feral.yaml"
+    },
+    {
+      "class_name": "Druid",
+      "name": "Forever Druid - Balance 1-60",
+      "version": "2.3.14",
+      "path": "forever/custom/11_balance.yaml"
+    },
+    {
+      "class_name": "Druid",
+      "name": "Forever Druid - Restoration 1-60",
+      "version": "2.3.14",
+      "path": "forever/custom/11_restoration.yaml"
+    },
+    {
+      "class_name": "Hunter",
+      "name": "Forever Hunter - Beast Mastery WASD 1-60",
+      "version": "1.0.8",
+      "path": "forever/custom/3_beast_mastery_wasd.yaml"
+    },
+    {
+      "class_name": "Hunter",
+      "name": "Forever Hunter - Marksmanship WASD 1-60",
+      "version": "1.0.8",
+      "path": "forever/custom/3_marksmanship_wasd.yaml"
+    },
+    {
+      "class_name": "Hunter",
+      "name": "Forever Hunter - Survival WASD 1-60",
+      "version": "1.0.8",
+      "path": "forever/custom/3_survival_wasd.yaml"
+    },
+    {
+      "class_name": "Shaman",
+      "name": "Forever Shaman - Elemental 1-60",
+      "version": "1.0.2",
+      "path": "forever/custom/7_elemental_leveling.yaml"
+    },
+    {
+      "class_name": "Shaman",
+      "name": "Forever Shaman - Enhancement 1-60",
+      "version": "1.0.2",
+      "path": "forever/custom/7_enhancement_leveling.yaml"
+    },
+    {
+      "class_name": "Shaman",
+      "name": "Forever Shaman - Restoration 1-60",
+      "version": "1.0.2",
+      "path": "forever/custom/7_restoration_leveling.yaml"
+    },
+    {
+      "class_name": "Warlock",
+      "name": "Forever Warlock - Affliction 1-60",
+      "version": "1.3.3",
+      "path": "forever/custom/9_affliction_leveling.yaml"
+    },
+    {
+      "class_name": "Warlock",
+      "name": "Forever Warlock - Demonology 1-60",
+      "version": "1.3.3",
+      "path": "forever/custom/9_demonology_leveling.yaml"
+    },
+    {
+      "class_name": "Warlock",
+      "name": "Forever Warlock - Destruction 1-60",
+      "version": "1.3.3",
+      "path": "forever/custom/9_destruction_leveling.yaml"
+    },
+    {
+      "class_name": "Warrior",
+      "name": "Forever Warrior - Arms WASD 1-60",
+      "version": "1.0.0",
+      "path": "forever/custom/1_arms_wasd.yaml"
+    },
+    {
+      "class_name": "Warrior",
+      "name": "Forever Warrior - Fury WASD 1-60",
+      "version": "1.0.0",
+      "path": "forever/custom/1_fury_wasd.yaml"
+    },
+    {
+      "class_name": "Warrior",
+      "name": "Forever Warrior - Protection WASD 1-60",
+      "version": "1.0.0",
+      "path": "forever/custom/1_protection_wasd.yaml"
+    }
+  ],
+  "addons": [
+    {
+      "name": "KhanForeverBindings",
+      "version": "1.1.6"
+    },
+    {
+      "name": "KaptinForeverHunterBindings",
+      "version": "1.0.3"
+    },
+    {
+      "name": "KaptinForeverShamanBindings",
+      "version": "1.0.0"
+    },
+    {
+      "name": "KhanForeverWarlockBindings",
+      "version": "1.3.3"
+    },
+    {
+      "name": "KaptinForeverWarriorBindings",
+      "version": "1.0.0"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 94,
+      "sha256": "bc017d1ef7a4cc793be2ebe828e5759fcab3318820b093a6cb472cff2f6ce743"
+    },
+    {
+      "path": "INSTALL.md",
+      "bytes": 2968,
+      "sha256": "c5e002d6fe2d9c9d4a1123935b20b1076f39ab51fa337269ab6efeac84e785cd"
+    },
+    {
+      "path": "Interface/AddOns/KaptinForeverHunterBindings/GroupEngagement.lua",
+      "bytes": 8697,
+      "sha256": "bf63400dbe2939126173fd6b242ee95f94afc6ab6c792a1e017fa9b2bd76915a"
+    },
+    {
+      "path": "Interface/AddOns/KaptinForeverHunterBindings/KaptinForeverHunterBindings.lua",
+      "bytes": 10074,
+      "sha256": "fd118eb2e06271bd6f166fdeb0bdea2df6e9ced0e64f7d17e8f61eeae8f51d4c"
+    },
+    {
+      "path": "Interface/AddOns/KaptinForeverHunterBindings/KaptinForeverHunterBindings.toc",
+      "bytes": 424,
+      "sha256": "d32fe9266e83172b2cb1468c5538304a38d3bf5614592f2deff8ce4fae03f0b6"
+    },
+    {
+      "path": "Interface/AddOns/KaptinForeverShamanBindings/KaptinForeverShamanBindings.lua",
+      "bytes": 8401,
+      "sha256": "e835688cc376d4d0e0c94b45b68958b74269cbdad28a8f0390ad99f27855587d"
+    },
+    {
+      "path": "Interface/AddOns/KaptinForeverShamanBindings/KaptinForeverShamanBindings.toc",
+      "bytes": 296,
+      "sha256": "51d1ed75fec3687877c2a3ad2793d8694955d5d533a62e46ec2c3f99a57ed18b"
+    },
+    {
+      "path": "Interface/AddOns/KaptinForeverWarriorBindings/KaptinForeverWarriorBindings.lua",
+      "bytes": 7675,
+      "sha256": "f24ae0935e4dde5719bd0b11d7b381c471460d263ae5907163f15e84703ca1c9"
+    },
+    {
+      "path": "Interface/AddOns/KaptinForeverWarriorBindings/KaptinForeverWarriorBindings.toc",
+      "bytes": 300,
+      "sha256": "9c2e2796caa1be48d827843647e7768bf3486725cdf73bd815afd22e05477586"
+    },
+    {
+      "path": "Interface/AddOns/KhanForeverBindings/KhanForeverBindings.lua",
+      "bytes": 15947,
+      "sha256": "1d52aade91a176a3edd9001823be2d3c55acebd52dc4cf12c2ca319e68506188"
+    },
+    {
+      "path": "Interface/AddOns/KhanForeverBindings/KhanForeverBindings.toc",
+      "bytes": 298,
+      "sha256": "773057f9cc7c09193e03691da774bb61a8d1cf760af1e7908717302d410fbe5a"
+    },
+    {
+      "path": "Interface/AddOns/KhanForeverWarlockBindings/GroundTargeting.lua",
+      "bytes": 31360,
+      "sha256": "78c08b5553885094ccc8f2c49b7ce35c91f75b7ae967a0a0c8f70b1a078c6d96"
+    },
+    {
+      "path": "Interface/AddOns/KhanForeverWarlockBindings/KhanForeverWarlockBindings.lua",
+      "bytes": 10406,
+      "sha256": "8fda64beed00d4333bb14e121e4ee1e45eee991a7cfe6314f3f1397325dcbda9"
+    },
+    {
+      "path": "Interface/AddOns/KhanForeverWarlockBindings/KhanForeverWarlockBindings.toc",
+      "bytes": 466,
+      "sha256": "752e7fd947de6771736a178647dadafedd3830c138b85b027a47edcf6b6f8e39"
+    },
+    {
+      "path": "Interface/AddOns/KhanForeverWarlockBindings/PetEngagement.lua",
+      "bytes": 5974,
+      "sha256": "320e1f5b24ebbcd9b6310aeee4f6972fb00ec9aed6ffdefeb17a4ab2d1a0431b"
+    },
+    {
+      "path": "Optional/README.md",
+      "bytes": 692,
+      "sha256": "793095bd36960002711bc687e77b4e9f2926f3927c4334d3449a61951ec5a861"
+    },
+    {
+      "path": "Optional/Warlock-Pet-Bridge/Install-PetEngagement.ps1",
+      "bytes": 7068,
+      "sha256": "8a86c5bd810d1680532ff62686ec79eb9d4229446f15b7b6bb8ffa4a91a5e4e1"
+    },
+    {
+      "path": "Optional/Warlock-Pet-Bridge/README.txt",
+      "bytes": 2197,
+      "sha256": "35e428abcee372aa6eb071df6fccf949352c12f7cdf5cc10faa0f65b8588f7c0"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1743,
+      "sha256": "473a8a1038420f3a3fd628f743421bb83285223a867fc2d59c0525f0c5c3a5a8"
+    },
+    {
+      "path": "docs/classes.md",
+      "bytes": 5834,
+      "sha256": "9b2eb81545852a2979a351b5c02d546e423832287c3db8bbbd8f9c66c3ef707c"
+    },
+    {
+      "path": "docs/release-notes.md",
+      "bytes": 2998,
+      "sha256": "84c8b64fa51e96be08cbe7cea45bd35f8506095f58ccf4948e3caa8c78c2ac37"
+    },
+    {
+      "path": "docs/shaman-bindings.md",
+      "bytes": 6790,
+      "sha256": "8f2ba06ee31fa73bc60fd086477fd885ff8a307e19a891715ffd9f4430c0802f"
+    },
+    {
+      "path": "docs/warlock/BINDINGS.md",
+      "bytes": 7678,
+      "sha256": "6c90bef1b57ca725b284ab915c45c4e14e7971b1918cba77e3a23d7dad02e900"
+    },
+    {
+      "path": "docs/warlock/Healthstone-macro.txt",
+      "bytes": 235,
+      "sha256": "cac92890c8ba0abcb7cb47a872c5b494b684029529e4158c59219bb7243b1300"
+    },
+    {
+      "path": "forever/custom/11_balance.yaml",
+      "bytes": 17912,
+      "sha256": "19a3516effdbf5b7073179932762408cb0071b785b5e71c26d357b36ce6c489d"
+    },
+    {
+      "path": "forever/custom/11_bear.yaml",
+      "bytes": 21761,
+      "sha256": "63d08f20659585ec8ed1d3472ac99fc9135ebb1f2791923e380428a3e49fb3a9"
+    },
+    {
+      "path": "forever/custom/11_cat.yaml",
+      "bytes": 16051,
+      "sha256": "7e21f8c29776981726db00729c7df9bf4d1948da2f2bb9d52f34c61b32810ea7"
+    },
+    {
+      "path": "forever/custom/11_feral.yaml",
+      "bytes": 22466,
+      "sha256": "e0db8d11fe42d8c68357e817be62f545d8262a034c96b7120155a0b86c49ae88"
+    },
+    {
+      "path": "forever/custom/11_restoration.yaml",
+      "bytes": 17452,
+      "sha256": "61d540b79182968e80f9fdbb729069fc42904940170a81d2967df0643efe0b7c"
+    },
+    {
+      "path": "forever/custom/1_arms_wasd.yaml",
+      "bytes": 23902,
+      "sha256": "5d649d68ce8179f325edf3e14810914a2d0637ffbc40425fe9303c164b495dd2"
+    },
+    {
+      "path": "forever/custom/1_fury_wasd.yaml",
+      "bytes": 24207,
+      "sha256": "e5adf8dff89f5f16693167e1a946ac100e4d0f30e82842b67c4cf814eb977b9b"
+    },
+    {
+      "path": "forever/custom/1_protection_wasd.yaml",
+      "bytes": 23974,
+      "sha256": "f145df4c11121688681f3a3ec9d80ae93aebe9a8f331b9dfdf870d53a316c3aa"
+    },
+    {
+      "path": "forever/custom/2_holy_leveling.yaml",
+      "bytes": 29587,
+      "sha256": "81c9c4315309a1693d5948bf1941b1553c3acb4108a4a8e72cf95399ec8a59e6"
+    },
+    {
+      "path": "forever/custom/2_protection_leveling.yaml",
+      "bytes": 54364,
+      "sha256": "7c7eef2cd147a43e93ca0f4f8bc02afd12c3bbb51d6a1c3fee81f48685fbca0c"
+    },
+    {
+      "path": "forever/custom/2_retribution_leveling.yaml",
+      "bytes": 47364,
+      "sha256": "04a547d7338778c531e0916aee03f63ba0c9eb066918c8bd03d113dc3c3eaa8a"
+    },
+    {
+      "path": "forever/custom/3_beast_mastery_wasd.yaml",
+      "bytes": 38738,
+      "sha256": "8e5ea36bc781818594815459291977039c89555444f76ef82dd3dfbcd6e663e9"
+    },
+    {
+      "path": "forever/custom/3_marksmanship_wasd.yaml",
+      "bytes": 38736,
+      "sha256": "bc03cfcf4137bdfc6eef3621fe6ec80ebe34035044f74825940acee73aa9f28b"
+    },
+    {
+      "path": "forever/custom/3_survival_wasd.yaml",
+      "bytes": 38728,
+      "sha256": "5a9f98eb1024fc11e3233bda563cd5c69fb7c00bf4ac7229839b05fdd089063a"
+    },
+    {
+      "path": "forever/custom/7_elemental_leveling.yaml",
+      "bytes": 34895,
+      "sha256": "c9f288f71a590109e83225e07c00630d0d4abc012ec1418d3ff7878ae30eb7b9"
+    },
+    {
+      "path": "forever/custom/7_enhancement_leveling.yaml",
+      "bytes": 35533,
+      "sha256": "b63ed4d3c0a51042ed36db8e3b4dd80dd8d116d8bb72b02d9b8b28a0dfd3e7f0"
+    },
+    {
+      "path": "forever/custom/7_restoration_leveling.yaml",
+      "bytes": 35611,
+      "sha256": "0a86026840d9f7a67d7de8e1de859e3e2be2797ee5971d34117015268faf9066"
+    },
+    {
+      "path": "forever/custom/9_affliction_leveling.yaml",
+      "bytes": 26684,
+      "sha256": "5341edb5d4c3dacbc0fcbaaadb78b686b5d3bcaa59595cc784d4a4707b61570b"
+    },
+    {
+      "path": "forever/custom/9_demonology_leveling.yaml",
+      "bytes": 27373,
+      "sha256": "69b170d2bd3e2054bf0b8375c1f946c50658a0405ac0c54860976a58d2b83f31"
+    },
+    {
+      "path": "forever/custom/9_destruction_leveling.yaml",
+      "bytes": 27646,
+      "sha256": "6c44f6c5c903bddeb1f7d9772529b39f11f078b62d5b246dffa80d7ef6d6bc85"
+    },
+    {
+      "path": "tools/verify_package.py",
+      "bytes": 1286,
+      "sha256": "625d50ccab0fbe24476f913f1338b75b5632cf496e32d7a578722472f4799fda"
+    }
+  ]
+}

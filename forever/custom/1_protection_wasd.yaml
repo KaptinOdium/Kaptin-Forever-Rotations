@@ -1,0 +1,500 @@
+# Forever only. Offline scenario validated; live key delivery must be checked.
+spec: 1
+name: Forever Warrior - Protection WASD 1-60
+version: 1.0.0
+author: Kaptin
+date: '2026-11-16'
+patch: Classic Forever
+entry: main
+description: 'Protection: manual movement, guarded rage spending, melee control and role-specific survival.'
+config:
+  setup:
+    section: Setup
+    type: note
+    label: 'Forever Warrior: manual movement, automatic priorities'
+    text: Choose Arms, Fury or Protection to match your build. Only learned, usable, enabled and bound abilities run. Install the Warrior binding companion,
+      then assign its stop-attack and any enabled mouseover/focus keys. Start pulls yourself by default. Weapon swaps, talents and positioning remain manual.
+  damage:
+    section: Targeting
+    type: checkbox
+    label: Enable damage on your selected enemy
+    default: true
+  start_selected:
+    section: Targeting
+    type: checkbox
+    label: Allow attacking your idle selected enemy
+    default: false
+  protect_cc:
+    section: Targeting
+    type: checkbox
+    label: Stop attacks into recognized breakable crowd control
+    default: true
+  avoid_retaliation:
+    section: PvP
+    type: checkbox
+    label: Stop melee attacks while enemy Retaliation is active
+    default: true
+  avoid_immunity:
+    section: PvP
+    type: checkbox
+    label: Stop attacks into recognized physical immunity
+    default: true
+  pvp_note:
+    section: PvP
+    type: note
+    label: Retaliation means stop attacking, not automatic kiting
+    text: The stop-attack binding is required to halt existing auto-attacks. Retaliation avoidance is conservative even when behind the enemy. You control
+      kiting, escape and re-engagement. No automatic enemy selection.
+  auto_stance:
+    section: Stances
+    type: checkbox
+    label: Maintain preferred stance when detected and rage-safe
+    default: true
+  preferred_stance:
+    section: Stances
+    type: dropdown
+    label: Preferred combat stance
+    default: 2
+    options:
+    - label: Battle
+      value: 0
+    - label: Berserker
+      value: 1
+    - label: Defensive
+      value: 2
+  retained_rage:
+    section: Stances
+    type: slider
+    label: Confirmed rage retained on stance change
+    min: 0
+    max: 25
+    default: 0
+  stance_note:
+    section: Stances
+    type: note
+    label: Set your stance before combat
+    text: Automatic maintenance requires a visible stance aura and a learned preferred stance. If stance telemetry is unavailable, select the stance manually.
+      Retained rage defaults to 0; set 10 only after training Tactical Mastery, then add 5 per Improved Tactical Mastery rank. Routine swaps never discard
+      excess rage. The profile does not repeatedly dance for off-stance abilities or equip a shield for you.
+  slam:
+    section: Movement
+    type: checkbox
+    label: Use Slam when stationary
+    default: false
+  improved_slam:
+    section: Movement
+    type: checkbox
+    label: I have Improved Slam (swing-preserving version)
+    default: false
+  slam_note:
+    section: Movement
+    type: note
+    label: WASD remains under your control
+    text: Instant attacks continue while moving. Slam waits until stationary; enable it with Improved Slam for the swing-preserving version. Interrupts
+      do not cancel an ongoing cast by default. Gap closers are opt-in.
+  charge:
+    section: Movement
+    type: checkbox
+    label: Charge selected enemy out of combat (moves you)
+    default: false
+  intercept:
+    section: Movement
+    type: checkbox
+    label: Intercept selected engaged enemy in combat (moves you)
+    default: false
+  interrupt:
+    section: Interrupts
+    type: checkbox
+    label: Interrupt selected engaged caster
+    default: true
+  mouseover_interrupt:
+    section: Interrupts
+    type: checkbox
+    label: Interrupt engaged mouseover caster
+    default: false
+  focus_interrupt:
+    section: Interrupts
+    type: checkbox
+    label: Interrupt engaged focus caster
+    default: false
+  interrupt_reserve:
+    section: Rage
+    type: checkbox
+    label: Keep interrupt cost while an interruptible cast is active
+    default: true
+  heroic_strike:
+    section: Rage
+    type: checkbox
+    label: Use Heroic Strike with surplus rage
+    default: true
+  cleave:
+    section: Rage
+    type: checkbox
+    label: Use Cleave with surplus rage and AoE enabled
+    default: true
+  dump_rage:
+    section: Rage
+    type: slider
+    label: Minimum rage for queued Heroic Strike / Cleave
+    min: 30
+    max: 95
+    default: 65
+  early_dump_rage:
+    section: Rage
+    type: slider
+    label: 'Before learning major core attacks: queued strike rage'
+    min: 25
+    max: 80
+    default: 35
+  reserve_window:
+    section: Rage
+    type: slider
+    label: Reserve core attack cost when ready within (seconds)
+    min: 0
+    max: 5
+    default: 2
+  bloodrage:
+    section: Rage
+    type: checkbox
+    label: Bloodrage during combat when healthy and low on rage
+    default: true
+  bloodrage_hp:
+    section: Rage
+    type: slider
+    label: Bloodrage minimum health (%)
+    min: 40
+    max: 100
+    default: 70
+  bloodrage_rage:
+    section: Rage
+    type: slider
+    label: Bloodrage below rage
+    min: 0
+    max: 60
+    default: 30
+  battle_shout:
+    section: Maintenance
+    type: checkbox
+    label: Maintain Battle Shout during combat
+    default: true
+  rend:
+    section: Maintenance
+    type: checkbox
+    label: Apply Rend when target has enough life remaining
+    default: false
+  rend_ttd:
+    section: Maintenance
+    type: slider
+    label: Rend minimum expected target lifetime (seconds)
+    min: 6
+    max: 20
+    default: 9
+  sunder:
+    section: Maintenance
+    type: checkbox
+    label: Maintain Sunder Armor on durable enemies
+    default: true
+  sunder_stacks:
+    section: Maintenance
+    type: slider
+    label: Sunder Armor stack goal
+    min: 1
+    max: 5
+    default: 5
+  sunder_ttd:
+    section: Maintenance
+    type: slider
+    label: DPS Sunder minimum target lifetime (seconds)
+    min: 10
+    max: 45
+    default: 20
+  demoralizing:
+    section: Defense
+    type: checkbox
+    label: Demoralizing Shout against melee pressure
+    default: true
+  thunder_clap:
+    section: Defense
+    type: checkbox
+    label: Thunder Clap against melee pressure / packs
+    default: true
+  health_potion:
+    section: Defense
+    type: checkbox
+    label: Use a bound available health potion in combat
+    default: true
+  potion_hp:
+    section: Defense
+    type: slider
+    label: Health potion below health (%)
+    min: 5
+    max: 50
+    default: 25
+  berserker_rage:
+    section: Defense
+    type: checkbox
+    label: Berserker Rage to break supported fear / incapacitate
+    default: true
+  racial_defense:
+    section: Defense
+    type: checkbox
+    label: Use available racial fear / poison / disease defenses
+    default: true
+  last_stand:
+    section: Defense
+    type: checkbox
+    label: Last Stand in a health emergency
+    default: true
+  last_stand_hp:
+    section: Defense
+    type: slider
+    label: Last Stand below health (%)
+    min: 5
+    max: 45
+    default: 25
+  shield_wall:
+    section: Long cooldowns
+    type: checkbox
+    label: Allow emergency Shield Wall (shield and Defensive required)
+    default: false
+  wall_hp:
+    section: Long cooldowns
+    type: slider
+    label: Shield Wall emergency health (%)
+    min: 5
+    max: 35
+    default: 15
+  retaliation:
+    section: Long cooldowns
+    type: checkbox
+    label: Outdoor emergency Retaliation when no living allies remain
+    default: false
+  retaliation_hp:
+    section: Long cooldowns
+    type: slider
+    label: Outdoor Retaliation emergency health (%)
+    min: 5
+    max: 35
+    default: 20
+  long_cd_note:
+    section: Long cooldowns
+    type: note
+    label: Long cooldowns are separate from Burst
+    text: Retaliation never triggers from enemy count alone. Its opt-in emergency requires outdoor PvE, no reported living groupmates, low health and a
+      nearby melee enemy attacking you. This includes being the last survivor of an outdoor group; living-member telemetry cannot prove that you are ungrouped.
+      It is counterdamage, not damage reduction. Recklessness, Challenging Shout and Intimidating Shout remain manual. Shield Wall is opt-in; no automatic
+      equipment swaps.
+  victory_rush:
+    section: Defense
+    type: checkbox
+    label: Use available Victory Rush; prioritize it while injured
+    default: true
+  victory_hp:
+    section: Defense
+    type: slider
+    label: Prioritize Victory Rush below health (%)
+    min: 50
+    max: 100
+    default: 90
+  execute:
+    section: Damage
+    type: checkbox
+    label: Use Execute with a rage / overkill check
+    default: true
+  execute_rage:
+    section: Damage
+    type: slider
+    label: 'Normal leveling: Execute only at or below rage'
+    min: 15
+    max: 80
+    default: 35
+  execute_min_hp:
+    section: Damage
+    type: slider
+    label: 'Normal leveling: avoid Execute below target health (%)'
+    min: 0
+    max: 15
+    default: 5
+  hamstring:
+    section: Control
+    type: checkbox
+    label: Hamstring engaged fleeing enemies / moving enemy players
+    default: true
+  disarm:
+    section: Control
+    type: checkbox
+    label: Disarm selected non-boss melee enemy attacking you
+    default: false
+  disarm_hp:
+    section: Control
+    type: slider
+    label: Disarm below player health (%)
+    min: 20
+    max: 90
+    default: 60
+  concussion:
+    section: Control
+    type: checkbox
+    label: Concussion Blow to stop a non-boss caster
+    default: false
+  cooldowns:
+    section: Offensive cooldowns
+    type: checkbox
+    label: Use short offensive cooldowns with Burst enabled
+    default: true
+  death_wish:
+    section: Offensive cooldowns
+    type: checkbox
+    label: Allow Death Wish when healthy and not tanking
+    default: false
+  sweeping:
+    section: Offensive cooldowns
+    type: checkbox
+    label: Sweeping Strikes for engaged packs
+    default: true
+  cooldown_ttd:
+    section: Offensive cooldowns
+    type: slider
+    label: Minimum target lifetime for offensive cooldowns
+    min: 5
+    max: 45
+    default: 15
+  aoe:
+    section: AoE
+    type: checkbox
+    label: Allow area attacks when AoE toggle is on
+    default: true
+  aoe_note:
+    section: AoE
+    type: note
+    label: Nearby-enemy counts are a safeguard, not perfect awareness
+    text: Area attacks require all counted nearby enemies to be in combat and recognized selected/mouseover/focus CC to be clear. Counts cannot prove every
+      enemy is fighting your group or reveal all nearby CC. Turn AoE off around controlled mobs, neutral packs or another group.
+  taunt:
+    section: Tanking
+    type: checkbox
+    label: 'Protection: recover selected mob attacking your group'
+    default: true
+  mouseover_taunt:
+    section: Tanking
+    type: checkbox
+    label: 'Protection: recover engaged mouseover mob'
+    default: false
+  shield_block:
+    section: Tanking
+    type: checkbox
+    label: 'Protection: proactive Shield Block under melee pressure'
+    default: true
+  taunt_note:
+    section: Tanking
+    type: note
+    label: Taunts need confirmed lost threat
+    text: Automatic Taunt is limited to grouped non-raid PvE with at most one assigned tank. It requires an engaged enemy attacking the group, known threat
+      below tanking, and melee range. Raid swaps remain manual. Select enemies yourself to spread Sunder and threat; there is no hidden target cycling.
+variables:
+  tank_profile: '1'
+  grouped: group.count(!cycle.is_player)>0
+  solo: '!var.grouped&!player.indungeon&!player.inraid&!player.ininstancedpvp'
+  valid: target.exists&target.alive&target.enemy&target.attackable
+  engaged: var.valid&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking)
+  can_attack: var.engaged|(var.valid&player.auto_attacking)|(config.start_selected&var.valid&!player.combat)
+  target_cc: target.debuff.polymorph.up.any|target.debuff.sap.up.any|target.debuff.gouge.up.any|target.debuff.blind.up.any|target.debuff.freezing_trap.up.any|target.debuff.hibernate.up.any|target.debuff.repentance.up.any|target.debuff.seduction.up.any|target.debuff.banish.up.any|target.debuff.fear.up.any
+  hover_cc: mouseover.debuff.polymorph.up.any|mouseover.debuff.sap.up.any|mouseover.debuff.gouge.up.any|mouseover.debuff.blind.up.any|mouseover.debuff.freezing_trap.up.any|mouseover.debuff.hibernate.up.any|mouseover.debuff.repentance.up.any|mouseover.debuff.seduction.up.any|mouseover.debuff.banish.up.any|mouseover.debuff.fear.up.any
+  focus_cc: focus.debuff.polymorph.up.any|focus.debuff.sap.up.any|focus.debuff.gouge.up.any|focus.debuff.blind.up.any|focus.debuff.freezing_trap.up.any|focus.debuff.hibernate.up.any|focus.debuff.repentance.up.any|focus.debuff.seduction.up.any|focus.debuff.banish.up.any|focus.debuff.fear.up.any
+  protected_target: (config.protect_cc&var.target_cc)|(config.avoid_retaliation&target.buff.retaliation.up.any)|(config.avoid_immunity&(target.buff.divine_shield.up.any|target.buff.ice_block.up.any|target.buff.blessing_of_protection.up.any))
+  target_cast: (target.casting|target.channeling)&target.casting.interruptible
+  hover_engaged: mouseover.exists&mouseover.alive&mouseover.enemy&mouseover.attackable&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)
+  focus_engaged: focus.exists&focus.alive&focus.enemy&focus.attackable&focus.combat&(focus.targeting_party|focus.threat>=0)
+  hover_cast: (mouseover.casting|mouseover.channeling)&mouseover.casting.interruptible
+  focus_cast: (focus.casting|focus.channeling)&focus.casting.interruptible
+  melee_pressure: var.engaged&target.in_melee&target.threat>=2&!target.casting&!target.channeling
+  stance_visible: buff.2457.up.any|buff.71.up.any|buff.2458.up.any
+  stance_safe: config.auto_stance&var.stance_visible&rage<=config.retained_rage
+  hover_protected: (config.protect_cc&var.hover_cc)|(config.avoid_retaliation&mouseover.buff.retaliation.up.any)|(config.avoid_immunity&(mouseover.buff.divine_shield.up.any|mouseover.buff.ice_block.up.any|mouseover.buff.blessing_of_protection.up.any))
+  focus_protected: (config.protect_cc&var.focus_cc)|(config.avoid_retaliation&focus.buff.retaliation.up.any)|(config.avoid_immunity&(focus.buff.divine_shield.up.any|focus.buff.ice_block.up.any|focus.buff.blessing_of_protection.up.any))
+  area_clear: state.aoe&config.aoe&enemies.combat.10y>0&enemies.10y=enemies.combat.10y&!var.protected_target&!var.hover_protected&!var.focus_protected
+  pack: var.area_clear&enemies.combat.8y>=2
+  rend_lifetime: target.time_to_die>=config.rend_ttd|(target.time_to_die<=0&target.health.pct>=70)
+  sunder_lifetime: target.boss|target.time_to_die>=config.sunder_ttd
+  cooldown_window: target.boss|target.time_to_die>=config.cooldown_ttd
+  execute_window: target.health.pct<=20&(target.boss|(target.health.pct>=config.execute_min_hp&rage<=config.execute_rage))
+  need_interrupt: (config.interrupt&var.engaged&!var.protected_target&target.in_melee&var.target_cast)|(config.mouseover_interrupt&var.hover_engaged&!var.hover_protected&mouseover.in_melee&var.hover_cast)|(config.focus_interrupt&var.focus_engaged&!var.focus_protected&focus.in_melee&var.focus_cast)
+  reserve_pummel: usable.pummel&!action.pummel.blocked&cooldown.pummel.remains<=0
+  reserve_bash: usable.shield_bash&!action.shield_bash.blocked&cooldown.shield_bash.remains<=0
+  interrupt_budget: (config.interrupt_reserve&var.need_interrupt)*(action.pummel.cost*var.reserve_pummel+action.shield_bash.cost*(!var.reserve_pummel&var.reserve_bash))
+  block_budget: action.shield_block.cost*(var.tank_profile&config.shield_block&var.melee_pressure&usable.shield_block&!action.shield_block.blocked&buff.shield_block.down.any&cooldown.shield_block.remains<=config.reserve_window)
+  can_taunt: var.tank_profile&var.grouped&!player.inraid&!player.inpvp&!player.ininstancedpvp&group.tanks.count<=1&group.count(cycle.tank&!cycle.is_player)=0
+  major_core_learned: (action.shield_slam.known&!action.shield_slam.blocked)|(action.bloodthirst.known&!action.bloodthirst.blocked)
+  dump_threshold: config.dump_rage*var.major_core_learned+config.early_dump_rage*!var.major_core_learned
+  core_budget: action.shield_slam.cost*(usable.shield_slam&!action.shield_slam.blocked&cooldown.shield_slam.remains<=config.reserve_window)+action.revenge.cost*(usable.revenge&!action.revenge.blocked&cooldown.revenge.remains<=config.reserve_window)
+  reserve: var.core_budget+var.interrupt_budget+var.block_budget
+lists:
+  main:
+  - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
+  - call_action_list,name=spell_queue
+  - return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
+  - battle_stance.stop_attack,range_check=none,ignore_usable=true,ignore_queue=true,if=player.auto_attacking&var.protected_target
+  - return,if=player.casting|player.channeling
+  - call_action_list,name=survival
+  - call_action_list,name=interrupts
+  - return,if=var.protected_target
+  - call_action_list,name=taunts
+  - return,if=!config.damage|!var.can_attack
+  - call_action_list,name=stances
+  - call_action_list,name=movement
+  - attack_target,if=target.in_melee&!player.auto_attacking
+  - victory_rush,if=config.victory_rush&target.in_melee&player.health.pct<=config.victory_hp
+  - call_action_list,name=maintenance
+  - call_action_list,name=control
+  - call_action_list,name=cooldowns
+  - return,if=!target.in_melee
+  - call_action_list,name=damage
+  - call_action_list,name=dumps
+  survival:
+  - berserker_rage,range_check=none,if=config.berserker_rage&(player.feared|player.incapacitated)
+  - will_of_the_forsaken,range_check=none,if=config.racial_defense&(player.feared|player.charmed)
+  - stoneform,range_check=none,if=config.racial_defense&player.combat&(player.dispelable.poison|player.dispelable.disease)
+  - health_potion,range_check=none,if=config.health_potion&player.combat&player.health.pct<=config.potion_hp&health_potion.ready
+  - last_stand,range_check=none,if=config.last_stand&player.combat&player.health.pct<=config.last_stand_hp&buff.last_stand.down.any&buff.shield_wall.down.any
+  - shield_wall,range_check=none,if=config.shield_wall&player.combat&player.health.pct<=config.wall_hp&buff.shield_wall.down.any
+  - retaliation,range_check=none,if=config.retaliation&var.solo&!player.inpvp&player.combat&var.melee_pressure&target.npcid>0&!var.protected_target&player.health.pct<=config.retaliation_hp&buff.retaliation.down.any&buff.shield_wall.down.any
+  interrupts:
+  - pummel.mouseover,if=config.mouseover_interrupt&player.combat&var.hover_engaged&!var.hover_protected&mouseover.in_melee&var.hover_cast
+  - shield_bash.mouseover,if=config.mouseover_interrupt&player.combat&var.hover_engaged&!var.hover_protected&mouseover.in_melee&var.hover_cast
+  - pummel.focus,if=config.focus_interrupt&player.combat&var.focus_engaged&!var.focus_protected&focus.in_melee&var.focus_cast
+  - shield_bash.focus,if=config.focus_interrupt&player.combat&var.focus_engaged&!var.focus_protected&focus.in_melee&var.focus_cast
+  - pummel,if=config.interrupt&player.combat&var.engaged&!var.protected_target&target.in_melee&var.target_cast
+  - shield_bash,if=config.interrupt&player.combat&var.engaged&!var.protected_target&target.in_melee&var.target_cast
+  taunts:
+  - taunt.mouseover,range_check=mouseover,if=config.mouseover_taunt&var.can_taunt&var.hover_engaged&!var.hover_cc&mouseover.npcid>0&mouseover.targeting_party&mouseover.threat>=0&mouseover.threat<2&mouseover.in_melee
+  - taunt,if=config.taunt&var.can_taunt&var.engaged&!var.protected_target&target.npcid>0&target.targeting_party&target.threat>=0&target.threat<2&target.in_melee
+  stances:
+  - defensive_stance,range_check=none,if=var.stance_safe&config.preferred_stance=2&buff.71.down.any
+  - berserker_stance,range_check=none,if=var.stance_safe&config.preferred_stance=1&buff.2458.down.any
+  - battle_stance,range_check=none,if=var.stance_safe&buff.2457.down.any&(config.preferred_stance=0|(config.preferred_stance=1&!action.berserker_stance.known)|(config.preferred_stance=2&!action.defensive_stance.known))
+  movement:
+  - charge,if=config.charge&!player.combat&!target.in_melee&target.range>=8&target.range<=25
+  - intercept,if=config.intercept&player.combat&var.engaged&!target.in_melee&target.range>=8&target.range<=25&rage>=action.intercept.cost+var.interrupt_budget
+  maintenance:
+  - bloodrage,range_check=none,if=config.bloodrage&player.combat&var.engaged&target.in_melee&rage<=config.bloodrage_rage&player.health.pct>=config.bloodrage_hp&buff.bloodrage.down.any
+  - battle_shout,range_check=none,if=config.battle_shout&player.combat&buff.battle_shout.remains.any<=5&rage>=action.battle_shout.cost+var.interrupt_budget
+  - shield_block,range_check=none,if=var.tank_profile&config.shield_block&var.melee_pressure&buff.shield_block.down.any&rage>=action.shield_block.cost+var.interrupt_budget
+  - demoralizing_shout,range_check=none,if=config.demoralizing&var.melee_pressure&var.area_clear&(enemies.combat.8y>=2|player.health.pct<=60|var.tank_profile)&debuff.demoralizing_shout.down.any&debuff.demoralizing_roar.down.any&debuff.curse_of_weakness.down.any&rage>=action.demoralizing_shout.cost+var.interrupt_budget+var.block_budget
+  - thunder_clap,range_check=none,if=config.thunder_clap&var.area_clear&target.distance<=8&var.melee_pressure&debuff.thunder_clap.down.any&(var.pack|var.tank_profile)&rage>=action.thunder_clap.cost+var.interrupt_budget+var.block_budget
+  control:
+  - concussion_blow,if=config.concussion&var.engaged&target.in_melee&!target.boss&(target.casting|target.channeling)&!action.pummel.ready&!action.shield_bash.ready
+  - hamstring,if=config.hamstring&var.engaged&target.in_melee&!target.boss&target.moving&(player.inpvp|(target.health.pct<=25&target.closing_speed<-1))&debuff.hamstring.down.any&debuff.crippling_poison.down.any&rage>=action.hamstring.cost+var.interrupt_budget
+  - disarm,if=config.disarm&var.melee_pressure&!target.boss&player.health.pct<=config.disarm_hp&debuff.disarm.down.any&rage>=action.disarm.cost+var.interrupt_budget
+  cooldowns:
+  - sweeping_strikes,range_check=none,if=config.cooldowns&config.sweeping&state.cds&player.combat&target.in_melee&var.pack&target.time_to_die>=8&rage>=action.sweeping_strikes.cost+var.interrupt_budget
+  - death_wish,range_check=none,if=config.cooldowns&config.death_wish&state.cds&player.combat&target.in_melee&!var.tank_profile&!player.inpvp&target.npcid>0&target.threat>=0&target.threat<2&player.health.pct>=80&var.cooldown_window&buff.death_wish.down.any&rage>=action.death_wish.cost+var.interrupt_budget
+  damage:
+  - revenge,if=action.revenge.ready&rage>=action.revenge.cost+var.interrupt_budget
+  - shield_slam,if=rage>=action.shield_slam.cost+var.interrupt_budget
+  - bloodthirst,if=rage>=action.bloodthirst.cost+var.interrupt_budget+var.block_budget
+  - sunder_armor,if=config.sunder&debuff.expose_armor.down.any&(debuff.sunder_armor.stack.any<config.sunder_stacks|debuff.sunder_armor.remains.any<=5)&(var.tank_profile|var.sunder_lifetime)&rage>=action.sunder_armor.cost+var.interrupt_budget+var.block_budget
+  - victory_rush,if=config.victory_rush
+  - rend,if=config.rend&var.rend_lifetime&dot.rend.remains<=0&rage>=action.rend.cost+var.interrupt_budget
+  dumps:
+  - cleave,if=config.cleave&var.pack&rage>=var.dump_threshold&rage>=action.cleave.cost+var.reserve
+  - heroic_strike,if=config.heroic_strike&(!config.cleave|!var.pack|!usable.cleave|action.cleave.blocked)&rage>=var.dump_threshold&rage>=action.heroic_strike.cost+var.reserve
