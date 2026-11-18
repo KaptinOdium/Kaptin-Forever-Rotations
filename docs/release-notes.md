@@ -1,4 +1,6 @@
-# Collection 2026.11.18.4
+# Collection 2026.11.18.5
+
+Restoration Druid 2.3.15 applies the Swiftmend slider during self-recovery and checks each recipient's range and heal over time. In parties it can retry an eligible ally when Simia's spell-wide check reports Swiftmend unusable. Actual casts through party bindings still need in-game confirmation. The profile also adds health thresholds for Wild Growth, Clearcasting heals and Nature's Swiftness with Healing Touch. See the [Druid class guide](classes.md#druid) for defaults and bindings.
 
 Druid Cat, Bear and Manual Feral 2.3.20 update Bear damage and Lacerate refreshes. Cat now follows a manual switch to Bear even with automatic form entry enabled. Cat and Bear also preserve Travel and Aquatic Form during automatic buffs and caster support.
 

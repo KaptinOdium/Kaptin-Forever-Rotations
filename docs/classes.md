@@ -12,6 +12,10 @@ Use `KhanForeverBindings`. Bind the ordinary seals/Judgement and enabled self, g
 
 Bear, Cat, Balance and Restoration have separate profiles. **Manual Feral** follows the form you choose and does not automatically switch forms. Early leveling melee finishing, resource management, healing and optional mouseover utility have their own settings. Current mouseover Bash requires a caster; selected-target stun behavior is separate.
 
+In **Restoration**, Swiftmend defaults to 55% effective health and needs your Rejuvenation or Regrowth on the recipient. Nature's Swiftness has its own 30% threshold and pairs with Healing Touch. In combat, party Wild Growth defaults to three members at or below 80% effective health within 30 yards. Under **Clearcasting**, choose Healing Touch (default) or Regrowth and set the free direct-heal threshold (80% by default). Wild Growth has a separate 90% threshold during Clearcasting when Simia reports a zero mana cost.
+
+For party healing with **Focus binds** off, bind the direct `@party1` through `@party4` variants. With **Party** or **Raid** selected, run AutoBind and check the shared focus assignment keys and each heal's `@focus` key.
+
 You can stay on **Cat** when you switch to Bear or Dire Bear. Switch back to Cat to resume Cat attacks. For full manual control, turn off automatic form entry under **Feral**. Mark of the Wild, Thorns and caster heals wait until you leave Travel or Aquatic Form. In Bear, bind the ordinary **Lacerate**, **Primal Bite**, **Maul** and **Swipe** spells as you learn them. Lacerate builds to five stacks on the selected enemy and refreshes near expiry. Primal Bite or Maul fills single-target gaps, and Swipe fills gaps on an eligible engaged pack with AoE enabled.
 
 In standalone **Cat**, **Stealth and opener → Pull with Faerie Fire out of combat** defaults off. With **Auto Prowl** on, approach in Cat Form and the profile waits for Prowl and your chosen opener. For a ranged Faerie Fire pull, turn Auto Prowl off and enable both the Faerie Fire pull and **Targeting → Allow attacks on an idle selected enemy**. In combat the usual debuff refresh applies.

@@ -7,9 +7,9 @@
 # Solo Clearcasting Starfire checked with native SimC at every level 20-59 and a level 60 holdout.
 spec: 11
 name: Forever Druid - Restoration 1-60
-version: 2.3.14
+version: 2.3.15
 author: Custom
-date: '2026-11-12'
+date: '2026-11-18'
 patch: Classic Forever
 entry: main
 movement_allowed: buff.natures_swiftness.up
@@ -143,7 +143,8 @@ config:
   swiftmend_hp:
     section: Healing
     type: slider
-    label: Swiftmend below health (%)
+    label: Swiftmend at or below effective health (%)
+    description: Applies to you and group members within 40 yards who have your Rejuvenation or Regrowth.
     min: 20
     max: 80
     default: 55
@@ -180,6 +181,43 @@ config:
     type: checkbox
     label: Nature's Swiftness for emergency Healing Touch
     default: true
+  natures_swiftness_hp:
+    section: Healing
+    type: slider
+    label: Nature's Swiftness at or below effective health (%)
+    min: 10
+    max: 80
+    default: 30
+  omen_healing:
+    section: Clearcasting
+    type: checkbox
+    label: Use Omen of Clarity for healing in combat
+    default: true
+  omen_direct_spell:
+    section: Clearcasting
+    type: dropdown
+    label: Preferred free direct heal
+    default: 0
+    options:
+    - label: Healing Touch
+      value: 0
+    - label: Regrowth
+      value: 1
+  omen_direct_hp:
+    section: Clearcasting
+    type: slider
+    label: Free direct heal at or below effective health (%)
+    min: 10
+    max: 99
+    default: 80
+  omen_wild_growth_hp:
+    section: Clearcasting
+    type: slider
+    label: Free Wild Growth at or below effective health (%)
+    description: Uses the same injured-member count as normal Wild Growth. The extra casts require Clearcasting and a reported mana cost of zero.
+    min: 10
+    max: 99
+    default: 90
   wild_growth:
     section: Party Healing
     type: checkbox
@@ -192,6 +230,14 @@ config:
     min: 2
     max: 5
     default: 3
+  wild_growth_hp:
+    section: Party Healing
+    type: slider
+    label: Count Wild Growth members at or below effective health (%)
+    description: Counts party members within 30 yards of you while you are stationary in combat.
+    min: 10
+    max: 99
+    default: 80
   tranquility:
     section: Party Healing
     type: checkbox
@@ -238,6 +284,8 @@ variables:
   between_pull_buffs: config.maintain_buffs&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any
   resting_caster: '!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any'
   healing_caster: buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any
+  healing_clearcast: 'config.omen_healing&player.combat&(buff.clearcasting.up|buff.16870.up)'
+  swiftmend_ally_check: 'var.healing_caster&buff.783.down.any&buff.1066.down.any&!player.inraid&!player.cc&!player.silenced&!usable.swiftmend&action.swiftmend.known&!action.swiftmend.blocked&cooldown.swiftmend.ready&mana>=action.swiftmend.cost'
 lists:
   survival:
   - health_potion,range_check=none,if=player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
@@ -245,7 +293,7 @@ lists:
   recovery:
   - mana_potion,range_check=none,if=player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<=config.mana_pot_pct&mana_potion.ready
   - innervate.player,range_check=none,if=config.use_innervate&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<config.innervate_pct&buff.innervate.down.any
-  - swiftmend.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.rest_hp&(buff.rejuvenation.up|buff.regrowth.up)
+  - swiftmend.player,range_check=none,if=var.healing_caster&config.self_heal&!player.combat&player.health.effective.pct<config.rest_hp&player.health.effective.pct<=config.swiftmend_hp&(buff.rejuvenation.up|buff.regrowth.up)
   - healing_touch.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))
   - rejuvenation.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.rest_hp&buff.rejuvenation.down
   - regrowth.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(buff.regrowth.down|player.health.effective.pct<config.rest_direct_hp)&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))
@@ -291,6 +339,7 @@ lists:
   - call_action_list,name=control
   - call_action_list,name=dispels
   - call_action_list,name=party_healing,if=var.healing_caster
+  - call_action_list,name=omen_healing,if=var.healing_caster&var.healing_clearcast&!player.moving
   - call_action_list,name=routine_healing,if=var.healing_caster
   - call_action_list,name=buffs
   - call_action_list,name=loot,if=config.lootnearby&!player.combat&(!target.exists|target.dead)
@@ -299,15 +348,22 @@ lists:
   - return,if=!(target.exists&target.alive&target.enemy&((player.combat&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking))|(config.start_selected&!player.combat)))
   - call_action_list,name=caster_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any
   urgent_healing:
-  - healing_touch,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&config.use_natures_swiftness&buff.natures_swiftness.up&cycle.range<=40&(cycle.health.effective.pct<config.touch_hp|cycle.health.effective.pct<config.emergency_hp)
-  - swiftmend,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up)
-  - natures_swiftness,range_check=none,if=config.use_natures_swiftness&player.combat&buff.natures_swiftness.down&action.healing_touch.ready&mana>=action.natures_swiftness.cost+action.healing_touch.cost&group.count(cycle.health.effective.pct<config.emergency_hp&cycle.range<=40)>0
+  - healing_touch,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=(player.combat|(var.resting_caster&!cycle.is_player))&config.use_natures_swiftness&buff.natures_swiftness.up&cycle.range<=40&(cycle.health.effective.pct<=config.touch_hp|cycle.health.effective.pct<=config.natures_swiftness_hp)
+  - swiftmend,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<=config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up)
+  # WoW reports one usability flag per spell. Recheck the actual party recipient when that flag is false.
+  - swiftmend,cycle=members,cycle_order=health.pct,range_check=cycle_member,ignore_usable=true,line_cd=2,if=var.swiftmend_ally_check&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<=config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up)
+  - natures_swiftness,range_check=none,if=config.use_natures_swiftness&player.combat&buff.natures_swiftness.down&action.healing_touch.ready&mana>=action.natures_swiftness.cost+action.healing_touch.cost&group.count(cycle.health.effective.pct<=config.natures_swiftness_hp&cycle.range<=40)>0
   - regrowth,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp
   - healing_touch,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp
   - rejuvenation,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp&cycle.buff.rejuvenation.down&(player.moving|(!action.regrowth.ready&!action.healing_touch.ready))
   party_healing:
   - tranquility,range_check=none,if=config.tranquility&state.cds&player.combat&!player.inraid&!player.moving&group.count(cycle.range<=30&cycle.health.effective.pct<50)>=3
-  - wild_growth,cycle=party,cycle_order=health.pct,if=config.wild_growth&player.combat&!player.inraid&!player.moving&cycle.range<=30&cycle.health.effective.pct<80&group.count(cycle.range<=30&cycle.health.effective.pct<80)>=config.wild_growth_count
+  - wild_growth,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=config.wild_growth&player.combat&!player.inraid&!player.moving&cycle.range<=30&cycle.health.effective.pct<=config.wild_growth_hp&group.count(cycle.range<=30&cycle.health.effective.pct<=config.wild_growth_hp)>=config.wild_growth_count
+  - wild_growth,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=config.wild_growth&var.healing_clearcast&!player.inraid&!player.moving&action.wild_growth.cost=0&cycle.range<=30&cycle.health.effective.pct<=config.omen_wild_growth_hp&group.count(cycle.range<=30&cycle.health.effective.pct<=config.omen_wild_growth_hp)>=config.wild_growth_count
+  omen_healing:
+  - regrowth,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=config.omen_direct_spell=1&action.regrowth.cost=0&cycle.range<=40&cycle.health.effective.pct<=config.omen_direct_hp
+  - healing_touch,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=action.healing_touch.cost=0&cycle.range<=40&cycle.health.effective.pct<=config.omen_direct_hp
+  - regrowth,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=config.omen_direct_spell=0&action.regrowth.cost=0&cycle.range<=40&cycle.health.effective.pct<=config.omen_direct_hp
   routine_healing:
   - regrowth,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.regrowth_hp
   - rejuvenation,cycle=tanks,cycle_order=health.pct,if=player.combat&cycle.range<=40&cycle.health.effective.pct<config.tank_hot_hp&cycle.buff.rejuvenation.down&mana.pct>20
