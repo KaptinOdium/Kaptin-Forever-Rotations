@@ -1,6 +1,6 @@
 # Kaptin Forever Rotations
 
-One collection of 20 Simia profiles for **WoW Forever**, covering six classes and levels 1-60. Movement-aware priorities: you move, face enemies and handle positioning yourself.
+One collection of 23 Simia profiles for **WoW Forever**, covering seven classes and levels 1-60. You move the character, choose a target and control positioning.
 
 **[Installation](INSTALL.md)** | **[Class guides](docs/classes.md)** | **[Versions and known issues](docs/release-notes.md)**
 
@@ -11,6 +11,7 @@ Download with **Code > Download ZIP**, then extract it. Install only the classes
 | Paladin | Protection, Retribution, Holy | 2.7.4 / 2.5.7 / 2.3.18 |
 | Druid | Bear, Cat, Balance, Restoration; manual Feral | Cat 2.3.19; manual Feral and others 2.3.14 |
 | Hunter | Beast Mastery, Marksmanship, Survival | 1.0.8 |
+| Mage | Arcane, Fire, Frost | 1.0.0 |
 | Shaman | Elemental, Enhancement, Restoration | 1.0.4 / 1.0.5 / 1.0.4 |
 | Warlock | Affliction, Demonology, Destruction | 1.3.3 |
 | Warrior | Arms, Fury, Protection | 1.0.2 |

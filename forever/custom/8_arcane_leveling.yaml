@@ -1,0 +1,178 @@
+spec: 8
+name: Forever Mage - Arcane 1-60
+version: 1.0.0
+author: Kaptin
+date: '2026-11-18'
+patch: Classic Forever
+entry: main
+config:
+  start_selected:
+    section: Targeting
+    type: checkbox
+    label: Allow pulling an idle selected enemy
+    default: false
+  maintain_buffs:
+    section: Buffs
+    type: checkbox
+    label: Maintain your Intellect and a learned armor between fights
+    default: true
+  mana_armor:
+    section: Buffs
+    type: checkbox
+    label: Prefer Mage Armor when no armor is active
+    default: true
+  interrupt:
+    section: Utility
+    type: checkbox
+    label: Counterspell an interruptible cast on your engaged target
+    default: true
+  interrupt_damage_cast:
+    section: Utility
+    type: checkbox
+    label: Allow Counterspell to interrupt your current damage hardcast
+    default: true
+  barrier:
+    section: Survival
+    type: checkbox
+    label: Shield with trained Ice Barrier in combat
+    default: true
+  barrier_hp:
+    section: Survival
+    type: slider
+    label: Use Ice Barrier below health (%)
+    min: 30
+    max: 95
+    default: 75
+  health_potion:
+    section: Survival
+    type: checkbox
+    label: Use a health potion in an emergency
+    default: true
+  potion_hp:
+    section: Survival
+    type: slider
+    label: Health potion below health (%)
+    min: 5
+    max: 50
+    default: 25
+  evocation:
+    section: Mana
+    type: checkbox
+    label: Channel Evocation between fights when mana is low
+    default: true
+  evocation_mana:
+    section: Mana
+    type: slider
+    label: Evocation below mana (%)
+    min: 5
+    max: 60
+    default: 20
+  wand:
+    section: Mana
+    type: checkbox
+    label: Use a wand to conserve mana
+    default: true
+  wand_mana:
+    section: Mana
+    type: slider
+    label: Prefer your wand below mana (%)
+    min: 5
+    max: 60
+    default: 20
+  use_aoe:
+    section: Area damage
+    type: checkbox
+    label: Use close-range area damage
+    default: true
+  aoe_count:
+    section: Area damage
+    type: slider
+    label: Minimum nearby engaged enemies for pack attacks
+    min: 2
+    max: 8
+    default: 3
+  aoe_mana:
+    section: Area damage
+    type: slider
+    label: Minimum mana for area damage (%)
+    min: 10
+    max: 85
+    default: 45
+  cooldowns:
+    section: Cooldowns
+    type: checkbox
+    label: Use offensive cooldowns on durable enemies
+    default: true
+  cooldown_ttd:
+    section: Cooldowns
+    type: slider
+    label: Minimum remaining fight time for cooldowns (seconds)
+    min: 8
+    max: 60
+    default: 20
+  blast_stacks:
+    section: Arcane
+    type: slider
+    label: Arcane Blast stack budget
+    min: 1
+    max: 4
+    default: 3
+  blast_mana:
+    section: Arcane
+    type: slider
+    label: Conserve Arcane Blast below mana (%)
+    min: 10
+    max: 75
+    default: 35
+variables:
+  valid_target: target.exists&target.alive&target.enemy&target.attackable
+  engaged: var.valid_target&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking|target.casting.targeting_me)
+  target_cc: target.debuff.polymorph.up.any|target.debuff.sap.up.any|target.debuff.banish.up.any|target.debuff.seduction.up.any|target.debuff.hibernate.up.any|target.debuff.repentance.up.any|target.debuff.fear.up.any|target.debuff.freezing_trap_effect.up.any|target.debuff.wyvern_sting.up.any
+  can_attack: var.valid_target&!var.target_cc&(var.engaged|(config.start_selected&!player.combat&!target.combat))
+  area_clear: nameplates.debuff.polymorph.count.any=0&nameplates.debuff.sap.count.any=0&nameplates.debuff.banish.count.any=0&nameplates.debuff.seduction.count.any=0&nameplates.debuff.hibernate.count.any=0&nameplates.debuff.repentance.count.any=0&nameplates.debuff.fear.count.any=0&nameplates.debuff.freezing_trap_effect.count.any=0&nameplates.debuff.wyvern_sting.count.any=0
+  area_window: config.use_aoe&state.aoe&player.combat&var.engaged&!var.target_cc&var.area_clear&mana.pct>=config.aoe_mana&player.has_world_pos&target.has_world_pos&target.distance<=10&enemies.10y=enemies.combat.10y&enemies.combat.10y>0
+  durable: target.boss|target.time_to_die>=config.cooldown_ttd
+  no_armor: '!(buff.frost_armor.up.any|buff.ice_armor.up.any|buff.mage_armor.up.any|buff.molten_armor.up.any)'
+  damage_hardcast: player.casting.fireball|player.casting.frostbolt|player.casting.pyroblast|player.casting.scorch|player.casting.frostfire_bolt|player.casting.arcane_blast|player.casting.arcane_wrath
+lists:
+  main:
+  - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
+  - call_action_list,name=spell_queue
+  - return,if=!player.combat&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
+  - call_action_list,name=interrupt,if=!player.channeling&(!player.casting|(config.interrupt_damage_cast&var.damage_hardcast))
+  - return,if=player.casting|player.channeling
+  - call_action_list,name=survival
+  - call_action_list,name=maintenance,if=!player.combat&!player.auto_attacking
+  - call_action_list,name=recovery,if=!player.combat&!player.auto_attacking&!var.can_attack
+  - return,if=!var.can_attack
+  - call_action_list,name=cooldowns,if=config.cooldowns&state.cds&player.combat&var.engaged&var.durable
+  - call_action_list,name=aoe,if=var.area_window
+  - call_action_list,name=wand,if=config.wand&!player.moving&mana.pct<=config.wand_mana
+  - call_action_list,name=damage
+  interrupt:
+  - counterspell,interrupt=true,if=config.interrupt&var.engaged&!var.target_cc&(target.casting|target.channeling)&target.casting.interruptible
+  survival:
+  - health_potion,range_check=none,if=config.health_potion&player.combat&player.health.pct<=config.potion_hp&health_potion.ready
+  - ice_barrier,range_check=none,if=config.barrier&player.combat&player.health.pct<=config.barrier_hp&buff.ice_barrier.down.any
+  maintenance:
+  - arcane_intellect,range_check=none,if=config.maintain_buffs&(!target.exists|target.enemy)&buff.arcane_intellect.down.any&buff.arcane_brilliance.down.any
+  - mage_armor,range_check=none,if=config.maintain_buffs&config.mana_armor&var.no_armor
+  - ice_armor,range_check=none,if=config.maintain_buffs&var.no_armor
+  - frost_armor,range_check=none,if=config.maintain_buffs&var.no_armor
+  recovery:
+  - evocation,range_check=none,if=config.evocation&!player.moving&mana.pct<=config.evocation_mana
+  wand:
+  - shoot,if=swing.ranged.remains>=9999
+  - return,if=swing.ranged.remains>0&swing.ranged.remains<9999
+  aoe:
+  - arcane_explosion,range_check=none,if=enemies.combat.10y>=config.aoe_count
+  cooldowns:
+  - arcane_power,range_check=none,if=mana.pct>=config.blast_mana&buff.arcane_power.down
+  damage:
+  - arcane_missiles,if=!player.moving&buff.400589.up
+  - fire_blast,if=player.moving|(target.time_to_die>0&target.time_to_die<=2)
+  - arcane_blast,if=!player.moving&((player.debuff.400573.stack<config.blast_stacks&mana.pct>=config.blast_mana)|buff.12536.up)
+  - arcane_wrath,if=!player.moving
+  - arcane_missiles,if=!player.moving&(mana.pct>=config.blast_mana|buff.12536.up)
+  - frostbolt,if=!player.moving
+  - fireball,if=!player.moving

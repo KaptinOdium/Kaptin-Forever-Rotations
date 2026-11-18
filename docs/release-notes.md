@@ -1,4 +1,6 @@
-# Collection 2026.11.18.2
+# Collection 2026.11.18.3
+
+Added Arcane, Fire and Frost Mage leveling profiles. See the [Mage leveling guide](mage-leveling.md) for the simulated builds and results.
 
 Standalone Cat 2.3.19 adds an optional out-of-combat Faerie Fire pull, off by default. Auto Prowl takes priority while you approach in Cat Form, including outside the configured Prowl distance and while waiting for the stealth aura.
 
@@ -30,4 +32,4 @@ Offline profile/scenario and companion checks cover conditions and generated mac
 
 ## Package verification
 
-The collection builder parses all 20 YAML files with duplicate-key rejection and the existing structural/expression validator. It verifies declared versions, every TOC-listed file, an explicit source allowlist, source-byte equality and ZIP integrity. `manifest.json` records portable file hashes and profile versions. Run `python tools/verify_package.py` to check the extracted files; this checks package integrity, not live combat behavior.
+The collection builder parses all 23 YAML files, rejects duplicate keys and validates profile expressions. It verifies declared versions, TOC dependencies, source files and ZIP integrity. `manifest.json` records portable file hashes and profile versions. Run `python tools/verify_package.py` to check the extracted files.

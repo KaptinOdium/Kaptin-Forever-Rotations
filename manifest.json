@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.18.2",
+  "collection": "2026.11.18.3",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -66,6 +66,24 @@
       "name": "Forever Hunter - Survival WASD 1-60",
       "version": "1.0.8",
       "path": "forever/custom/3_survival_wasd.yaml"
+    },
+    {
+      "class_name": "Mage",
+      "name": "Forever Mage - Arcane 1-60",
+      "version": "1.0.0",
+      "path": "forever/custom/8_arcane_leveling.yaml"
+    },
+    {
+      "class_name": "Mage",
+      "name": "Forever Mage - Fire 1-60",
+      "version": "1.0.0",
+      "path": "forever/custom/8_fire_leveling.yaml"
+    },
+    {
+      "class_name": "Mage",
+      "name": "Forever Mage - Frost 1-60",
+      "version": "1.0.0",
+      "path": "forever/custom/8_frost_leveling.yaml"
     },
     {
       "class_name": "Shaman",
@@ -152,8 +170,8 @@
     },
     {
       "path": "INSTALL.md",
-      "bytes": 2968,
-      "sha256": "c5e002d6fe2d9c9d4a1123935b20b1076f39ab51fa337269ab6efeac84e785cd"
+      "bytes": 3020,
+      "sha256": "eb49f4add842c9dbe5384e08ba19f5cafa923b34cb5228ebdda7619858704eff"
     },
     {
       "path": "Interface/AddOns/KaptinForeverHunterBindings/GroupEngagement.lua",
@@ -237,18 +255,23 @@
     },
     {
       "path": "README.md",
-      "bytes": 1774,
-      "sha256": "61ec497947b108276a353fe116916529750f3e34e944a92a8d32516881011f20"
+      "bytes": 1797,
+      "sha256": "332253a16c87447085633fde5a921c5798a29343a3e154deff96c7003a689304"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 10492,
-      "sha256": "8a48e3d6dff12e4872be56b3f554bb7aabc4968fedfa37c10a1ffc0766d02ded"
+      "bytes": 10694,
+      "sha256": "e1e748a31afb6c268beda330918c916569f5c8c4302a8e78308100be83c98680"
+    },
+    {
+      "path": "docs/mage-leveling.md",
+      "bytes": 4445,
+      "sha256": "649eab076ba77de18513cec64eb6bda4269f0f2b498abda9b2fafb920a0dfe6a"
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 4542,
-      "sha256": "32a0be67f5b30dc97c7e58af04c6ce733214817d10921acdb5696f18541af8f7"
+      "bytes": 4562,
+      "sha256": "10129508846d66d6437465f740aaf183ae9f54c1ba33d1ae648986616e6f57b9"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -351,6 +374,21 @@
       "sha256": "e93473bc123cfd28a418bd4318c63bf4db64743436b880248c1f94bd9ce9eb0f"
     },
     {
+      "path": "forever/custom/8_arcane_leveling.yaml",
+      "bytes": 7189,
+      "sha256": "7aaf83ba655f165b5b0eeef8a9366330caa71420db1ff4f1f08d6e632d587b2f"
+    },
+    {
+      "path": "forever/custom/8_fire_leveling.yaml",
+      "bytes": 7243,
+      "sha256": "b9d5467fb5f910f6371ccda41841e9fe58c2b282fbc82ddd9e5e39495aff2d82"
+    },
+    {
+      "path": "forever/custom/8_frost_leveling.yaml",
+      "bytes": 7412,
+      "sha256": "1e2aed354a97e9376fa76584ae02caa423c2201d83000d3c2002bb0de5562315"
+    },
+    {
       "path": "forever/custom/9_affliction_leveling.yaml",
       "bytes": 26684,
       "sha256": "5341edb5d4c3dacbc0fcbaaadb78b686b5d3bcaa59595cc784d4a4707b61570b"
@@ -368,7 +406,7 @@
     {
       "path": "tools/verify_package.py",
       "bytes": 1286,
-      "sha256": "625d50ccab0fbe24476f913f1338b75b5632cf496e32d7a578722472f4799fda"
+      "sha256": "6cbe75bc3cd75f948a8db6c5e86a9de739de0db07d97a3f0bf8173c51b1937fb"
     }
   ]
 }

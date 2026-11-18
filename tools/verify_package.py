@@ -21,6 +21,6 @@ for toc in (root / 'Interface' / 'AddOns').rglob('*.toc'):
             path = (toc.parent / line.replace('\\', '/')).resolve()
             if not path.is_relative_to(root) or not path.is_file():
                 raise SystemExit('Missing TOC dependency: ' + toc.name + ': ' + line)
-if len(manifest['profiles']) != 20 or len(manifest['addons']) != 5:
+if len(manifest['profiles']) != 23 or len(manifest['addons']) != 5:
     raise SystemExit('Unexpected collection size')
-print('Verified', len(expected), 'files, 20 profiles and 5 companions.')
+print('Verified', len(expected), 'files, 23 profiles and 5 companions.')

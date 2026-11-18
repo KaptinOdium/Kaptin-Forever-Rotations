@@ -2,12 +2,13 @@
 
 1. Download and extract the ZIP. Keep a backup of any matching profiles/addons you already use.
 2. In `forever/custom`, copy the YAML files for your class into your actual **Simia Forever loader's `forever/custom` folder**. If your loader uses a different custom-profile location, use that location. YAML files do not go into the game's AddOns folder.
-3. Copy your class's complete companion folder from `Interface/AddOns` into the **Forever game's `Interface/AddOns` folder**. Keep the TOC and Lua files directly inside that companion folder; avoid nesting the folder twice.
+3. If your class has a companion in the table below, copy its complete folder from `Interface/AddOns` into the **Forever game's `Interface/AddOns` folder**. Keep the TOC and Lua files directly inside that companion folder.
 
 | Class | Companion folder |
 |---|---|
 | Paladin and Druid | `KhanForeverBindings` |
 | Hunter | `KaptinForeverHunterBindings` |
+| Mage | Uses the loader's ordinary spell bindings |
 | Shaman | `KaptinForeverShamanBindings` |
 | Warlock | `KhanForeverWarlockBindings` |
 | Warrior | `KaptinForeverWarriorBindings` |

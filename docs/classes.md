@@ -34,6 +34,10 @@ To join the tank's fight, enable **Targeting > Join selected fighting enemy in d
 
 Optional retargeting preserves living targets but native Target Enemy can select an idle enemy. Leave idle pulling off. Rapid Fire needs its own option, Burst and lifetime/range checks. Bestial Wrath also checks pet melee range. Review mana/Mend reserves if expensive attacks are withheld. Traps, Feign Death and ground targeting remain manual.
 
+## Mage
+
+Arcane, Fire and Frost each have a level 1–60 profile. Use ordinary Simia spell bindings. The [Mage leveling guide](mage-leveling.md) covers setup, spec priorities and leveling simulations.
+
 ## Shaman
 
 Elemental, Enhancement and Restoration include movement-aware damage/healing, shield maintenance and configurable totems. Enhancement now prioritizes eligible Windfury Totem before Strength of Earth, while reactive Grounding stays first. Select **Totems > Air slot > Windfury** and bind its ordinary key. Both Earth/Air slots can stay active; existing mana, fight-length, movement and healing-reserve checks still apply. Optional Fire Nova requires the configured pack/totem conditions; it is not an unconditional single-target filler. Enhancement can apply the strongest learned main-hand imbue between fights when no temporary enchant is present. Existing enchants are preserved and off-hand application stays manual.
