@@ -6,12 +6,12 @@
 # Simulation reference adapted for leveling and reactive utility; not live-verified.
 spec: 11
 name: Forever Druid - Cat 1-60
-version: 2.3.19
+version: 2.3.20
 author: Custom
 date: '2026-11-18'
 patch: Classic Forever
 entry: main
-description: Feral leveling fallbacks and level-60 Shifting Power, Rip and positional builder priorities.
+description: Cat leveling and positional attacks, with Bear attacks when you shift to Bear or Dire Bear.
 config:
   setup:
     section: Setup
@@ -223,8 +223,7 @@ config:
     section: Feral
     type: note
     label: Cat leveling and level 60
-    text: Uses Bear before Cat is learned, and caster spells before Bear. Pools energy for Shred when the loader reports rear positioning, regardless of threat; Claw covers frontal or missing position checks. Clearcasting uses free attacks,
-      with a final Bite when the enemy is about to die. Does not leave Cat in combat to heal.
+    text: Stay on this profile when you change forms. Cat uses Shred from behind and Claw from the front. Bear and Dire Bear use Bear attacks until you switch back. Automatic form entry can take you from caster form into Cat, or Bear before Cat is learned. Turn it off to control every shift yourself.
   conservative_shred:
     section: Feral
     type: checkbox
@@ -243,7 +242,7 @@ config:
   auto_form:
     section: Feral
     type: checkbox
-    label: Enter Cat Form for combat, Bear before Cat is learned
+    label: From caster form, enter Cat for combat or Bear before Cat is learned
     default: true
   use_shifting_power:
     section: Resources
@@ -313,14 +312,17 @@ variables:
   cat_shred_allowed: var.cat_rear&(!config.conservative_shred|(target.threat>=0&target.threat<2))
   cat_builder: combo_points<5|buff.clearcasting.up|((!action.ferocious_bite.known|action.ferocious_bite.blocked)&(!action.rip.known|action.rip.blocked|target.time_to_die<config.rip_ttd))|(energy.deficit<25&(!action.rip.known|action.rip.blocked|dot.rip.remains>2|target.time_to_die<config.rip_ttd))
   demo_shout_present: debuff.1160.up.any|debuff.6190.up.any|debuff.11554.up.any|debuff.11555.up.any|debuff.11556.up.any
+  bear_lacerate_due: target.in_melee&(target.time_to_die<=0|target.time_to_die>=6)&(debuff.lacerate.stack<5|(dot.lacerate.remains>0&dot.lacerate.remains<=4.5))
+  bear_maul_filler: debuff.lacerate.stack<5|!action.primal_bite.known|action.primal_bite.blocked
+  bear_swipe_pack: state.aoe&target.in_melee&enemies.8y=enemies.combat.8y&enemies.combat.8y>=2
 lists:
   survival:
   - health_potion,range_check=none,if=player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
   - barkskin,range_check=none,if=config.use_barkskin&player.combat&player.health.pct<config.barkskin_hp&buff.barkskin.down
   recovery:
   - mana_potion,range_check=none,if=player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<=config.mana_pot_pct&mana_potion.ready
-  - innervate.player,range_check=none,if=config.use_innervate&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<config.innervate_pct&buff.innervate.down.any
-  - call_action_list,name=rest_heals,if=config.self_heal&!player.combat&!player.auto_attacking&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any&buff.783.down.any&buff.1066.down.any&buff.prowl.down.any
+  - innervate.player,range_check=none,if=config.use_innervate&player.combat&var.caster_form_active&mana.pct<config.innervate_pct&buff.innervate.down.any
+  - call_action_list,name=rest_heals,if=config.self_heal&!player.combat&!player.auto_attacking&var.caster_form_active&buff.prowl.down.any
   rest_heals:
   - swiftmend.player,range_check=none,if=config.rest_swiftmend&player.health.effective.pct<60&(buff.rejuvenation.up|buff.regrowth.up)
   - healing_touch.player,range_check=none,if=config.rest_healing_touch&!player.moving&player.health.effective.pct<config.rest_healing_touch_hp
@@ -332,8 +334,8 @@ lists:
   - healing_touch.player,range_check=none,if=!player.moving&player.health.effective.pct<config.combat_healing_touch_hp
   - rejuvenation.player,range_check=none,if=player.health.effective.pct<config.combat_rejuvenation_hp&buff.rejuvenation.down.any
   buffs:
-  - call_action_list,name=self_mark,if=config.maintain_buffs&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.gift_of_the_wild.down.any&(buff.mark_of_the_wild.down.any|(buff.mark_of_the_wild.up&buff.mark_of_the_wild.remains>0&buff.mark_of_the_wild.remains<60))
-  - call_action_list,name=self_thorns,if=config.maintain_buffs&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&(buff.thorns.down.any|(buff.thorns.up&buff.thorns.remains>0&buff.thorns.remains<30))
+  - call_action_list,name=self_mark,if=config.maintain_buffs&!player.combat&var.caster_form_active&buff.gift_of_the_wild.down.any&(buff.mark_of_the_wild.down.any|(buff.mark_of_the_wild.up&buff.mark_of_the_wild.remains>0&buff.mark_of_the_wild.remains<60))
+  - call_action_list,name=self_thorns,if=config.maintain_buffs&!player.combat&var.caster_form_active&(buff.thorns.down.any|(buff.thorns.up&buff.thorns.remains>0&buff.thorns.remains<30))
   self_mark:
   - mark_of_the_wild,range_check=none,if=!target.exists|target.enemy
   - mark_of_the_wild.player,range_check=none
@@ -344,11 +346,11 @@ lists:
   - bash.mouseover,range_check=mouseover,if=config.mouseover_bash&(buff.5487.up.any|buff.9634.up.any)&mouseover.exists&mouseover.enemy&mouseover.alive&mouseover.combat&!mouseover.boss&(mouseover.targeting_party|mouseover.threat>=0)&(mouseover.casting|mouseover.channeling)
   - bash,if=config.auto_bash&(buff.5487.up.any|buff.9634.up.any)&target.exists&target.enemy&target.alive&target.combat&!target.boss&(target.targeting_party|target.threat>=0)&(target.casting|target.channeling)&(target.casting.interruptible|target.incoming_cast.stunnable.up)
   - war_stomp,range_check=none,if=config.war_stomp_interrupt&player.combat&(buff.768.up.any|buff.5487.up.any|buff.9634.up.any)&buff.prowl.down.any&action.war_stomp.ready&!player.moving&var.stomp_area_clear&((var.selected_stun_cast&target.distance<=8&target.casting.remains>0.6)|(var.hover_stun_cast&mouseover.distance<=8&mouseover.casting.remains>0.6))
-  - rebirth.mouseover,range_check=mouseover,if=config.rebirth_mouseover&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&mouseover.exists&mouseover.friendly&mouseover.dead
+  - rebirth.mouseover,range_check=mouseover,if=config.rebirth_mouseover&var.caster_form_active&!player.moving&mouseover.exists&mouseover.friendly&mouseover.dead
   dispels:
-  - remove_curse,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.curse
-  - abolish_poison,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any
-  - cure_poison,cycle=members,if=config.dispels&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any
+  - remove_curse,cycle=members,if=config.dispels&var.caster_form_active&cycle.range<=30&cycle.dispelable.curse
+  - abolish_poison,cycle=members,if=config.dispels&var.caster_form_active&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any
+  - cure_poison,cycle=members,if=config.dispels&var.caster_form_active&cycle.range<=30&cycle.dispelable.poison&cycle.buff.abolish_poison.down&!cycle.buff.abolish_poison.up.any
   caster_damage:
   - attack_target,if=var.early_melee_finish_active&!player.auto_attacking
   - moonfire,if=(!var.early_melee_saving|action.moonfire.cost=0)&var.caster_form_active&dot.moonfire.remains<=0&target.time_to_die>=8&(action.moonfire.cost=0|(mana-action.moonfire.cost)*100>=mana.max*config.mana_reserve)
@@ -377,11 +379,11 @@ lists:
   - call_action_list,name=loot,if=config.lootnearby&!player.combat&!player.auto_attacking&buff.prowl.down.any&buff.20580.down.any&(!target.exists|target.dead)
   - 2383,range_check=none,ignore_usable=true,if=config.find_herbs&action.2383.known&!player.combat&!player.auto_attacking&buff.prowl.down.any&buff.20580.down.any&buff.2383.down.any&buff.8387.down.any&(!config.start_selected|!target.exists|!target.enemy|target.dead)
   - return,if=!(target.exists&target.alive&target.enemy&((player.combat&target.combat&(target.targeting_party|target.threat>=0|player.auto_attacking))|(config.start_selected&!player.combat)))
-  - cat_form,range_check=none,if=var.auto_form_allowed&buff.768.down.any
+  - cat_form,range_check=none,if=var.auto_form_allowed&var.caster_form_active
   - call_action_list,name=cat_combat,if=buff.768.up.any
-  - dire_bear_form,range_check=none,if=var.auto_form_allowed&!action.768.known&buff.5487.down.any&buff.9634.down.any
-  - bear_form,range_check=none,if=var.auto_form_allowed&!action.768.known&buff.5487.down.any&buff.9634.down.any
-  - call_action_list,name=early_bear,if=(!var.auto_form_allowed|!action.768.known|action.cat_form.blocked|mana<action.cat_form.cost)&(buff.5487.up.any|buff.9634.up.any)
+  - dire_bear_form,range_check=none,if=var.auto_form_allowed&var.caster_form_active&!action.768.known
+  - bear_form,range_check=none,if=var.auto_form_allowed&var.caster_form_active&!action.768.known
+  - call_action_list,name=early_bear,if=buff.5487.up.any|buff.9634.up.any
   - call_action_list,name=caster_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any&(!config.auto_form|action.cat_form.blocked|(!action.768.known&(!action.5487.known|action.bear_form.blocked)&(!action.9634.known|action.dire_bear_form.blocked))|mana<action.cat_form.cost|mana<action.bear_form.cost|mana<action.dire_bear_form.cost)
   cat_combat:
   - run_action_list,name=cat_opening,if=buff.prowl.up.any
@@ -403,7 +405,15 @@ lists:
   - ravage,if=config.cat_opener=0&buff.prowl.up.any&var.cat_rear
   - return
   early_bear:
+  - attack_target,if=target.in_melee&!player.auto_attacking&buff.frenzied_regeneration.up&rage<40
+  - run_action_list,name=bear_regen_free,if=buff.frenzied_regeneration.up&rage<40
   - demoralizing_roar,range_check=none,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y>=2&debuff.demoralizing_roar.remains.any<=2&(!config.respect_demo_shout|!var.demo_shout_present)
-  - swipe,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y>=2&rage>=20
-  - maul,if=target.in_melee&rage>=25
+  - lacerate,if=var.bear_lacerate_due&rage>=action.lacerate.cost
+  - swipe,if=var.bear_swipe_pack&rage>=action.swipe.cost
+  - primal_bite,if=target.in_melee&rage>=action.primal_bite.cost
+  - maul,if=target.in_melee&var.bear_maul_filler&(rage>=25|(buff.clearcasting.up&action.maul.cost=0))&rage>=action.maul.cost&buff.frenzied_regeneration.down
   - attack_target,if=target.in_melee&!player.auto_attacking
+  bear_regen_free:
+  - lacerate,if=var.bear_lacerate_due&buff.clearcasting.up&action.lacerate.cost=0
+  - swipe,if=var.bear_swipe_pack&buff.clearcasting.up&action.swipe.cost=0
+  - primal_bite,if=target.in_melee&buff.clearcasting.up&action.primal_bite.cost=0

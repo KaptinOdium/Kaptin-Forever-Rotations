@@ -7,9 +7,9 @@
 # Offline scenario-verified; live client delivery still requires in-game checks.
 spec: 11
 name: Forever Druid - Feral Manual Forms 1-60
-version: 2.3.14
+version: 2.3.20
 author: Custom
-date: '2026-11-17'
+date: '2026-11-18'
 patch: Classic Forever
 entry: main
 description: Manual Cat/Bear form routing with caster healing, buffs and optional Moonfire pulls; no automatic shifting or Wrath.
@@ -343,6 +343,9 @@ variables:
   cat_shred_allowed: var.cat_rear&(!config.conservative_shred|(target.threat>=0&target.threat<2))
   cat_builder: combo_points<5|buff.clearcasting.up|((!action.ferocious_bite.known|action.ferocious_bite.blocked)&(!action.rip.known|action.rip.blocked|target.time_to_die<config.rip_ttd))|(energy.deficit<25&(!action.rip.known|action.rip.blocked|dot.rip.remains>2|target.time_to_die<config.rip_ttd))
   demo_shout_present: debuff.1160.up.any|debuff.6190.up.any|debuff.11554.up.any|debuff.11555.up.any|debuff.11556.up.any
+  bear_lacerate_due: target.in_melee&(target.time_to_die<=0|target.time_to_die>=6)&(debuff.lacerate.stack<5|(dot.lacerate.remains>0&dot.lacerate.remains<=4.5))
+  bear_maul_filler: debuff.lacerate.stack<5|!action.primal_bite.known|action.primal_bite.blocked
+  bear_swipe_pack: state.aoe&target.in_melee&enemies.8y=enemies.combat.8y&enemies.combat.8y>=config.swipe_targets
 lists:
   survival:
   - health_potion,range_check=none,if=player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
@@ -420,20 +423,17 @@ lists:
   - enrage,range_check=none,if=config.use_enrage&rage<20&nameplates.threat.count=0&player.health.pct>90&buff.enrage.down
   - faerie_fire,if=debuff.faerie_fire.remains.any<=2&target.time_to_die>=8
   - demoralizing_roar,range_check=none,if=config.demo&state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&debuff.demoralizing_roar.remains.any<=2&(target.boss|target.time_to_die>=12|enemies.combat.8y>=2)&(!config.respect_demo_shout|!var.demo_shout_present)
-  - primal_bite,if=target.in_melee
-  - swipe,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y>=config.swipe_targets&(enemies.combat.8y>=3|((!action.primal_bite.known|action.primal_bite.blocked)&(!action.lacerate.known|action.lacerate.blocked)))&(rage-action.swipe.cost>=10|buff.clearcasting.up|((!action.primal_bite.known|action.primal_bite.blocked)&(!action.lacerate.known|action.lacerate.blocked)))
-  - lacerate,if=target.in_melee&target.time_to_die>=6&(debuff.lacerate.stack<5|dot.lacerate.remains<=4.5)
-  - swipe,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y=2&enemies.combat.8y>=config.swipe_targets&(rage-action.swipe.cost>=10|buff.clearcasting.up|((!action.primal_bite.known|action.primal_bite.blocked)&(!action.lacerate.known|action.lacerate.blocked)))
-  - maul,if=target.in_melee&(rage>=config.maul_rage|(buff.clearcasting.up&action.maul.cost=0))&rage>=action.maul.cost&buff.frenzied_regeneration.down
-  - lacerate,if=target.in_melee&rage>=25
-  - swipe,if=state.aoe&enemies.8y=enemies.combat.8y&enemies.combat.8y>=config.swipe_targets&target.in_melee&rage>=35&buff.frenzied_regeneration.down
+  - lacerate,if=var.bear_lacerate_due&rage>=action.lacerate.cost
+  - swipe,if=var.bear_swipe_pack&rage>=action.swipe.cost&(debuff.lacerate.stack>=5|rage-action.swipe.cost>=10|buff.clearcasting.up|((!action.primal_bite.known|action.primal_bite.blocked)&(!action.lacerate.known|action.lacerate.blocked)))
+  - primal_bite,if=target.in_melee&rage>=action.primal_bite.cost
+  - maul,if=target.in_melee&var.bear_maul_filler&(rage>=config.maul_rage|(buff.clearcasting.up&action.maul.cost=0))&rage>=action.maul.cost&buff.frenzied_regeneration.down
   - attack_target,if=target.in_melee&!player.auto_attacking
   bear_regen_free:
   - elunes_light,range_check=none,if=config.elunes_light&state.cds&action.elunes_light.ready&buff.1259799.down.any&player.combat&var.selected_fighting_group&target.in_melee&(target.boss|target.time_to_die>=12)
   - faerie_fire,if=debuff.faerie_fire.remains.any<=2&target.time_to_die>=8
+  - lacerate,if=var.bear_lacerate_due&buff.clearcasting.up&action.lacerate.cost=0
+  - swipe,if=var.bear_swipe_pack&buff.clearcasting.up&action.swipe.cost=0
   - primal_bite,if=target.in_melee&buff.clearcasting.up&action.primal_bite.cost=0
-  - swipe,if=state.aoe&enemies.8y=enemies.combat.8y&target.in_melee&enemies.combat.8y>=config.swipe_targets&buff.clearcasting.up&action.swipe.cost=0
-  - lacerate,if=target.in_melee&target.time_to_die>=6&(debuff.lacerate.stack<5|dot.lacerate.remains<=4.5)&buff.clearcasting.up&action.lacerate.cost=0
   caster_pull:
   - moonfire,if=config.caster_moonfire_pull&config.start_selected&var.caster_form_active&!player.combat&!player.auto_attacking&buff.prowl.down.any&target.exists&target.enemy&target.alive&!target.combat&dot.moonfire.remains<=0&(action.moonfire.cost=0|(mana-action.moonfire.cost)*100>=mana.max*config.mana_reserve)
   cat_combat:

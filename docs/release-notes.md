@@ -1,4 +1,6 @@
-# Collection 2026.11.18.3
+# Collection 2026.11.18.4
+
+Druid Cat, Bear and Manual Feral 2.3.20 update Bear damage and Lacerate refreshes. Cat now follows a manual switch to Bear even with automatic form entry enabled. Cat and Bear also preserve Travel and Aquatic Form during automatic buffs and caster support.
 
 Added Arcane, Fire and Frost Mage leveling profiles. See the [Mage leveling guide](mage-leveling.md) for the simulated builds and results.
 

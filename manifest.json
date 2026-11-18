@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.18.3",
+  "collection": "2026.11.18.4",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -22,19 +22,19 @@
     {
       "class_name": "Druid",
       "name": "Forever Druid - Bear 1-60",
-      "version": "2.3.14",
+      "version": "2.3.20",
       "path": "forever/custom/11_bear.yaml"
     },
     {
       "class_name": "Druid",
       "name": "Forever Druid - Cat 1-60",
-      "version": "2.3.19",
+      "version": "2.3.20",
       "path": "forever/custom/11_cat.yaml"
     },
     {
       "class_name": "Druid",
       "name": "Forever Druid - Feral Manual Forms 1-60",
-      "version": "2.3.14",
+      "version": "2.3.20",
       "path": "forever/custom/11_feral.yaml"
     },
     {
@@ -255,13 +255,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 1797,
-      "sha256": "332253a16c87447085633fde5a921c5798a29343a3e154deff96c7003a689304"
+      "bytes": 1824,
+      "sha256": "898184d07ccddfc6d445b31932730e140aa5054494a73dc5886b9ff55ab5dabb"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 10694,
-      "sha256": "e1e748a31afb6c268beda330918c916569f5c8c4302a8e78308100be83c98680"
+      "bytes": 11258,
+      "sha256": "8bdfe6eb7728ecaddf542dc0f9e49f239526c484d0f32fb5bd4a1694fcd66721"
     },
     {
       "path": "docs/mage-leveling.md",
@@ -270,8 +270,8 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 4562,
-      "sha256": "10129508846d66d6437465f740aaf183ae9f54c1ba33d1ae648986616e6f57b9"
+      "bytes": 4820,
+      "sha256": "19b3e64d90ec3664ce43e4c9dd2a2dbbc777e05b321f6635443b4fd907e2636d"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -295,18 +295,18 @@
     },
     {
       "path": "forever/custom/11_bear.yaml",
-      "bytes": 21761,
-      "sha256": "63d08f20659585ec8ed1d3472ac99fc9135ebb1f2791923e380428a3e49fb3a9"
+      "bytes": 21139,
+      "sha256": "d63017a9b6db34bbe20d25286cb7e5e588e0a8a5f131f91a1101a181c0f18c8c"
     },
     {
       "path": "forever/custom/11_cat.yaml",
-      "bytes": 22550,
-      "sha256": "bd39536bca3d723c838825729cf3f15507fd4ea82012cb8a5bc1e6e1c6c56020"
+      "bytes": 23098,
+      "sha256": "8ddf15fa797ec26dc7067383eab257c14bd664f6e5c88fea5c2b846a27f57a76"
     },
     {
       "path": "forever/custom/11_feral.yaml",
-      "bytes": 25049,
-      "sha256": "a6300b692df097a5ced80945366c13256e6f7389acae1edfb7e2fe8d6c0f9acf"
+      "bytes": 24658,
+      "sha256": "646562bf5cc1b4c40d6b431828106a25823dfabf4dbd54764cf46bbcc3e49472"
     },
     {
       "path": "forever/custom/11_restoration.yaml",
