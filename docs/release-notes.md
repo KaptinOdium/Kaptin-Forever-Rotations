@@ -1,6 +1,8 @@
-# Collection 2026.11.18.5
+# Collection 2026.11.20
 
-Restoration Druid 2.3.15 applies the Swiftmend slider during self-recovery and checks each recipient's range and heal over time. In parties it can retry an eligible ally when Simia's spell-wide check reports Swiftmend unusable. Actual casts through party bindings still need in-game confirmation. The profile also adds health thresholds for Wild Growth, Clearcasting heals and Nature's Swiftness with Healing Touch. See the [Druid class guide](classes.md#druid) for defaults and bindings.
+Restoration Druid 2.3.16 checks ranked Rejuvenation and Regrowth auras on the injured member. When the spell-wide usability flag rejects Swiftmend, the profile can try an eligible party or raid member with your HoT, within range and at or below your Swiftmend threshold. Verify the recipient in the in-game combat log. See the [Druid class guide](classes.md#druid) for bindings.
+
+Restoration Shaman 1.0.6 has independent group healing, group cures, weapon imbue and air totem settings. Review these four choices once after updating. Choose Party under Focus binds and run AutoBind to heal dungeon allies while an enemy stays selected. The [Shaman binding guide](shaman-bindings.md) also describes direct party bindings.
 
 Druid Cat, Bear and Manual Feral 2.3.20 update Bear damage and Lacerate refreshes. Cat now follows a manual switch to Bear even with automatic form entry enabled. Cat and Bear also preserve Travel and Aquatic Form during automatic buffs and caster support.
 

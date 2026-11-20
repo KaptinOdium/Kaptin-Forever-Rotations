@@ -7,9 +7,9 @@
 # Solo Clearcasting Starfire checked with native SimC at every level 20-59 and a level 60 holdout.
 spec: 11
 name: Forever Druid - Restoration 1-60
-version: 2.3.15
+version: 2.3.16
 author: Custom
-date: '2026-11-18'
+date: '2026-11-20'
 patch: Classic Forever
 entry: main
 movement_allowed: buff.natures_swiftness.up
@@ -144,7 +144,7 @@ config:
     section: Healing
     type: slider
     label: Swiftmend at or below effective health (%)
-    description: Applies to you and group members within 40 yards who have your Rejuvenation or Regrowth.
+    description: Checks your own Rejuvenation or Regrowth on each member within 40 yards, including downranked HoTs. With Focus binds off, Swiftmend needs party1–4 keys in dungeons. With Party or Raid focus binds, run AutoBind and check Swiftmend's focus key.
     min: 20
     max: 80
     default: 55
@@ -285,7 +285,7 @@ variables:
   resting_caster: '!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any'
   healing_caster: buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any
   healing_clearcast: 'config.omen_healing&player.combat&(buff.clearcasting.up|buff.16870.up)'
-  swiftmend_ally_check: 'var.healing_caster&buff.783.down.any&buff.1066.down.any&!player.inraid&!player.cc&!player.silenced&!usable.swiftmend&action.swiftmend.known&!action.swiftmend.blocked&cooldown.swiftmend.ready&mana>=action.swiftmend.cost'
+  swiftmend_ally_check: 'var.healing_caster&buff.783.down.any&buff.1066.down.any&!player.cc&!player.silenced&!usable.swiftmend&action.swiftmend.known&!action.swiftmend.blocked&cooldown.swiftmend.ready&mana>=action.swiftmend.cost'
 lists:
   survival:
   - health_potion,range_check=none,if=player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
@@ -293,7 +293,7 @@ lists:
   recovery:
   - mana_potion,range_check=none,if=player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<=config.mana_pot_pct&mana_potion.ready
   - innervate.player,range_check=none,if=config.use_innervate&player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&mana.pct<config.innervate_pct&buff.innervate.down.any
-  - swiftmend.player,range_check=none,if=var.healing_caster&config.self_heal&!player.combat&player.health.effective.pct<config.rest_hp&player.health.effective.pct<=config.swiftmend_hp&(buff.rejuvenation.up|buff.regrowth.up)
+  - swiftmend.player,range_check=none,if=var.healing_caster&config.self_heal&!player.combat&player.health.effective.pct<config.rest_hp&player.health.effective.pct<=config.swiftmend_hp&(buff.rejuvenation.up|buff.regrowth.up|buff.774.up|buff.1058.up|buff.1430.up|buff.2090.up|buff.2091.up|buff.3627.up|buff.8910.up|buff.9839.up|buff.9840.up|buff.9841.up|buff.25299.up|buff.417057.up|buff.417058.up|buff.417059.up|buff.417060.up|buff.417061.up|buff.417062.up|buff.417063.up|buff.417064.up|buff.417065.up|buff.417066.up|buff.417068.up|buff.8936.up|buff.8938.up|buff.8939.up|buff.8940.up|buff.8941.up|buff.9750.up|buff.9856.up|buff.9857.up|buff.9858.up|buff.436937.up|buff.436938.up|buff.436939.up|buff.436940.up|buff.436942.up|buff.436943.up|buff.436944.up|buff.436945.up|buff.436946.up)
   - healing_touch.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))
   - rejuvenation.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&player.health.effective.pct<config.rest_hp&buff.rejuvenation.down
   - regrowth.player,range_check=none,if=buff.24858.down.any&config.self_heal&!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any&!player.moving&player.health.effective.pct<config.rest_hp&(buff.regrowth.down|player.health.effective.pct<config.rest_direct_hp)&(player.health.effective.pct<config.rest_direct_hp|!action.rejuvenation.known|(!action.rejuvenation.ready&buff.rejuvenation.down))
@@ -349,9 +349,10 @@ lists:
   - call_action_list,name=caster_damage,if=buff.5487.down.any&buff.9634.down.any&buff.768.down.any
   urgent_healing:
   - healing_touch,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=(player.combat|(var.resting_caster&!cycle.is_player))&config.use_natures_swiftness&buff.natures_swiftness.up&cycle.range<=40&(cycle.health.effective.pct<=config.touch_hp|cycle.health.effective.pct<=config.natures_swiftness_hp)
-  - swiftmend,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<=config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up)
-  # WoW reports one usability flag per spell. Recheck the actual party recipient when that flag is false.
-  - swiftmend,cycle=members,cycle_order=health.pct,range_check=cycle_member,ignore_usable=true,line_cd=2,if=var.swiftmend_ally_check&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<=config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up)
+  # SpellDataDump/druid.txt lists two periodic-heal ID families per HoT. Match the actual rank on the candidate, including downranked casts.
+  - swiftmend,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<=config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up|cycle.buff.774.up|cycle.buff.1058.up|cycle.buff.1430.up|cycle.buff.2090.up|cycle.buff.2091.up|cycle.buff.3627.up|cycle.buff.8910.up|cycle.buff.9839.up|cycle.buff.9840.up|cycle.buff.9841.up|cycle.buff.25299.up|cycle.buff.417057.up|cycle.buff.417058.up|cycle.buff.417059.up|cycle.buff.417060.up|cycle.buff.417061.up|cycle.buff.417062.up|cycle.buff.417063.up|cycle.buff.417064.up|cycle.buff.417065.up|cycle.buff.417066.up|cycle.buff.417068.up|cycle.buff.8936.up|cycle.buff.8938.up|cycle.buff.8939.up|cycle.buff.8940.up|cycle.buff.8941.up|cycle.buff.9750.up|cycle.buff.9856.up|cycle.buff.9857.up|cycle.buff.9858.up|cycle.buff.436937.up|cycle.buff.436938.up|cycle.buff.436939.up|cycle.buff.436940.up|cycle.buff.436942.up|cycle.buff.436943.up|cycle.buff.436944.up|cycle.buff.436945.up|cycle.buff.436946.up)
+  # The spell-wide usability flag has no recipient. Recheck the specific party or raid member when it is false.
+  - swiftmend,cycle=members,cycle_order=health.pct,range_check=cycle_member,ignore_usable=true,line_cd=2,if=var.swiftmend_ally_check&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<=config.swiftmend_hp&(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up|cycle.buff.774.up|cycle.buff.1058.up|cycle.buff.1430.up|cycle.buff.2090.up|cycle.buff.2091.up|cycle.buff.3627.up|cycle.buff.8910.up|cycle.buff.9839.up|cycle.buff.9840.up|cycle.buff.9841.up|cycle.buff.25299.up|cycle.buff.417057.up|cycle.buff.417058.up|cycle.buff.417059.up|cycle.buff.417060.up|cycle.buff.417061.up|cycle.buff.417062.up|cycle.buff.417063.up|cycle.buff.417064.up|cycle.buff.417065.up|cycle.buff.417066.up|cycle.buff.417068.up|cycle.buff.8936.up|cycle.buff.8938.up|cycle.buff.8939.up|cycle.buff.8940.up|cycle.buff.8941.up|cycle.buff.9750.up|cycle.buff.9856.up|cycle.buff.9857.up|cycle.buff.9858.up|cycle.buff.436937.up|cycle.buff.436938.up|cycle.buff.436939.up|cycle.buff.436940.up|cycle.buff.436942.up|cycle.buff.436943.up|cycle.buff.436944.up|cycle.buff.436945.up|cycle.buff.436946.up)
   - natures_swiftness,range_check=none,if=config.use_natures_swiftness&player.combat&buff.natures_swiftness.down&action.healing_touch.ready&mana>=action.natures_swiftness.cost+action.healing_touch.cost&group.count(cycle.health.effective.pct<=config.natures_swiftness_hp&cycle.range<=40)>0
   - regrowth,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp
   - healing_touch,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp

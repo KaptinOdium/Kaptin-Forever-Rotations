@@ -5,12 +5,12 @@ local _, class = UnitClass("player")
 if class ~= "SHAMAN" then return end
 
 local A, M
-local status = {version = "1.0.0", added = 0, skipped = 0}
+local status = {version = "1.0.1", added = 0, skipped = 0}
 _G.KaptinForeverShamanBindings = status
 
 -- Forever families, not retail spell IDs. The localized
 -- spellbook scan below supplies matching learned ranks and host base IDs.
--- cycle=members/tanks uses focus transport; it does not need party1-4 rows.
+-- Direct party variants are available in the host's Additional Macros menu.
 local families = {
     {331, "Healing Wave", "friendly"},
     {8004, "Lesser Healing Wave", "friendly"},
@@ -179,6 +179,35 @@ update()
 
 SLASH_KAPTINFOREVERSHAMANBINDINGS1 = "/kaptinshamanbindings"
 SLASH_KAPTINFOREVERSHAMANBINDINGS2 = "/khanshamanbindings"
+local function describeHealingRoute()
+    if not A.Player or not A.Player.SpecID or A.Player.SpecID == 0 or not A.Player.ResolveFocusScope then
+        print("Healing route unavailable. Check Keybinds > AutoBind > Focus binds on this talent group.")
+        return
+    end
+    local scope = A.Player.FocusScope
+    if scope ~= "party" and scope ~= "raid" then
+        print("Focus binds: Off. For dungeons, right-click each heal/cure in Keybinds > Autobind > Additional Macros and select @party1 through @party4. Check each key.")
+        print("Alternatively select Party or Raid in Focus binds, then run AUTOBIND. Self-heals use @player.")
+        return
+    end
+    print(("Focus binds: %s. Simia sets focus for each group heal. Bind each heal/cure @focus and self-heals @player."):format(scope))
+    local getKey = A.Autobind and A.Autobind.GetKeyString
+    if type(getKey) ~= "function" then return end
+    local units = {"player", "party1", "party2", "party3", "party4"}
+    if scope == "raid" then
+        for i = 1, 40 do units[#units + 1] = "raid" .. i end
+    end
+    local missing = {}
+    for _, unit in ipairs(units) do
+        local id = _G["VIRTUAL_ACTION_FOCUS_" .. unit:upper()]
+        if not id or not getKey(id) then missing[#missing + 1] = unit end
+    end
+    if #missing > 0 then
+        print("Missing shared Focus keys: " .. table.concat(missing, ", ") .. ". Run Keybinds > AutoBind > AUTOBIND or assign these rows.")
+    else
+        print(("Shared Focus keys assigned: %d/%d. Verify the per-spell @focus keys in Keybinds."):format(#units, #units))
+    end
+end
 SlashCmdList.KAPTINFOREVERSHAMANBINDINGS = function()
     if not A then update() end
     if not A then
@@ -187,6 +216,6 @@ SlashCmdList.KAPTINFOREVERSHAMANBINDINGS = function()
     end
     print(("Kaptin Forever Shaman Bindings %s: %s; %d added variants; %s."):format(
         status.version, status.host, status.added, status.potions or "potion refresh pending"))
-    print("Bind learned self/focus heal and utility variants in Simia; enable native group focus routing for member healing.")
+    describeHealingRoute()
     print("Bind Earth Shock, Frost Shock and Purge @mouseover/@focus if enabled. Existing keys and custom macros are preserved.")
 end

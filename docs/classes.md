@@ -52,7 +52,9 @@ For Enhancement, select **Totems > Fire slot > Searing** or **Magma on packs; Se
 
 **Totems > Recast selected totems that have fallen out of range** is enabled by default for Enhancement. During an eligible fight, stand still and the profile can replace an individual tracked support totem beyond its 30-yard buff radius. Searing and Magma also check whether their old position still reaches the target or other enemies. If the loader cannot locate an active totem, you can move or replace it manually.
 
-Use `KaptinForeverShamanBindings`. Bind learned spells, chosen totems/imbues, potions and enabled heal/cure variants. Configure native focus routing for group healing. [Detailed bindings](shaman-bindings.md) explain focus assignment, `@player` self-heals and optional mouseover Earth Shock. Choose utility totems and position them yourself.
+Restoration saves its own **Main-hand weapon imbue** and **Air slot** choices. After updating, reselect any imbue or air totem you want on the healer. The defaults are **Manual** and **None** respectively.
+
+Use `KaptinForeverShamanBindings`. Bind learned spells, chosen totems/imbues, potions and enabled heal/cure variants. For dungeon healing, choose **Keybinds > AutoBind > Focus binds > Party**, run **AUTOBIND** and confirm. Simia assigns focus for each heal while you keep your enemy selected. The [binding guide](shaman-bindings.md) also covers direct party keys, raid setup and separate self-heals.
 
 ## Warlock
 

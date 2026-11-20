@@ -1,4 +1,4 @@
-# Shaman binding companion 1.0.0
+# Shaman binding companion 1.0.1
 
 Enable `KaptinForeverShamanBindings` alongside Simia on a Forever Shaman. The ZIP places the folder under `Interface/AddOns`. The binding fixtures were rechecked against SimulationcraftExtra 12.176, Forever interface 16001, on 15 November 2026. Existing native focus macros are preserved. Type `/kaptinshamanbindings` to inspect registration; `/khanshamanbindings` is an alias.
 
@@ -20,15 +20,17 @@ The companion supplies these targeting variants:
 
 Existing native mouseover healing entries remain intact. Bind only learned actions and variants you intend to use. No Earth Shield, Wind Shear, Lava Burst, Lava Lash or guessed weapon-hand targeting is added. Ordinary spell and racial actions use the host's existing bindings.
 
-## Group healing needs native focus routing
+## Setting up group healing
 
 In SimulationcraftExtra 12.176, **Focus binds controls the route**: Off exports direct-party routing, while Party/Raid exports focus routing. Forever defaults to Off for each talent group. Selecting the Restoration profile or adding a focus macro does not change that setting. Member cycling alone does not guarantee focus transport.
 
-1. Open **Keybinds > AutoBind > Focus binds > Party (player + party1-4)** for a dungeon, or **Raid** for raids.
+1. Open **Keybinds > AutoBind > Focus binds > Party (player + party1-4)** for a dungeon, or **Raid** for raids. Raid scope includes the party assignment keys for dungeons.
 2. Click the top **AUTOBIND** entry and confirm, or assign the needed keys manually. Changing the scope does not itself run AutoBind.
 3. Check the shared **Focus Player / Focus Party 1-4** assignment keys (plus raid assignment keys for Raid scope), each enabled heal/cure's **@focus** key, and self-heals' **@player** keys. The shared assignment keys are reused by all focus heals; each spell needs only one focus casting key.
 
-An ordinary heal key or a manually selected friendly target does not replace that route. The companion adds macro variants; it does not select party members, enable focus scope or set focus itself. Existing native focus macros are preserved.
+Simia assigns focus during a group heal. You can keep an enemy selected. Run `/kaptinshamanbindings` on the current talent group to see the active route and check the shared focus assignment keys. Each enabled heal/cure also needs its own cast key.
+
+**Direct dungeon keys with Focus binds Off.** In current Simia, right-click a learned heal's main row in Keybinds, open **Autobind > Additional Macros**, and select **@party1** through **@party4**. Repeat for each group heal or cure you enable and verify the assigned keys. Keep **@player** for self-heals. The native menu adds only the variants you select. Use Raid focus routing to cover raid members.
 
 Before relying on party healing, confirm that a group heal reaches the intended injured member while an enemy is selected. Self-heals use the separate `@player` variants. If the focus route or a required key is missing, disable group healing until configured; the Restoration profile may correctly withhold damage while allies need recovery. Recheck learned rank bindings after training or changing talents.
 
@@ -40,7 +42,7 @@ The hostile `@mouseover` and `@focus` macros use only that explicit living hosti
 
 WASD movement stays manual. The profiles react to movement; neither the companion nor the profiles walk, chase, turn or reposition the player. Instant Maelstrom Lightning Bolt and eligible Nature's Swiftness healing still require usable bindings.
 
-For automatic main-hand imbues, bind the ordinary Windfury Weapon, Flametongue Weapon or Rockbiter Weapon spell and select **Buffs > Main-hand weapon imbue**. Explicit Frostbrand is also available. Enhancement defaults to Automatic leveling; Elemental/Restoration default to Manual. No new variant or companion is needed. It applies between fights only when the main hand has no temporary enchant. Existing enchants are never replaced; off-hand application stays manual because its weapon/shield type cannot be established. Windfury Weapon can coexist with Windfury Totem under the current hotfix.
+For automatic main-hand imbues, bind the ordinary spell and select **Buffs > Main-hand weapon imbue**. Enhancement defaults to Automatic leveling. Restoration 1.0.6 has its own preference, initially Manual, and a separate **Totems > Air slot** preference, initially None. Select a choice in Restoration if you want a personal weapon imbue or an air totem. Existing temporary enchants keep their remaining duration. Off-hand application is manual.
 
 Optional Fire Nova requires its ordinary key and the chosen Searing/Magma Totem key; see the Shaman section in [the class guide](classes.md) and the profile settings for tracked-totem and pack conditions. Totemic Call, Totemic Recall, Earthbind, Tremor, resistance and cleansing totems remain manual. Keep useful keys for them in your own layout. Totemic Call moves totems to your feet; Fire Nova is centered on an active fire totem. Chain Heal bounce geometry remains unavailable. No cursor/controller targeting helper or host patch is supplied.
 

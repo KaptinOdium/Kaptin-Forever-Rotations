@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.18.5",
+  "collection": "2026.11.20",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -46,7 +46,7 @@
     {
       "class_name": "Druid",
       "name": "Forever Druid - Restoration 1-60",
-      "version": "2.3.15",
+      "version": "2.3.16",
       "path": "forever/custom/11_restoration.yaml"
     },
     {
@@ -100,7 +100,7 @@
     {
       "class_name": "Shaman",
       "name": "Forever Shaman - Restoration 1-60",
-      "version": "1.0.4",
+      "version": "1.0.6",
       "path": "forever/custom/7_restoration_leveling.yaml"
     },
     {
@@ -151,7 +151,7 @@
     },
     {
       "name": "KaptinForeverShamanBindings",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "name": "KhanForeverWarlockBindings",
@@ -190,13 +190,13 @@
     },
     {
       "path": "Interface/AddOns/KaptinForeverShamanBindings/KaptinForeverShamanBindings.lua",
-      "bytes": 8401,
-      "sha256": "e835688cc376d4d0e0c94b45b68958b74269cbdad28a8f0390ad99f27855587d"
+      "bytes": 9888,
+      "sha256": "5b3558c1785bd2152ad85a921e6c94e8e6de1682314a698923eb863e4acdca1c"
     },
     {
       "path": "Interface/AddOns/KaptinForeverShamanBindings/KaptinForeverShamanBindings.toc",
       "bytes": 296,
-      "sha256": "51d1ed75fec3687877c2a3ad2793d8694955d5d533a62e46ec2c3f99a57ed18b"
+      "sha256": "7e60511435576d90f98c3b4345b79551e069e96f42220f34b899e56b8e2b7982"
     },
     {
       "path": "Interface/AddOns/KaptinForeverWarriorBindings/KaptinForeverWarriorBindings.lua",
@@ -256,12 +256,12 @@
     {
       "path": "README.md",
       "bytes": 1828,
-      "sha256": "2b70a6e5c17784f6b63a9355fac165b60e2b47c7949c78599a2c515c75c1b7fe"
+      "sha256": "b84d2a78ced158f843d17b31758ca49eaff85bbc0d042b85df7e87d2e8e8761e"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 12004,
-      "sha256": "23bcdb246c533aeb9c91289bf4ad72df4b80780d90b9839faaa5d714fd858b72"
+      "bytes": 12270,
+      "sha256": "17679f6c1a12d9d75b1bfd2991037863114f363df49dffcc1d3fcfda6c022774"
     },
     {
       "path": "docs/mage-leveling.md",
@@ -270,13 +270,13 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 5310,
-      "sha256": "57dd7d89fe6ee3c0b0bacdc257b3e481202341282b6c900f5450da9656107e71"
+      "bytes": 5539,
+      "sha256": "e61a2f69342db63f465278fe5eb7cf05ab8169559e5b06727acdb17f2affe98e"
     },
     {
       "path": "docs/shaman-bindings.md",
-      "bytes": 6790,
-      "sha256": "8f2ba06ee31fa73bc60fd086477fd885ff8a307e19a891715ffd9f4430c0802f"
+      "bytes": 7095,
+      "sha256": "8e4360c6bb2ca20e16fa11dd32870172d58a89b7d3d9f7c391093d71bc2934b6"
     },
     {
       "path": "docs/warlock/BINDINGS.md",
@@ -310,8 +310,8 @@
     },
     {
       "path": "forever/custom/11_restoration.yaml",
-      "bytes": 20760,
-      "sha256": "6dd9c3a4c81945e51d456d1462fb52cb5175c09f7d76cc19c67eb77220d4fb91"
+      "bytes": 23209,
+      "sha256": "30ac992d9f73222e1c8f47eb1ea2dc3ec1d33799ee6b869b933444345a1f93ad"
     },
     {
       "path": "forever/custom/1_arms_wasd.yaml",
@@ -370,8 +370,8 @@
     },
     {
       "path": "forever/custom/7_restoration_leveling.yaml",
-      "bytes": 35604,
-      "sha256": "e93473bc123cfd28a418bd4318c63bf4db64743436b880248c1f94bd9ce9eb0f"
+      "bytes": 35577,
+      "sha256": "45f95ba19dc41626774ad14787a56ec5e643a51be5577150ad6c13a3786215c7"
     },
     {
       "path": "forever/custom/8_arcane_leveling.yaml",
