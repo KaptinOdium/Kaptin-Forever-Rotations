@@ -1,7 +1,7 @@
 # Forever only. Offline decision checks do not establish live key delivery.
 spec: 3
 name: Forever Hunter - Survival WASD 1-60
-version: 1.0.10
+version: 1.0.11
 author: Kaptin
 date: '2026-11-20'
 patch: Classic Forever
@@ -12,9 +12,9 @@ config:
     section: Setup
     type: note
     label: Forever Hunter - manual WASD and positioning
-    text: Choose the profile matching your talents. Install the included companion, then assign or AutoBind your spells, Pet Attack and Auto Shot @stop_attack;
-      optional retargeting needs Auto Shot @retarget_stop. You choose targets and start pulls. Optional combat retargeting can acquire a target only when
-      yours is dead or missing. No movement, pet training or gear changes.
+    text: Choose the profile matching your talents. Install the included companion, then assign or AutoBind your spells, Pet Attack and Auto Shot @stop_attack.
+      Optional retargeting and Follow on CC use Auto Shot @retarget_stop. You choose targets and start pulls. Optional combat retargeting can acquire a
+      target only when yours is dead or missing. No movement, pet training or gear changes.
   damage:
     section: Targeting
     type: checkbox
@@ -65,6 +65,11 @@ config:
     type: checkbox
     label: Stop your attacks and pet on recognized breakable CC
     default: true
+  cc_pet_follow:
+    section: Targeting
+    type: checkbox
+    label: Keep pet stance on breakable CC (Follow)
+    default: false
   avoid_immunity:
     section: Targeting
     type: checkbox
@@ -74,10 +79,10 @@ config:
     section: Targeting
     type: note
     label: Stop key is required for existing attacks
-    text: Auto Shot @stop_attack stops your attacks and calls the pet back in Passive mode for recognized CC, immunity or damage OFF. Ordinary retargeting
-      uses the separate @retarget_stop command, which does not issue a pet stance change. Protective recall is independent of permanent-pet care. Passive
-      can disrupt summoned hawks on Forever; the optional Hawk Assist mode can resume them on an eligible summon. The profile cannot detect every CC or
-      queued attack; manual control takes priority. Stopping new recommendations alone cannot stop existing auto-attacks.
+    text: Keep CC protection enabled. By default a protected target uses Auto Shot @stop_attack to stop your attacks and set the pet to Passive and Follow.
+      To keep the current stance on breakable CC, enable Follow and bind Auto Shot @retarget_stop in companion 1.0.3. This works with combat retargeting
+      off. A pet in Assist or Defensive can re-engage on its own. Damage OFF and protected immunity use Passive even when Follow is enabled. An unbound
+      Follow key leaves existing attacks under manual control.
   auto_shot:
     section: Ranged
     type: checkbox
@@ -127,8 +132,8 @@ config:
     type: note
     label: Optional workaround for hawks returning on Passive
     text: Bind Summon Hawk @assist and enable this option to switch your pet to Assist when an eligible Hawk is summoned. Assist stays active and can follow
-      your attacks onto other targets. Recognized CC blocks this variant; protective recall can still set Passive. This option does not change stance while
-      idle or when the variant is unbound. Leave it OFF to control pet stance yourself. Live recovery still needs confirmation.
+      your attacks onto other targets. Recognized CC blocks this variant. Check the CC recall choice under Targeting if you want to keep Assist. This option
+      does not change stance while idle or when the variant is unbound. Leave it OFF to control pet stance yourself. Live recovery still needs confirmation.
   hawk_cap:
     section: Pet damage
     type: checkbox
@@ -498,7 +503,9 @@ variables:
   target_cc: target.debuff.polymorph.up.any|target.debuff.sap.up.any|target.debuff.gouge.up.any|target.debuff.blind.up.any|target.debuff.freezing_trap.up.any|target.debuff.hibernate.up.any|target.debuff.repentance.up.any|target.debuff.seduction.up.any|target.debuff.banish.up.any|target.debuff.fear.up.any|target.debuff.scatter_shot.up.any|target.debuff.shackle_undead.up.any|target.debuff.scare_beast.up.any|target.debuff.psychic_scream.up.any|target.debuff.intimidating_shout.up.any|target.debuff.howl_of_terror.up.any|target.debuff.turn_undead.up.any
   hover_cc: mouseover.debuff.polymorph.up.any|mouseover.debuff.sap.up.any|mouseover.debuff.gouge.up.any|mouseover.debuff.blind.up.any|mouseover.debuff.freezing_trap.up.any|mouseover.debuff.hibernate.up.any|mouseover.debuff.repentance.up.any|mouseover.debuff.seduction.up.any|mouseover.debuff.banish.up.any|mouseover.debuff.fear.up.any|mouseover.debuff.scatter_shot.up.any|mouseover.debuff.shackle_undead.up.any|mouseover.debuff.scare_beast.up.any|mouseover.debuff.psychic_scream.up.any|mouseover.debuff.intimidating_shout.up.any|mouseover.debuff.howl_of_terror.up.any|mouseover.debuff.turn_undead.up.any
   focus_cc: focus.debuff.polymorph.up.any|focus.debuff.sap.up.any|focus.debuff.gouge.up.any|focus.debuff.blind.up.any|focus.debuff.freezing_trap.up.any|focus.debuff.hibernate.up.any|focus.debuff.repentance.up.any|focus.debuff.seduction.up.any|focus.debuff.banish.up.any|focus.debuff.fear.up.any|focus.debuff.scatter_shot.up.any|focus.debuff.shackle_undead.up.any|focus.debuff.scare_beast.up.any|focus.debuff.psychic_scream.up.any|focus.debuff.intimidating_shout.up.any|focus.debuff.howl_of_terror.up.any|focus.debuff.turn_undead.up.any
-  protected_target: (config.protect_cc&var.target_cc)|(config.avoid_immunity&(target.buff.divine_shield.up.any|target.buff.ice_block.up.any|target.buff.blessing_of_protection.up.any))
+  protected_immunity: config.avoid_immunity&(target.buff.divine_shield.up.any|target.buff.ice_block.up.any|target.buff.blessing_of_protection.up.any)
+  protected_cc: config.protect_cc&var.target_cc
+  protected_target: var.protected_cc|var.protected_immunity
   attacks_active: player.auto_attacking|swing.ranged.remains<9999|(pet.alive&pet.attacking_target)
   retarget_needed: config.retarget_combat&config.damage&player.combat&(!target.exists|target.dead)&enemies.combat.40y>=1
   melee_pressure: var.engaged&target.in_melee&target.threat>=2&!target.casting&!target.channeling
@@ -536,7 +543,8 @@ lists:
   - call_action_list,name=spell_queue
   - return,if=!var.fighting&(buff.food.up.any|buff.drink.up.any|buff.nutritious_food.up.any|buff.nutritious_drink.up.any)
   - stop_casting,if=player.casting&var.shot_cast&(var.protected_target|!config.damage)
-  - auto_shot.stop_attack,range_check=none,ignore_usable=true,ignore_queue=true,if=var.attacks_active&(var.protected_target|!config.damage)
+  - auto_shot.stop_attack,range_check=none,ignore_usable=true,ignore_queue=true,if=var.attacks_active&(!config.damage|var.protected_immunity|(var.protected_cc&!config.cc_pet_follow))
+  - auto_shot.retarget_stop,range_check=none,ignore_usable=true,ignore_queue=true,if=var.attacks_active&config.damage&var.protected_cc&config.cc_pet_follow&!var.protected_immunity
   - stop_casting,if=player.channeling&var.mend_channel&(!pet.alive|pet.health.pct>=95|(var.fighting&(var.melee_pressure|player.health.pct<config.mend_self_hp)))
   - call_action_list,name=defense
   - return,if=player.casting|player.channeling

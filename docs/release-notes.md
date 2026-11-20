@@ -1,4 +1,6 @@
-# Collection 2026.11.20.4
+# Collection 2026.11.20.5
+
+Hunter 1.0.11 adds **Targeting > Keep pet stance on breakable CC (Follow)** for Beast Mastery, Marksmanship and Survival. The option defaults off and uses the **Auto Shot @retarget_stop** binding from companion 1.0.3. Update the three Hunter profiles and reload the rotation list. See the [Hunter setup](classes.md#hunter).
 
 Enhancement Shaman 1.0.7 adds Deac's optional Clearcasting priority for Chain Lightning in engaged packs. See [Shaman setup](classes.md#shaman) to enable it.
 

@@ -38,7 +38,11 @@ All three specializations include pet management, movement/range checks, Hawk ti
 
 In **Alterac Valley** or another battleground, select a living, attackable enemy player. Once both of you are in combat, the profile can use eligible single-target shots. Pet Attack waits four seconds between requests and Auto Shot waits two seconds between startup requests. This gives other shots time to fire while the pet is travelling or an attack confirmation is missing.
 
-Use `KaptinForeverHunterBindings`. Bind **Pet Attack**, ordinary **Auto Shot**, **Auto Shot @stop_attack**, and learned spells. Optional retargeting additionally needs **Target Enemy** and **Auto Shot @retarget_stop**. The new retarget stop uses `/stopattack` and `/petfollow` without changing pet stance. Protective stop for recognized CC/immunity or Damage disabled still deliberately sets Passive. Select the preferred stance yourself if your pet was already Passive.
+Use `KaptinForeverHunterBindings` 1.0.3. Bind **Pet Attack**, ordinary **Auto Shot**, **Auto Shot @stop_attack** and learned spells. Optional combat retargeting also needs **Target Enemy** and **Auto Shot @retarget_stop**.
+
+To recall the pet with Follow when your selected enemy is under breakable crowd control (CC), bind **Auto Shot @retarget_stop** and enable **Targeting > Keep pet stance on breakable CC (Follow)**. Keep CC protection enabled. Combat retargeting can stay off. The binding runs `/stopattack` and `/petfollow`, preserving your pet's current stance. A pet in Assist or Defensive may re-engage on its own. If your pet is already Passive, select your preferred stance once.
+
+With Follow off (the default), CC recalls set Passive. Disabling Damage or encountering an immunity covered by the immunity setting takes priority and recalls the pet in Passive using **Auto Shot @stop_attack**.
 
 To join the tank's fight, enable **Targeting > Join selected fighting enemy in dungeons**, keep Force Combat and idle-target pulling off, select a fighting enemy and stand in shooting range. This dungeon mode needs no bridge installer. The old strict group bridge is not included here; disable it with `/kaptinhuntergroup off` if previously installed for that different mode.
 
