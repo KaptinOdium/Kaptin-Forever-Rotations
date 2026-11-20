@@ -42,7 +42,9 @@ Use `KaptinForeverHunterBindings`. Bind **Pet Attack**, ordinary **Auto Shot**, 
 
 To join the tank's fight, enable **Targeting > Join selected fighting enemy in dungeons**, keep Force Combat and idle-target pulling off, select a fighting enemy and stand in shooting range. This dungeon mode needs no bridge installer. The old strict group bridge is not included here; disable it with `/kaptinhuntergroup off` if previously installed for that different mode.
 
-Optional retargeting preserves living targets but native Target Enemy can select an idle enemy. Leave idle pulling off. Rapid Fire needs its own option, Burst and lifetime/range checks. Bestial Wrath also checks pet melee range. Review mana/Mend reserves if expensive attacks are withheld. Traps, Feign Death and ground targeting remain manual.
+Optional retargeting preserves living targets but native Target Enemy can select an idle enemy. Leave idle pulling off. Review mana/Mend reserves if expensive attacks are withheld. Traps, Feign Death and ground targeting remain manual.
+
+**Cooldowns > Use remaining pull time for Bestial Wrath and Rapid Fire** is on by default. Both abilities check whether the pull has at least the configured time left (default 18 seconds). If the estimate is unknown or you turn the option off, they check the selected target's remaining life. A selected boss always passes the time check. Both abilities require Burst. Rapid Fire also needs its own option (off by default) and usable range. Bestial Wrath needs your pet attacking the selected target in melee.
 
 ## Mage
 

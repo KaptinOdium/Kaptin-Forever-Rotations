@@ -1,10 +1,12 @@
-# Collection 2026.11.20.3
+# Collection 2026.11.20.4
 
 Enhancement Shaman 1.0.7 adds Deac's optional Clearcasting priority for Chain Lightning in engaged packs. See [Shaman setup](classes.md#shaman) to enable it.
 
 KhanForeverBindings 1.1.7 adds `/khanbindings swiftmend` for Restoration Druids. It compares Swiftmend's saved binding and macro with the working Rejuvenation focus route. See the [Druid binding check](classes.md#druid) for an in-game test.
 
-Hunter 1.0.9 updates Beast Mastery, Marksmanship and Survival for fights against selected enemy players in battlegrounds. Pet Attack and Auto Shot startup retries leave room for the regular shot rotation. Players running companion 1.0.3 can update the three Hunter profiles and reload the rotation list.
+Hunter 1.0.10 adds pull-time estimates for Bestial Wrath and Rapid Fire across all three specializations. With the default 18-second minimum, a dying target in a long pull can qualify for cooldowns. A short pull holds cooldowns even when the selected target has more time left. Unknown pull time falls back to target lifetime, and a selected boss always passes the time check. Turn off **Cooldowns > Use remaining pull time for Bestial Wrath and Rapid Fire** for target-only timing. With companion 1.0.3 installed, update the three Hunter profiles and reload the rotation list.
+
+Hunter 1.0.9 updated Beast Mastery, Marksmanship and Survival for fights against selected enemy players in battlegrounds. Pet Attack and Auto Shot startup retries leave room for the regular shot rotation.
 
 Restoration Druid 2.3.16 checks ranked Rejuvenation and Regrowth auras on the injured member. When the spell-wide usability flag rejects Swiftmend, the profile can try an eligible party or raid member with your HoT, within range and at or below your Swiftmend threshold. Verify the recipient in the in-game combat log. See the [Druid class guide](classes.md#druid) for bindings.
 

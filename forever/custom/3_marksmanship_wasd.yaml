@@ -1,7 +1,7 @@
 # Forever only. Offline decision checks do not establish live key delivery.
 spec: 3
 name: Forever Hunter - Marksmanship WASD 1-60
-version: 1.0.9
+version: 1.0.10
 author: Kaptin
 date: '2026-11-20'
 patch: Classic Forever
@@ -443,27 +443,33 @@ config:
   bestial_wrath:
     section: Cooldowns
     type: checkbox
-    label: Bestial Wrath once the pet reaches melee of a durable target
+    label: Bestial Wrath once the pet reaches melee
     default: true
   rapid_fire:
     section: Cooldowns
     type: checkbox
     label: Allow Rapid Fire with Burst on (long cooldown)
     default: false
+  cooldown_pull_ttd:
+    section: Cooldowns
+    type: checkbox
+    label: Use remaining pull time for Bestial Wrath and Rapid Fire
+    default: true
   cooldown_ttd:
     section: Cooldowns
     type: slider
-    label: Offensive cooldown minimum target lifetime (seconds)
+    label: Minimum remaining time for offensive cooldowns (seconds)
     min: 8
     max: 45
     default: 18
   cooldown_note:
     section: Cooldowns
     type: note
-    label: Long cooldowns stay deliberate
-    text: Bestial Wrath requires Burst on and the pet in melee of your selected target; an attack command alone is not enough. Rapid Fire is off by default
-      and never fires from pack size alone. Readiness, Feign Death, Disengage, traps and Volley remain manual. Feign Death pauses the profile until you
-      end it yourself.
+    label: When to spend offensive cooldowns
+    text: Use the estimated time left for enemies fighting your group. Simia uses the boss estimate when it sees an engaged boss. If the pull estimate is
+      unavailable or the option is off, use the selected target estimate. A selected boss qualifies immediately. Both abilities require Burst. Bestial Wrath
+      needs your pet in melee of the selected enemy. Rapid Fire is off by default. Readiness, Feign Death, Disengage, traps and Volley remain manual. Feign
+      Death pauses the profile until you end it yourself.
   multi:
     section: AoE
     type: checkbox
@@ -501,7 +507,8 @@ variables:
   aimed_lifetime: target.time_to_die>=config.aimed_ttd|(config.unknown_dots&target.time_to_die<=0&target.health.pct>=70)
   sniper_lifetime: target.time_to_die>=config.sniper_ttd|(config.unknown_dots&target.time_to_die<=0&target.health.pct>=70)
   mark_lifetime: target.time_to_die>=config.mark_ttd|(target.time_to_die<=0&target.health.pct>=40)
-  cooldown_window: target.boss|target.time_to_die>=config.cooldown_ttd
+  cooldown_pull_known: config.cooldown_pull_ttd&fight_remains>0&fight_remains<9999
+  cooldown_window: target.boss|(var.cooldown_pull_known&fight_remains>=config.cooldown_ttd)|(!var.cooldown_pull_known&target.time_to_die>=config.cooldown_ttd&target.time_to_die<9999)
   bestial_window: config.use_pet&config.bestial_wrath&state.cds&var.engaged&var.cooldown_window&pet.alive&pet.attacking_target&pet.in_melee.target&pet.health.pct>=40&pet.buff.bestial_wrath.down.any
   rapid_window: config.rapid_fire&state.cds&var.engaged&var.cooldown_window&buff.rapid_fire.down.any&((!player.moving&range.auto_shot.target)|(config.melee&target.in_melee))
   low_mana: config.mana_recovery&var.fighting&mana.pct<=config.recovery_pct
