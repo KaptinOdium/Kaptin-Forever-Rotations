@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.20.1",
+  "collection": "2026.11.20.3",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -94,7 +94,7 @@
     {
       "class_name": "Shaman",
       "name": "Forever Shaman - Enhancement 1-60",
-      "version": "1.0.5",
+      "version": "1.0.7",
       "path": "forever/custom/7_enhancement_leveling.yaml"
     },
     {
@@ -143,7 +143,7 @@
   "addons": [
     {
       "name": "KhanForeverBindings",
-      "version": "1.1.6"
+      "version": "1.1.7"
     },
     {
       "name": "KaptinForeverHunterBindings",
@@ -210,13 +210,13 @@
     },
     {
       "path": "Interface/AddOns/KhanForeverBindings/KhanForeverBindings.lua",
-      "bytes": 15947,
-      "sha256": "1d52aade91a176a3edd9001823be2d3c55acebd52dc4cf12c2ca319e68506188"
+      "bytes": 20223,
+      "sha256": "58af55d68d31b193fba2b5f0d6b507ebacdbfc0fc8b95d030d5cd560e9795d19"
     },
     {
       "path": "Interface/AddOns/KhanForeverBindings/KhanForeverBindings.toc",
       "bytes": 298,
-      "sha256": "773057f9cc7c09193e03691da774bb61a8d1cf760af1e7908717302d410fbe5a"
+      "sha256": "c049aaa252e24d89234ed477079687025095cfbdbf13ee59fdb32975693c75ed"
     },
     {
       "path": "Interface/AddOns/KhanForeverWarlockBindings/GroundTargeting.lua",
@@ -256,12 +256,12 @@
     {
       "path": "README.md",
       "bytes": 1828,
-      "sha256": "2c203fe3bebc3a11f92c4a2db6ef372962befa0fa66562205302e6a088f1cdfb"
+      "sha256": "ba8ce850050414a306ee23e8403db00a021b0a8a8901350ac39b3376607e7ecb"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 12649,
-      "sha256": "86c225f71d1b433ff1890b45dbb66ded3d7eec3e25eafbb9859c2fe5fe805926"
+      "bytes": 13659,
+      "sha256": "cae680543d7e901d7df6448201e941362c14c985b2d20cca81a8b5a3dc106e08"
     },
     {
       "path": "docs/mage-leveling.md",
@@ -270,8 +270,8 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 5846,
-      "sha256": "6d985ed9fd4fcb8c94ecde362ba09d0f70a8c5dfdaf5c8ec1a2887649a59d9f4"
+      "bytes": 6254,
+      "sha256": "754e3d8319a3670b7774bce93a7c919bad3eda8fb0769e597b1dba58e4bf8107"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -365,8 +365,8 @@
     },
     {
       "path": "forever/custom/7_enhancement_leveling.yaml",
-      "bytes": 43063,
-      "sha256": "463fe0dbd4c8077ca1b9d4467e6faaad24af0fc0035dbb4f44b12d08681553a9"
+      "bytes": 44609,
+      "sha256": "43dcc60f5b64019c53760cf29063add166a70c066da349d73927a539e5a6ae96"
     },
     {
       "path": "forever/custom/7_restoration_leveling.yaml",

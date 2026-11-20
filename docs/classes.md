@@ -16,6 +16,8 @@ In **Restoration**, Swiftmend defaults to 55% effective health and needs your Re
 
 For party healing with **Focus binds** off, bind the direct `@party1` through `@party4` variants. With **Party** or **Raid** selected, run AutoBind and check the shared focus assignment keys and each heal's `@focus` key.
 
+In a battleground raid, select **Raid** scope for group healing. If Rejuvenation heals an unselected raider and Swiftmend stalls on the same ally, use **KhanForeverBindings 1.1.7** from this collection and run `/khanbindings swiftmend` to compare their spell bindings. To test delivery, pause Simia and keep an enemy selected. Hover the injured ally’s raid frame and type `/focus [@mouseover,help,nodead]`, then move the mouse away. With your Rejuvenation or Regrowth active on the ally and Swiftmend ready, press the **Swiftmend @focus** key. Check the recipient in the combat log.
+
 You can stay on **Cat** when you switch to Bear or Dire Bear. Switch back to Cat to resume Cat attacks. For full manual control, turn off automatic form entry under **Feral**. Mark of the Wild, Thorns and caster heals wait until you leave Travel or Aquatic Form. In Bear, bind the ordinary **Lacerate**, **Primal Bite**, **Maul** and **Swipe** spells as you learn them. Lacerate builds to five stacks on the selected enemy and refreshes near expiry. Primal Bite or Maul fills single-target gaps, and Swipe fills gaps on an eligible engaged pack with AoE enabled.
 
 In standalone **Cat**, **Stealth and opener → Pull with Faerie Fire out of combat** defaults off. With **Auto Prowl** on, approach in Cat Form and the profile waits for Prowl and your chosen opener. For a ranged Faerie Fire pull, turn Auto Prowl off and enable both the Faerie Fire pull and **Targeting → Allow attacks on an idle selected enemy**. In combat the usual debuff refresh applies.
@@ -47,6 +49,8 @@ Optional retargeting preserves living targets but native Target Enemy can select
 Arcane, Fire and Frost each have a level 1–60 profile. Use ordinary Simia spell bindings. The [Mage leveling guide](mage-leveling.md) covers setup, spec priorities and leveling simulations.
 
 ## Shaman
+
+Under **Enhancement**, enable **Spend Clearcasting on Chain Lightning in packs (Deac)** to prioritize an Elemental Focus proc over Fire Nova and damage shocks. Enable AoE and **Damage > Chain Lightning for engaged packs**, bind ordinary Chain Lightning, and stand still for a hardcast. The pack threshold defaults to three enemies. Emergency healing, interrupts and a ready five-stack instant Maelstrom Bolt take priority.
 
 Elemental, Enhancement and Restoration include movement-aware damage/healing, shield maintenance and configurable totems. Enhancement now prioritizes eligible Windfury Totem before Strength of Earth, while reactive Grounding stays first. Select **Totems > Air slot > Windfury** and bind its ordinary key. Both Earth/Air slots can stay active; existing mana, fight-length, movement and healing-reserve checks still apply. Optional Fire Nova requires the configured pack/totem conditions; it is not an unconditional single-target filler. Enhancement can apply the strongest learned main-hand imbue between fights when no temporary enchant is present. Existing enchants are preserved and off-hand application stays manual.
 

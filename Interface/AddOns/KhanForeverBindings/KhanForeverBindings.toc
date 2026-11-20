@@ -2,6 +2,6 @@
 ## Title: Khan Forever Bindings
 ## Notes: Adds targeting variants for Forever paladins and druids, plus bindings for learned racials and Find Herbs. Does not assign or reset keys.
 ## Author: Custom
-## Version: 1.1.6
+## Version: 1.1.7
 ## OptionalDeps: SimulationcraftExtra
 KhanForeverBindings.lua

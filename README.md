@@ -12,7 +12,7 @@ Download with **Code > Download ZIP**, then extract it. Install only the classes
 | Druid | Bear, Cat, Balance, Restoration and manual Feral | Bear, Cat and manual Feral 2.3.20. Balance 2.3.14. Restoration 2.3.16. |
 | Hunter | Beast Mastery, Marksmanship, Survival | 1.0.9 |
 | Mage | Arcane, Fire, Frost | 1.0.0 |
-| Shaman | Elemental, Enhancement, Restoration | 1.0.4 / 1.0.5 / 1.0.6 |
+| Shaman | Elemental, Enhancement, Restoration | 1.0.4 / 1.0.7 / 1.0.6 |
 | Warlock | Affliction, Demonology, Destruction | 1.3.3 |
 | Warrior | Arms, Fury, Protection | 1.0.2 |
 

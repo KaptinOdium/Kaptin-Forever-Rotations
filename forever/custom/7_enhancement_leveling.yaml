@@ -1,9 +1,9 @@
 # Forever only. See README.txt and RESEARCH.md. Offline validated; live testing required.
 spec: 7
 name: Forever Shaman - Enhancement 1-60
-version: 1.0.5
+version: 1.0.7
 author: Kaptin
-date: '2026-11-18'
+date: '2026-11-20'
 patch: Classic Forever
 entry: main
 description: 'Enhancement: movement-aware leveling and normal dungeons; reactive healing, shock control and stable totem slots.'
@@ -528,6 +528,13 @@ config:
     type: checkbox
     label: Spend five Maelstrom stacks on instant Lightning Bolt
     default: true
+  deac_clearcasting_chain:
+    section: Enhancement
+    type: checkbox
+    label: Spend Clearcasting on Chain Lightning in packs (Deac)
+    default: false
+    description: Enable Chain Lightning under Damage and turn AoE on. Uses the Chain Lightning pack threshold. A free cast can be used below the Chain Lightning
+      mana setting. Stop moving for a hardcast. Emergency heals, interrupts and a ready five-stack Maelstrom Bolt take priority.
   ranged_pull:
     section: Enhancement
     type: checkbox
@@ -562,7 +569,7 @@ variables:
   totem_window: config.use_totems&player.combat&var.engaged&!var.target_cc&(!config.totems_stationary|!player.moving)&mana.pct>=config.totem_mana&var.long_fight
   safe_fire: target.range<=20&enemies.combat.20y>0&enemies.20y=enemies.combat.20y&(state.aoe|(player.has_world_pos&player.distance.target<=20&enemies.around.angle.180.20=1))
   safe_chain: enemies.around_target>=config.chain_targets&enemies.30y=enemies.combat.30y&enemies.combat.30y>=config.chain_targets
-  nova_window: config.fire_nova&state.aoe&player.combat&var.can_damage&action.fire_nova.known&!action.fire_nova.blocked&mana.pct>=config.nova_mana&(target.time_to_die>=config.nova_ttd|(target.time_to_die<=0&target.health.pct>=70))&!(config.maelstrom&buff.408505.stack>=5&action.lightning_bolt.cast_time=0&action.lightning_bolt.ready)
+  nova_window: config.fire_nova&state.aoe&player.combat&var.can_damage&action.fire_nova.known&!action.fire_nova.blocked&mana.pct>=config.nova_mana&(target.time_to_die>=config.nova_ttd|(target.time_to_die<=0&target.health.pct>=70))&!var.maelstrom_bolt_ready
   nova_safe_area: enemies.30y=enemies.combat.30y&enemies.combat.30y>=config.nova_targets
   fire_nova_area: ((totem.searing_totem.up&minion.2523.up&minion.2523.distance<=20&minion.2523.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance<=20&minion.3902.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance<=20&minion.3903.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance<=20&minion.3904.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance<=20&minion.7400.enemies.10>=config.nova_targets)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance<=20&minion.7402.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance<=20&minion.5929.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance<=20&minion.7464.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance<=20&minion.7465.enemies.10>=config.nova_targets)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance<=20&minion.7466.enemies.10>=config.nova_targets))&var.nova_safe_area
   fire_near: (totem.searing_totem.up&minion.2523.up&minion.2523.distance<=20)|(totem.searing_totem.up&minion.3902.up&minion.3902.distance<=20)|(totem.searing_totem.up&minion.3903.up&minion.3903.distance<=20)|(totem.searing_totem.up&minion.3904.up&minion.3904.distance<=20)|(totem.searing_totem.up&minion.7400.up&minion.7400.distance<=20)|(totem.searing_totem.up&minion.7402.up&minion.7402.distance<=20)|(totem.magma_totem.up&minion.5929.up&minion.5929.distance<=20)|(totem.magma_totem.up&minion.7464.up&minion.7464.distance<=20)|(totem.magma_totem.up&minion.7465.up&minion.7465.distance<=20)|(totem.magma_totem.up&minion.7466.up&minion.7466.distance<=20)
@@ -591,6 +598,8 @@ variables:
   magma_totem_present: totem.magma_totem.up|minion.5929.up|minion.7464.up|minion.7465.up|minion.7466.up
   searing_totem_stranded: totem.searing_totem.up&!(var.fire_utility|var.magma_totem_present)&(minion.2523.up|minion.3902.up|minion.3903.up|minion.3904.up|minion.7400.up|minion.7402.up)&(!minion.2523.up|(minion.2523.target_distance>20&minion.2523.target_distance<1000000000&minion.2523.enemies.20=0))&(!minion.3902.up|(minion.3902.target_distance>20&minion.3902.target_distance<1000000000&minion.3902.enemies.20=0))&(!minion.3903.up|(minion.3903.target_distance>20&minion.3903.target_distance<1000000000&minion.3903.enemies.20=0))&(!minion.3904.up|(minion.3904.target_distance>20&minion.3904.target_distance<1000000000&minion.3904.enemies.20=0))&(!minion.7400.up|(minion.7400.target_distance>20&minion.7400.target_distance<1000000000&minion.7400.enemies.20=0))&(!minion.7402.up|(minion.7402.target_distance>20&minion.7402.target_distance<1000000000&minion.7402.enemies.20=0))
   magma_totem_stranded: totem.magma_totem.up&!(var.fire_utility|var.searing_totem_present)&(minion.5929.up|minion.7464.up|minion.7465.up|minion.7466.up)&(!minion.5929.up|(minion.5929.target_distance>8&minion.5929.target_distance<1000000000&minion.5929.enemies.8=0))&(!minion.7464.up|(minion.7464.target_distance>8&minion.7464.target_distance<1000000000&minion.7464.enemies.8=0))&(!minion.7465.up|(minion.7465.target_distance>8&minion.7465.target_distance<1000000000&minion.7465.enemies.8=0))&(!minion.7466.up|(minion.7466.target_distance>8&minion.7466.target_distance<1000000000&minion.7466.enemies.8=0))
+  maelstrom_bolt_ready: config.maelstrom&buff.408505.stack>=5&action.lightning_bolt.cast_time=0&action.lightning_bolt.ready
+  chain_pack_cc: cluster.debuff.polymorph.count.any>0|cluster.debuff.sap.count.any>0|cluster.debuff.gouge.count.any>0|cluster.debuff.blind.count.any>0|cluster.debuff.freezing_trap.count.any>0|cluster.debuff.hibernate.count.any>0|cluster.debuff.repentance.count.any>0|cluster.debuff.seduction.count.any>0|cluster.debuff.banish.count.any>0|cluster.debuff.fear.count.any>0|cluster.debuff.scatter_shot.count.any>0|cluster.debuff.shackle_undead.count.any>0|cluster.debuff.scare_beast.count.any>0|cluster.debuff.psychic_scream.count.any>0|cluster.debuff.intimidating_shout.count.any>0|cluster.debuff.howl_of_terror.count.any>0|cluster.debuff.turn_undead.count.any>0
 lists:
   main:
   - return,if=!state.rotation|state.blocked_inputs|!player.alive|player.mounted
@@ -607,6 +616,7 @@ lists:
   - call_action_list,name=imbues,if=var.imbue_window
   - call_action_list,name=mana
   - return,if=!var.can_damage
+  - chain_lightning,if=config.deac_clearcasting_chain&config.chain_lightning&state.aoe&player.combat&var.engaged&buff.16246.up&buff.natures_swiftness.down.any&!var.maelstrom_bolt_ready&var.safe_chain&!var.chain_pack_cc&(!player.moving|action.chain_lightning.cast_time=0)&(action.chain_lightning.cost=0|(mana.pct>=config.chain_mana&mana>=action.chain_lightning.cost+var.heal_reserve))
   - call_action_list,name=nova
   - call_action_list,name=totems
   - call_action_list,name=cooldowns

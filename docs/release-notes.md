@@ -1,4 +1,8 @@
-# Collection 2026.11.20.1
+# Collection 2026.11.20.3
+
+Enhancement Shaman 1.0.7 adds Deac's optional Clearcasting priority for Chain Lightning in engaged packs. See [Shaman setup](classes.md#shaman) to enable it.
+
+KhanForeverBindings 1.1.7 adds `/khanbindings swiftmend` for Restoration Druids. It compares Swiftmend's saved binding and macro with the working Rejuvenation focus route. See the [Druid binding check](classes.md#druid) for an in-game test.
 
 Hunter 1.0.9 updates Beast Mastery, Marksmanship and Survival for fights against selected enemy players in battlegrounds. Pet Attack and Auto Shot startup retries leave room for the regular shot rotation. Players running companion 1.0.3 can update the three Hunter profiles and reload the rotation list.
 
@@ -26,7 +30,7 @@ The Cat tester reports Shred is working again. The cause of the earlier position
 - Shaman 1.0.4, companion 1.0.0: air-slot checks use reported active occupants, avoiding an unavailable legacy name's false absence flag. Active utility totems remain protected. Enhancement Windfury-first priority, weapon imbues, shields, Fire Nova and healing reserves remain. Reload the YAML; no new binding or addon update is required. Existing Air slot choices still apply.
 - Warlock 1.3.3: engaged-mouseover DoTs and optional own-pet engagement support, retaining health/mana recovery.
 - Warrior 1.0.2: Fury stance recovery allows a configurable 15-rage loss by default; normal attacks spend higher rage down while Bloodrage waits. Whirlwind covers its full 8-yard radius, and both offensive self-buffs require an engaged melee enemy. Position/AoE safeguards remain. Blood Fury and curse-only Shatter Curse support is retained. Ordinary stance/racial keys are required; companion 1.0.0 is unchanged. 63 offline Warrior scenarios passed; the reported live stance cause and actual casting still need confirmation.
-- Paladin/Druid shared companion is 1.1.6; Warlock companion is 1.3.3.
+- Paladin and Druid use shared companion 1.1.7. Warlock uses companion 1.3.3.
 
 ## Compatibility and known issues
 

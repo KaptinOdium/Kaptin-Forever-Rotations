@@ -5,7 +5,7 @@ if type(interface) ~= "number" or interface < 16000 or interface >= 17000 then r
 local _, class = UnitClass("player")
 if class ~= "PALADIN" and class ~= "DRUID" then return end
 local A, B, M
-local status = { version = "1.1.6", added = 0, skipped = 0 }
+local status = { version = "1.1.7", added = 0, skipped = 0 }
 _G.KhanForeverBindings = status
 
 -- The host normally scans the General tab for racials only. Its extra spell
@@ -305,8 +305,83 @@ end
 events:SetScript("OnEvent", update)
 update()
 
+-- Read the same talent-group rows the host shows in Keybinds. A saved key
+-- alone can survive a spellbook rebuild without its matching WoW binding.
+local function describeSwiftmend()
+    local player = A and A.Player
+    local getKey = A and A.Autobind and A.Autobind.GetKeyString
+    local setting = A and A.Spells and A.Spells.GetSetting
+    if not (player and player.SpecID and player.SpecID ~= 0 and player.ResolveFocusScope
+            and getKey and setting and A.SpellData.GetVariantOwner) then
+        print("Swiftmend binding information is unavailable. Check that Simia has loaded this talent group.")
+        return
+    end
+    local scope = player.FocusScope or "off"
+    local _, instance = IsInInstance()
+    local group = instance == "pvp" and "battleground" or (IsInRaid() and "raid" or "party/solo")
+    local ledger = A.db and A.db.Global and A.db.Global.WowBindings
+    local records = ledger and ledger[player.SpecID]
+    local function keyStatus(row, compareMacro)
+        local key = row and getKey(row)
+        if not key then return "unassigned", false end
+        if not records then return key .. " (binding records unavailable)", false end
+        local record = records[key]
+        if not record or record.spellKey ~= row then return key .. " (missing/mismatched record)", false end
+        if setting(row, "Skip", false) or not setting(row, "Enabled", true) then
+            return key .. " (disabled/skipped)", false
+        end
+        local macro = setting(row, "Macro")
+        if macro and macro ~= "" then return key .. " (custom macro)", true end
+        if compareMacro and A.SpellData.GetSpellMacro then
+            local expected = A.SpellData.GetSpellMacro(row, player.SpecID)
+            if expected and (record.type ~= "macrotext" or record.macrotext ~= expected) then
+                return key .. " (stored macro differs)", false
+            end
+        end
+        return key, true
+    end
+    local function spellRow(id)
+        local top = A.ClassicRankTop and A.ClassicRankTop[id] or id
+        return A.SpellData.GetVariantOwner(top), top
+    end
+    local swift, top = spellRow(18562)
+    local rejuv = spellRow(774)
+    local baseFlags = {}
+    if A.SessionBlocked and (A.SessionBlocked[swift] or A.SessionBlocked[top]) then baseFlags[#baseFlags+1] = "session-blocked" end
+    if setting(swift, "Cooldown", false) then baseFlags[#baseFlags+1] = "marked cooldown" end
+    if setting(swift, "Skip", false) then baseFlags[#baseFlags+1] = "skipped" end
+    if not setting(swift, "Enabled", true) then baseFlags[#baseFlags+1] = "disabled" end
+    print(("Swiftmend %s | %s | Focus binds %s | spell %d, binding ID %d"):format(status.version, group, scope, top, swift))
+    print("Swiftmend base " .. keyStatus(swift) .. ", @focus " .. keyStatus(swift .. "-focus", true)
+        .. " | Rejuvenation @focus " .. keyStatus(rejuv .. "-focus", true))
+    if #baseFlags > 0 then print("Swiftmend spell settings: " .. table.concat(baseFlags, ", ")) end
+    if scope == "off" then
+        local keys = {}
+        for i = 1, 4 do keys[i] = "@party" .. i .. " " .. keyStatus(swift .. "-party" .. i, true) end
+        print("Swiftmend direct party keys: " .. table.concat(keys, ", "))
+    elseif scope == "party" or scope == "raid" then
+        local prefix, count = "PARTY", 4
+        if scope == "raid" and (instance == "pvp" or IsInRaid()) then prefix, count = "RAID", 40 end
+        local missing = {}
+        for i = 1, count do
+            local _, assigned = keyStatus(_G["VIRTUAL_ACTION_FOCUS_" .. prefix .. i])
+            if not assigned then missing[#missing+1] = i end
+        end
+        print(("Focus %s selector keys with matching records: %d/%d"):format(prefix:lower(), count-#missing, count)
+            .. (#missing > 0 and ("; check slots " .. table.concat(missing, ", ")) or ""))
+    end
+    if (instance == "pvp" or IsInRaid()) and scope ~= "raid" then
+        print("For raid-wide healing choose Keybinds > AutoBind > Focus binds > Raid, then run AUTOBIND out of combat.")
+    end
+end
+
 SLASH_KHANFOREVERBINDINGS1 = "/khanbindings"
-SlashCmdList.KHANFOREVERBINDINGS = function()
+SlashCmdList.KHANFOREVERBINDINGS = function(argument)
+    local mode = type(argument) == "string" and argument:lower():match("^%s*(.-)%s*$")
+    if class == "DRUID" and (mode == "swiftmend" or mode == "swiftmend status") then
+        describeSwiftmend()
+        return
+    end
     if not A then update() end
     if not A then
         print("Khan Forever Bindings " .. status.version .. ": waiting for a compatible, enabled Simia addon.")
