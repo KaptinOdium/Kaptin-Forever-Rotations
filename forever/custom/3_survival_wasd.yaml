@@ -1,9 +1,9 @@
 # Forever only. Offline decision checks do not establish live key delivery.
 spec: 3
 name: Forever Hunter - Survival WASD 1-60
-version: 1.0.8
+version: 1.0.9
 author: Kaptin
-date: '2026-11-16'
+date: '2026-11-20'
 patch: Classic Forever
 entry: main
 description: 'Survival: manual movement, pet care, mana conservation and learned Forever abilities.'
@@ -486,7 +486,8 @@ variables:
   valid: target.exists&target.alive&target.enemy&target.attackable
   engaged: var.valid&target.combat&(target.targeting_party|target.threat>=0|(pet.alive&pet.attacking_target))
   dungeon_selected_combat: config.dungeon_selected_combat&player.indungeon&!player.inraid&!player.ininstancedpvp&group.count(!cycle.is_player)>0&var.valid&target.combat
-  can_attack: var.engaged|var.dungeon_selected_combat|(config.start_selected&!player.combat&var.valid)
+  pvp_selected_combat: player.ininstancedpvp&player.combat&var.valid&target.player&target.combat
+  can_attack: var.engaged|var.dungeon_selected_combat|var.pvp_selected_combat|(config.start_selected&!player.combat&var.valid)
   fighting: player.combat|var.engaged
   target_cc: target.debuff.polymorph.up.any|target.debuff.sap.up.any|target.debuff.gouge.up.any|target.debuff.blind.up.any|target.debuff.freezing_trap.up.any|target.debuff.hibernate.up.any|target.debuff.repentance.up.any|target.debuff.seduction.up.any|target.debuff.banish.up.any|target.debuff.fear.up.any|target.debuff.scatter_shot.up.any|target.debuff.shackle_undead.up.any|target.debuff.scare_beast.up.any|target.debuff.psychic_scream.up.any|target.debuff.intimidating_shout.up.any|target.debuff.howl_of_terror.up.any|target.debuff.turn_undead.up.any
   hover_cc: mouseover.debuff.polymorph.up.any|mouseover.debuff.sap.up.any|mouseover.debuff.gouge.up.any|mouseover.debuff.blind.up.any|mouseover.debuff.freezing_trap.up.any|mouseover.debuff.hibernate.up.any|mouseover.debuff.repentance.up.any|mouseover.debuff.seduction.up.any|mouseover.debuff.banish.up.any|mouseover.debuff.fear.up.any|mouseover.debuff.scatter_shot.up.any|mouseover.debuff.shackle_undead.up.any|mouseover.debuff.scare_beast.up.any|mouseover.debuff.psychic_scream.up.any|mouseover.debuff.intimidating_shout.up.any|mouseover.debuff.howl_of_terror.up.any|mouseover.debuff.turn_undead.up.any
@@ -538,8 +539,8 @@ lists:
   - call_action_list,name=buffs
   - call_action_list,name=controls
   - return,if=!config.damage|!var.can_attack|var.protected_target
-  - petattack,range_check=none,if=config.use_pet&config.pet_attack&pet.alive&!pet.attacking_target
-  - auto_shot,if=config.auto_shot&!player.moving&swing.ranged.remains>=9999&range.auto_shot.target
+  - petattack,range_check=none,line_cd=4,if=config.use_pet&config.pet_attack&pet.alive&!pet.attacking_target
+  - auto_shot,line_cd=2,if=config.auto_shot&!player.moving&swing.ranged.remains>=9999&range.auto_shot.target
   - run_action_list,name=mana_recovery,if=var.low_mana
   - hunters_mark,if=config.mark&var.mark_lifetime&debuff.hunters_mark.down.any&(action.hunters_mark.cost=0|(!var.low_mana&mana>=action.hunters_mark.cost+var.mana_budget&(!config.mana_recovery|mana>=action.hunters_mark.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max)))
   - call_action_list,name=cooldowns

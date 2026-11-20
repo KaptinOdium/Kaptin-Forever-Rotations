@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.20",
+  "collection": "2026.11.20.1",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -52,19 +52,19 @@
     {
       "class_name": "Hunter",
       "name": "Forever Hunter - Beast Mastery WASD 1-60",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "path": "forever/custom/3_beast_mastery_wasd.yaml"
     },
     {
       "class_name": "Hunter",
       "name": "Forever Hunter - Marksmanship WASD 1-60",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "path": "forever/custom/3_marksmanship_wasd.yaml"
     },
     {
       "class_name": "Hunter",
       "name": "Forever Hunter - Survival WASD 1-60",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "path": "forever/custom/3_survival_wasd.yaml"
     },
     {
@@ -256,12 +256,12 @@
     {
       "path": "README.md",
       "bytes": 1828,
-      "sha256": "b84d2a78ced158f843d17b31758ca49eaff85bbc0d042b85df7e87d2e8e8761e"
+      "sha256": "2c203fe3bebc3a11f92c4a2db6ef372962befa0fa66562205302e6a088f1cdfb"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 12270,
-      "sha256": "17679f6c1a12d9d75b1bfd2991037863114f363df49dffcc1d3fcfda6c022774"
+      "bytes": 12649,
+      "sha256": "86c225f71d1b433ff1890b45dbb66ded3d7eec3e25eafbb9859c2fe5fe805926"
     },
     {
       "path": "docs/mage-leveling.md",
@@ -270,8 +270,8 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 5539,
-      "sha256": "e61a2f69342db63f465278fe5eb7cf05ab8169559e5b06727acdb17f2affe98e"
+      "bytes": 5846,
+      "sha256": "6d985ed9fd4fcb8c94ecde362ba09d0f70a8c5dfdaf5c8ec1a2887649a59d9f4"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -345,18 +345,18 @@
     },
     {
       "path": "forever/custom/3_beast_mastery_wasd.yaml",
-      "bytes": 38738,
-      "sha256": "8e5ea36bc781818594815459291977039c89555444f76ef82dd3dfbcd6e663e9"
+      "bytes": 38880,
+      "sha256": "f3eed39d7f8b2e1a8747e118a71831a496176b7ecfbd78e1b9d9d07a84cedcf4"
     },
     {
       "path": "forever/custom/3_marksmanship_wasd.yaml",
-      "bytes": 38736,
-      "sha256": "bc03cfcf4137bdfc6eef3621fe6ec80ebe34035044f74825940acee73aa9f28b"
+      "bytes": 38878,
+      "sha256": "a5f539d12647974be7330fd21c2860f8ca47c463ee6c642afd4d81d2cdebe644"
     },
     {
       "path": "forever/custom/3_survival_wasd.yaml",
-      "bytes": 38728,
-      "sha256": "5a9f98eb1024fc11e3233bda563cd5c69fb7c00bf4ac7229839b05fdd089063a"
+      "bytes": 38870,
+      "sha256": "9441ae5717dc12d9f08108c099d692a3f3020b78f9f33d654422d8b4c466b96b"
     },
     {
       "path": "forever/custom/7_elemental_leveling.yaml",

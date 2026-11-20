@@ -34,6 +34,8 @@ Use `KhanForeverBindings`. Bind the learned abilities/forms and the exact self/g
 
 All three specializations include pet management, movement/range checks, Hawk timing, optional dungeon entry, combat retargeting and low-mana priorities. Hawk timing uses exported guardian age and an assumed lifespan, not exact per-slot expiry.
 
+In **Alterac Valley** or another battleground, select a living, attackable enemy player. Once both of you are in combat, the profile can use eligible single-target shots. Pet Attack waits four seconds between requests and Auto Shot waits two seconds between startup requests. This gives other shots time to fire while the pet is travelling or an attack confirmation is missing.
+
 Use `KaptinForeverHunterBindings`. Bind **Pet Attack**, ordinary **Auto Shot**, **Auto Shot @stop_attack**, and learned spells. Optional retargeting additionally needs **Target Enemy** and **Auto Shot @retarget_stop**. The new retarget stop uses `/stopattack` and `/petfollow` without changing pet stance. Protective stop for recognized CC/immunity or Damage disabled still deliberately sets Passive. Select the preferred stance yourself if your pet was already Passive.
 
 To join the tank's fight, enable **Targeting > Join selected fighting enemy in dungeons**, keep Force Combat and idle-target pulling off, select a fighting enemy and stand in shooting range. This dungeon mode needs no bridge installer. The old strict group bridge is not included here; disable it with `/kaptinhuntergroup off` if previously installed for that different mode.
