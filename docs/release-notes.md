@@ -1,4 +1,6 @@
-# Collection 2026.11.20.5
+# Collection 2026.11.21
+
+Restoration Druid 2.3.17 adds a group Rejuvenation cast specifically to prepare Swiftmend. This works independently of the routine Rejuvenation slider. In a battleground, choose Raid focus binds and check the two spells with `/khanbindings swiftmend`. The update has offline coverage. For a live check, keep an enemy selected and confirm both heals land on the intended teammate in the combat log. See the [Druid class guide](classes.md#druid).
 
 Hunter 1.0.11 adds **Targeting > Keep pet stance on breakable CC (Follow)** for Beast Mastery, Marksmanship and Survival. The option defaults off and uses the **Auto Shot @retarget_stop** binding from companion 1.0.3. Update the three Hunter profiles and reload the rotation list. See the [Hunter setup](classes.md#hunter).
 

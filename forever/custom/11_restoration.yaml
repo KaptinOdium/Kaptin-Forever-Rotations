@@ -7,9 +7,9 @@
 # Solo Clearcasting Starfire checked with native SimC at every level 20-59 and a level 60 holdout.
 spec: 11
 name: Forever Druid - Restoration 1-60
-version: 2.3.16
+version: 2.3.17
 author: Custom
-date: '2026-11-20'
+date: '2026-11-21'
 patch: Classic Forever
 entry: main
 movement_allowed: buff.natures_swiftness.up
@@ -144,7 +144,7 @@ config:
     section: Healing
     type: slider
     label: Swiftmend at or below effective health (%)
-    description: Checks your own Rejuvenation or Regrowth on each member within 40 yards, including downranked HoTs. With Focus binds off, Swiftmend needs party1–4 keys in dungeons. With Party or Raid focus binds, run AutoBind and check Swiftmend's focus key.
+    description: Uses your Rejuvenation or Regrowth on an injured member within 40 yards. If both are missing and you can afford both spells, prepares Swiftmend with Rejuvenation at this threshold. For battlegrounds use Raid focus binds and check the Swiftmend focus key.
     min: 20
     max: 80
     default: 55
@@ -285,7 +285,8 @@ variables:
   resting_caster: '!player.combat&buff.5487.down.any&buff.9634.down.any&buff.768.down.any'
   healing_caster: buff.5487.down.any&buff.9634.down.any&buff.768.down.any&buff.24858.down.any
   healing_clearcast: 'config.omen_healing&player.combat&(buff.clearcasting.up|buff.16870.up)'
-  swiftmend_ally_check: 'var.healing_caster&buff.783.down.any&buff.1066.down.any&!player.cc&!player.silenced&!usable.swiftmend&action.swiftmend.known&!action.swiftmend.blocked&cooldown.swiftmend.ready&mana>=action.swiftmend.cost'
+  swiftmend_available: 'var.healing_caster&buff.783.down.any&buff.1066.down.any&!player.cc&!player.silenced&action.swiftmend.known&!action.swiftmend.blocked&cooldown.swiftmend.ready'
+  swiftmend_ally_check: 'var.swiftmend_available&!usable.swiftmend&mana>=action.swiftmend.cost'
 lists:
   survival:
   - health_potion,range_check=none,if=player.combat&player.health.pct<=config.health_pot_hp&health_potion.ready
@@ -357,6 +358,8 @@ lists:
   - regrowth,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp
   - healing_touch,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&!player.moving&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp
   - rejuvenation,cycle=members,cycle_order=health.pct,if=(player.combat|(var.resting_caster&!cycle.is_player))&cycle.range<=40&cycle.health.effective.pct<config.emergency_hp&cycle.buff.rejuvenation.down&(player.moving|(!action.regrowth.ready&!action.healing_touch.ready))
+  # Recheck each member after the GCD. Emergency direct heals above take priority over spending two globals.
+  - rejuvenation,cycle=members,cycle_order=health.pct,range_check=cycle_member,line_cd=4,if=var.swiftmend_available&!cycle.is_player&cycle.range<=40&cycle.health.effective.pct<=config.swiftmend_hp&mana>=action.rejuvenation.cost+action.swiftmend.cost&!(cycle.buff.rejuvenation.up|cycle.buff.regrowth.up|cycle.buff.774.up|cycle.buff.1058.up|cycle.buff.1430.up|cycle.buff.2090.up|cycle.buff.2091.up|cycle.buff.3627.up|cycle.buff.8910.up|cycle.buff.9839.up|cycle.buff.9840.up|cycle.buff.9841.up|cycle.buff.25299.up|cycle.buff.417057.up|cycle.buff.417058.up|cycle.buff.417059.up|cycle.buff.417060.up|cycle.buff.417061.up|cycle.buff.417062.up|cycle.buff.417063.up|cycle.buff.417064.up|cycle.buff.417065.up|cycle.buff.417066.up|cycle.buff.417068.up|cycle.buff.8936.up|cycle.buff.8938.up|cycle.buff.8939.up|cycle.buff.8940.up|cycle.buff.8941.up|cycle.buff.9750.up|cycle.buff.9856.up|cycle.buff.9857.up|cycle.buff.9858.up|cycle.buff.436937.up|cycle.buff.436938.up|cycle.buff.436939.up|cycle.buff.436940.up|cycle.buff.436942.up|cycle.buff.436943.up|cycle.buff.436944.up|cycle.buff.436945.up|cycle.buff.436946.up)
   party_healing:
   - tranquility,range_check=none,if=config.tranquility&state.cds&player.combat&!player.inraid&!player.moving&group.count(cycle.range<=30&cycle.health.effective.pct<50)>=3
   - wild_growth,cycle=members,cycle_order=health.pct,range_check=cycle_member,if=config.wild_growth&player.combat&!player.inraid&!player.moving&cycle.range<=30&cycle.health.effective.pct<=config.wild_growth_hp&group.count(cycle.range<=30&cycle.health.effective.pct<=config.wild_growth_hp)>=config.wild_growth_count

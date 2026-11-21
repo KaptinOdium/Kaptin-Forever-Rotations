@@ -1,5 +1,5 @@
 {
-  "collection": "2026.11.20.5",
+  "collection": "2026.11.21",
   "profiles": [
     {
       "class_name": "Paladin",
@@ -46,7 +46,7 @@
     {
       "class_name": "Druid",
       "name": "Forever Druid - Restoration 1-60",
-      "version": "2.3.16",
+      "version": "2.3.17",
       "path": "forever/custom/11_restoration.yaml"
     },
     {
@@ -256,12 +256,12 @@
     {
       "path": "README.md",
       "bytes": 1829,
-      "sha256": "7d3b1dea9a64320a58418c82071296285748608b3d39ff2d35dbd9efc569079c"
+      "sha256": "163b1f41a50cc12c85f898b471b800b5d0dbc53737d50730cbd055ae53e362b6"
     },
     {
       "path": "docs/classes.md",
-      "bytes": 14494,
-      "sha256": "acf861350b7f7b998051771a34460b323924ff56dd5b626809502292fcb6c6a9"
+      "bytes": 14967,
+      "sha256": "699e367fe2cfbfef29016085b2b6c13d44baad5b0b9a039b5156eeeed967ff90"
     },
     {
       "path": "docs/mage-leveling.md",
@@ -270,8 +270,8 @@
     },
     {
       "path": "docs/release-notes.md",
-      "bytes": 7059,
-      "sha256": "23e347bfc2c8da9ba867391c611f608d39f9ce433d28d288c2c49e68c5e4a73c"
+      "bytes": 7503,
+      "sha256": "f723645b8b5eb26a8faa930fc065fa7585699d73f13beb30e4071a4177890616"
     },
     {
       "path": "docs/shaman-bindings.md",
@@ -310,8 +310,8 @@
     },
     {
       "path": "forever/custom/11_restoration.yaml",
-      "bytes": 23209,
-      "sha256": "30ac992d9f73222e1c8f47eb1ea2dc3ec1d33799ee6b869b933444345a1f93ad"
+      "bytes": 24483,
+      "sha256": "2f57e4fb3791331b1f4a66bda47e3313fbf6a71b5ba9ffb12fcb4b5d86813a38"
     },
     {
       "path": "forever/custom/1_arms_wasd.yaml",
