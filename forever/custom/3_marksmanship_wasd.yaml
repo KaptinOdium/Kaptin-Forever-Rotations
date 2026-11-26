@@ -1,9 +1,9 @@
 # Forever only. Offline decision checks do not establish live key delivery.
 spec: 3
 name: Forever Hunter - Marksmanship WASD 1-60
-version: 1.0.11
+version: 1.0.12
 author: Kaptin
-date: '2026-11-20'
+date: '2026-11-26'
 patch: Classic Forever
 entry: main
 description: 'Marksmanship: manual movement, pet care, mana conservation and learned Forever abilities.'
@@ -360,8 +360,8 @@ config:
     section: Buffs
     type: note
     label: Stable aspect preference
-    text: No automatic aspect swapping on every range change. Beast falls back to Monkey before it is learned; Hawk also falls back to Monkey at early levels.
-      Travel aspects are preserved between fights and replaced with your chosen combat aspect once an engagement is recognized.
+    text: Any learned rank of Hawk or Beast keeps your preference. Monkey is the early-level fallback until you learn your preferred aspect. Cheetah and
+      Pack stay active between fights.
   melee:
     section: Melee
     type: checkbox
@@ -523,12 +523,17 @@ variables:
   mana_budget: mana.max*config.mana_floor/100+var.mend_reserve
   mend_channel: (player.casting.spell_id=136|player.casting.spell_id=3111|player.casting.spell_id=3661|player.casting.spell_id=3662|player.casting.spell_id=13542|player.casting.spell_id=13543|player.casting.spell_id=13544)
   shot_cast: (player.casting.spell_id=19434|player.casting.spell_id=20900|player.casting.spell_id=20901|player.casting.spell_id=20902|player.casting.spell_id=20903|player.casting.spell_id=20904|player.casting.spell_id=1310687|player.casting.spell_id=1310785|player.casting.spell_id=1310786|player.casting.spell_id=2643)
-  travel_aspect: buff.aspect_of_the_cheetah.up.any|buff.aspect_of_the_pack.up.any
+  travel_aspect: buff.aspect_of_the_cheetah.up.any|buff.5118.up.any|buff.aspect_of_the_pack.up.any|buff.13159.up.any
   aspect_window: config.aspects&(var.fighting|!var.travel_aspect)
   hover_engaged: mouseover.exists&mouseover.alive&mouseover.enemy&mouseover.attackable&mouseover.combat&(mouseover.targeting_party|mouseover.threat>=0)
   focus_engaged: focus.exists&focus.alive&focus.enemy&focus.attackable&focus.combat&(focus.targeting_party|focus.threat>=0)
   cluster_cc: cluster.debuff.polymorph.count.any>0|cluster.debuff.sap.count.any>0|cluster.debuff.gouge.count.any>0|cluster.debuff.blind.count.any>0|cluster.debuff.freezing_trap.count.any>0|cluster.debuff.hibernate.count.any>0|cluster.debuff.repentance.count.any>0|cluster.debuff.seduction.count.any>0|cluster.debuff.banish.count.any>0|cluster.debuff.fear.count.any>0|cluster.debuff.scatter_shot.count.any>0|cluster.debuff.shackle_undead.count.any>0|cluster.debuff.scare_beast.count.any>0|cluster.debuff.psychic_scream.count.any>0|cluster.debuff.intimidating_shout.count.any>0|cluster.debuff.howl_of_terror.count.any>0|cluster.debuff.turn_undead.count.any>0
   area_clear: config.multi&state.aoe&var.engaged&!var.target_cc&!var.hover_cc&!var.focus_cc&!var.cluster_cc&enemies.50y=enemies.combat.50y&enemies.combat.50y>=config.multi_count&enemies.around_target>=config.multi_count
+  hawk_active: buff.aspect_of_the_hawk.up.any|buff.13165.up.any|buff.14318.up.any|buff.14319.up.any|buff.14320.up.any|buff.14321.up.any|buff.14322.up.any|buff.25296.up.any
+  hawk_learned: var.hawk_active|action.aspect_of_the_hawk.known|action.13165.known|action.14318.known|action.14319.known|action.14320.known|action.14321.known|action.14322.known|action.25296.known
+  beast_active: buff.aspect_of_the_beast.up.any|buff.13161.up.any|buff.1299445.up.any|buff.1299446.up.any|buff.1299447.up.any
+  beast_learned: var.beast_active|action.aspect_of_the_beast.known|action.13161.known|action.1299445.known|action.1299446.known|action.1299447.known
+  monkey_active: buff.aspect_of_the_monkey.up.any|buff.13163.up.any
   rapid_reserve: action.rapid_fire.cost*(config.mana_recovery&var.rapid_window&action.rapid_fire.known&!action.rapid_fire.blocked&cooldown.rapid_fire.remains<=0&action.rapid_fire.cost+var.mend_reserve<=mana.max)
   bestial_reserve: action.bestial_wrath.cost*(config.mana_recovery&var.bestial_window&action.bestial_wrath.known&!action.bestial_wrath.blocked&cooldown.bestial_wrath.remains<=0&action.bestial_wrath.cost+var.mend_reserve<=mana.max)
   cooldown_reserve: var.rapid_reserve*(var.rapid_reserve>=var.bestial_reserve)+var.bestial_reserve*(var.bestial_reserve>var.rapid_reserve)
@@ -574,9 +579,9 @@ lists:
   - call_pet,range_check=none,if=config.use_pet&config.call_pet&!var.fighting&!pet.exists&!pet.dead&!pet.unavailable
   - mend_pet,range_check=none,if=config.use_pet&config.mend&pet.alive&pet.range<=20&!player.moving&((!var.fighting&pet.health.pct<config.mend_idle_hp)|(var.fighting&pet.health.pct<config.mend_hp&player.health.pct>=config.mend_self_hp&!var.melee_pressure))
   buffs:
-  - aspect_of_the_beast,range_check=none,if=var.aspect_window&config.aspect=2&buff.aspect_of_the_beast.down.any&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_beast.cost=0|(!var.low_mana&mana>=action.aspect_of_the_beast.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_beast.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
-  - aspect_of_the_hawk,range_check=none,if=var.aspect_window&config.aspect=0&buff.aspect_of_the_hawk.down.any&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_hawk.cost=0|(!var.low_mana&mana>=action.aspect_of_the_hawk.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_hawk.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
-  - aspect_of_the_monkey,range_check=none,if=var.aspect_window&buff.aspect_of_the_monkey.down.any&(config.aspect=1|(config.aspect=2&!action.aspect_of_the_beast.known)|(config.aspect=0&!action.aspect_of_the_hawk.known))&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_monkey.cost=0|(!var.low_mana&mana>=action.aspect_of_the_monkey.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_monkey.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
+  - aspect_of_the_beast,range_check=none,if=var.aspect_window&config.aspect=2&var.beast_learned&!var.beast_active&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_beast.cost=0|(!var.low_mana&mana>=action.aspect_of_the_beast.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_beast.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
+  - aspect_of_the_hawk,range_check=none,if=var.aspect_window&config.aspect=0&var.hawk_learned&!var.hawk_active&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_hawk.cost=0|(!var.low_mana&mana>=action.aspect_of_the_hawk.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_hawk.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
+  - aspect_of_the_monkey,range_check=none,if=var.aspect_window&!var.monkey_active&(config.aspect=1|(config.aspect=2&!var.beast_learned)|(config.aspect=0&!var.hawk_learned))&(!config.mana_recovery|!var.fighting|var.travel_aspect|(action.aspect_of_the_monkey.cost=0|(!var.low_mana&mana>=action.aspect_of_the_monkey.cost+var.mana_budget&(!config.mana_recovery|mana>=action.aspect_of_the_monkey.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
   - trueshot_aura,range_check=none,if=config.trueshot&buff.trueshot_aura.down.any&(!config.mana_recovery|!var.fighting|(action.trueshot_aura.cost=0|(!var.low_mana&mana>=action.trueshot_aura.cost+var.mana_budget&(!config.mana_recovery|mana>=action.trueshot_aura.cost+var.mend_reserve+var.cooldown_reserve|mana>=mana.max))))
   controls:
   - intimidation,range_check=none,if=config.use_pet&config.intimidation&var.engaged&!var.protected_target&!target.boss&pet.alive&pet.attacking_target&((target.casting|target.channeling)|(target.threat>=2&player.health.pct<=config.intimidation_hp))&pet.buff.intimidation.down.any

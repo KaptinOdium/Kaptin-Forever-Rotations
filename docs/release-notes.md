@@ -1,4 +1,6 @@
-# Collection 2026.11.21
+# Collection 2026.11.26
+
+Hunter 1.0.12 fixes repeated switches between Aspect of the Monkey and Aspect of the Hawk after learning Cheetah. All three Hunter profiles recognize learned and active ranks of the preferred combat aspect. To update from 1.0.11, replace the three Hunter YAMLs and reload the rotation list. Your existing bindings and companion 1.0.3 work with this update.
 
 Restoration Druid 2.3.17 adds a group Rejuvenation cast specifically to prepare Swiftmend. This works independently of the routine Rejuvenation slider. In a battleground, choose Raid focus binds and check the two spells with `/khanbindings swiftmend`. The update has offline coverage. For a live check, keep an enemy selected and confirm both heals land on the intended teammate in the combat log. See the [Druid class guide](classes.md#druid).
 

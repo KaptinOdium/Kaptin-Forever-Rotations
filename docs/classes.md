@@ -38,6 +38,8 @@ Use `KhanForeverBindings`. Bind the learned abilities/forms and the exact self/g
 
 All three specializations include pet management, movement/range checks, Hawk timing, optional dungeon entry, combat retargeting and low-mana priorities. Hawk timing uses exported guardian age and an assumed lifespan, not exact per-slot expiry.
 
+Under **Buffs > Preferred combat aspect**, choose Hawk, Monkey or Beast. With Hawk or Beast selected, Monkey serves as an early-level fallback until you learn the preferred aspect. Any active rank of the preferred aspect satisfies the setting. You can keep Cheetah or Pack active between fights and the profile resumes your combat aspect when it recognizes an engagement.
+
 In **Alterac Valley** or another battleground, select a living, attackable enemy player. Once both of you are in combat, the profile can use eligible single-target shots. Pet Attack waits four seconds between requests and Auto Shot waits two seconds between startup requests. This gives other shots time to fire while the pet is travelling or an attack confirmation is missing.
 
 Use `KaptinForeverHunterBindings` 1.0.3. Bind **Pet Attack**, ordinary **Auto Shot**, **Auto Shot @stop_attack** and learned spells. Optional combat retargeting also needs **Target Enemy** and **Auto Shot @retarget_stop**.
